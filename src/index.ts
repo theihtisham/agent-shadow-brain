@@ -29,6 +29,7 @@ export { BaseAdapter } from './adapters/base-adapter.js';
 export { LLMClient, LLMError } from './brain/llm-client.js';
 export { Analyzer, PromptBuilder } from './brain/analyzer.js';
 export { ProjectContextBuilder } from './brain/project-context.js';
+export { PatternMemory } from './brain/pattern-memory.js';
 export { Orchestrator } from './brain/orchestrator.js';
 
 // Watchers

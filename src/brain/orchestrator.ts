@@ -5,6 +5,7 @@ import * as crypto from 'crypto';
 import { LLMClient } from './llm-client.js';
 import { ProjectContextBuilder } from './project-context.js';
 import { Analyzer } from './analyzer.js';
+import { PatternMemory } from './pattern-memory.js';
 import { FileWatcher } from '../watchers/file-watcher.js';
 import { GitWatcher, GitState } from '../watchers/git-watcher.js';
 import { createAdapter, detectRunningAgents } from '../adapters/index.js';
@@ -21,6 +22,7 @@ export class Orchestrator extends EventEmitter {
   private fileWatcher: FileWatcher;
   private gitWatcher: GitWatcher;
   private adapters: BaseAdapter[] = [];
+  private patternMemory: PatternMemory;
   private running = false;
   private analyzing = false;
   private pendingChanges: FileChange[] = [];
@@ -38,12 +40,16 @@ export class Orchestrator extends EventEmitter {
     });
     this.contextBuilder = new ProjectContextBuilder(config.projectDir);
     this.analyzer = new Analyzer(this.llmClient, config.brainPersonality, config.reviewDepth);
+    this.patternMemory = new PatternMemory();
     this.fileWatcher = new FileWatcher(config.projectDir);
     this.gitWatcher = new GitWatcher(config.projectDir);
   }
 
   async start(): Promise<void> {
     if (this.running) return;
+
+    // Load pattern memory
+    await this.patternMemory.load();
 
     this.startTime = Date.now();
     this.currentSession = {
@@ -101,6 +107,7 @@ export class Orchestrator extends EventEmitter {
 
     try { this.fileWatcher.stop(); } catch { /* ignore */ }
     try { this.gitWatcher.stop(); } catch { /* ignore */ }
+    await this.patternMemory.save();
 
     this.emit('stopped');
   }
@@ -238,6 +245,17 @@ export class Orchestrator extends EventEmitter {
         activity: activities,
         agentMemory,
       });
+
+      // Enhance with pattern memory insights
+      const patternInsights = this.patternMemory.getPatternInsights(changes);
+      insights.push(...patternInsights);
+
+      // Record patterns
+      this.patternMemory.recordFileCorrelation(changes);
+      this.patternMemory.recordChangeFrequency(changes);
+      for (const insight of insights) {
+        this.patternMemory.recordErrorPattern(insight);
+      }
 
       for (const insight of insights) {
         insight.timestamp = new Date();

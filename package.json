@@ -1,6 +1,6 @@
 {
   "name": "@theihtisham/agent-shadow-brain",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "A shadow AI brain that runs alongside Claude Code, Kilo Code, Cline, OpenCode, and Codex — watching, reviewing, and injecting intelligence in real-time.",
   "main": "dist/index.js",
   "exports": {

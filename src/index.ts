@@ -25,12 +25,31 @@ export { OpenCodeAdapter } from './adapters/opencode.js';
 export { CodexAdapter } from './adapters/codex.js';
 export { BaseAdapter } from './adapters/base-adapter.js';
 
-// Brain
+// Brain — Core
 export { LLMClient, LLMError } from './brain/llm-client.js';
 export { Analyzer, PromptBuilder } from './brain/analyzer.js';
 export { ProjectContextBuilder } from './brain/project-context.js';
 export { PatternMemory } from './brain/pattern-memory.js';
 export { Orchestrator } from './brain/orchestrator.js';
+
+// Brain — Health Score
+export { HealthScoreEngine } from './brain/health-score.js';
+export type { HealthScore, HealthDimension, HealthHistory } from './brain/health-score.js';
+
+// Brain — Smart Fix Engine
+export { SmartFixEngine } from './brain/smart-fix.js';
+export type { FixSuggestion } from './brain/smart-fix.js';
+
+// Brain — Report Generator
+export { ReportGenerator } from './brain/report-generator.js';
+export type { ReportOptions } from './brain/report-generator.js';
+
+// Brain — Framework Presets
+export { detectFramework, applyFrameworkRules } from './brain/framework-presets.js';
+
+// Dashboard
+export { DashboardServer } from './dashboard/server.js';
+export type { DashboardOptions } from './dashboard/server.js';
 
 // Watchers
 export { FileWatcher } from './watchers/file-watcher.js';

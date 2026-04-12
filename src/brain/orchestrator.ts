@@ -6,6 +6,10 @@ import { LLMClient } from './llm-client.js';
 import { ProjectContextBuilder } from './project-context.js';
 import { Analyzer } from './analyzer.js';
 import { PatternMemory } from './pattern-memory.js';
+import { HealthScoreEngine, HealthScore } from './health-score.js';
+import { SmartFixEngine, FixSuggestion } from './smart-fix.js';
+import { detectFramework, applyFrameworkRules } from './framework-presets.js';
+import { ReportGenerator } from './report-generator.js';
 import { FileWatcher } from '../watchers/file-watcher.js';
 import { GitWatcher, GitState } from '../watchers/git-watcher.js';
 import { createAdapter, detectRunningAgents } from '../adapters/index.js';
@@ -23,12 +27,17 @@ export class Orchestrator extends EventEmitter {
   private gitWatcher: GitWatcher;
   private adapters: BaseAdapter[] = [];
   private patternMemory: PatternMemory;
+  private healthEngine: HealthScoreEngine;
+  private fixEngine: SmartFixEngine;
+  private reportGen: ReportGenerator;
   private running = false;
   private analyzing = false;
   private pendingChanges: FileChange[] = [];
   private debounceTimer: NodeJS.Timeout | null = null;
   private currentSession: BrainSession | null = null;
   private startTime = 0;
+  private lastHealthScore: HealthScore | null = null;
+  private lastFixes: FixSuggestion[] = [];
 
   constructor(config: BrainConfig) {
     super();
@@ -41,6 +50,9 @@ export class Orchestrator extends EventEmitter {
     this.contextBuilder = new ProjectContextBuilder(config.projectDir);
     this.analyzer = new Analyzer(this.llmClient, config.brainPersonality, config.reviewDepth);
     this.patternMemory = new PatternMemory();
+    this.healthEngine = new HealthScoreEngine();
+    this.fixEngine = new SmartFixEngine(this.llmClient);
+    this.reportGen = new ReportGenerator();
     this.fileWatcher = new FileWatcher(config.projectDir);
     this.gitWatcher = new GitWatcher(config.projectDir);
   }
@@ -48,8 +60,9 @@ export class Orchestrator extends EventEmitter {
   async start(): Promise<void> {
     if (this.running) return;
 
-    // Load pattern memory
+    // Load pattern memory + health history
     await this.patternMemory.load();
+    await this.healthEngine.load();
 
     this.startTime = Date.now();
     this.currentSession = {
@@ -108,6 +121,7 @@ export class Orchestrator extends EventEmitter {
     try { this.fileWatcher.stop(); } catch { /* ignore */ }
     try { this.gitWatcher.stop(); } catch { /* ignore */ }
     await this.patternMemory.save();
+    await this.healthEngine.save();
 
     this.emit('stopped');
   }
@@ -130,16 +144,49 @@ export class Orchestrator extends EventEmitter {
       ? await this.adapters[0].readMemory().catch(() => undefined)
       : undefined;
 
-    const insights = await this.analyzer.analyze({
+    let insights = await this.analyzer.analyze({
       changes,
       context,
       activity: activities,
       agentMemory,
     });
 
+    // ── Apply framework-specific rules ─────────────────────────────────
+    const framework = detectFramework(
+      context.structure || [],
+      {},
+      context.language || [],
+    );
+    if (framework !== 'unknown') {
+      const allContent = changes.map(c => c.content || c.diff || '').join('\n');
+      const frameworkResults = applyFrameworkRules(framework, context.structure || [], allContent);
+      for (const r of frameworkResults) {
+        insights.push({
+          type: (r.type as BrainInsight['type']) || 'warning',
+          priority: (r.priority as BrainInsight['priority']) || 'medium',
+          title: `[${framework}] ${r.message}`,
+          content: r.fix || r.message,
+          files: [],
+          timestamp: new Date(),
+        });
+      }
+    }
+
     // Add metadata
     for (const insight of insights) {
       insight.timestamp = new Date();
+    }
+
+    // ── Health Score ──────────────────────────────────────────────────
+    const healthScore = this.healthEngine.compute(insights, changes, context);
+    this.lastHealthScore = healthScore;
+    this.emit('health-score', { score: healthScore });
+
+    // ── Smart Fix Engine ──────────────────────────────────────────────
+    const fixes = this.fixEngine.generateFixes(changes, insights);
+    this.lastFixes = fixes;
+    if (fixes.length > 0) {
+      this.emit('fixes', { fixes });
     }
 
     // Inject if auto-inject is enabled
@@ -155,6 +202,59 @@ export class Orchestrator extends EventEmitter {
     this.emit('insights', { insights });
     return insights;
   }
+
+  /** Generate a full report (HTML/markdown/JSON) */
+  async generateReport(format: 'html' | 'markdown' | 'json' = 'html'): Promise<string> {
+    const context = await this.contextBuilder.build([]);
+    const changes = await this.getGitChanges();
+    const insights = this.currentSession?.insights || [];
+    const fixes = this.lastFixes;
+    const healthScore = this.lastHealthScore || this.healthEngine.compute(insights, changes, context);
+
+    return this.reportGen.generate(insights, changes, context, healthScore, fixes, { format });
+  }
+
+  /** Generate GitHub Actions workflow YAML */
+  async generateCIWorkflow(): Promise<string> {
+    const context = await this.contextBuilder.build([]);
+    return this.reportGen.generate([], [], context, undefined, undefined, { format: 'github-actions' });
+  }
+
+  /** Generate pre-commit hook script */
+  generatePreCommitHook(): string {
+    return this.reportGen.generatePreCommitHook();
+  }
+
+  /** Get smart fix suggestions for current changes */
+  async getSmartFixes(): Promise<FixSuggestion[]> {
+    const context = await this.contextBuilder.build([]);
+    const changes = await this.getGitChanges();
+    const insights = this.currentSession?.insights || [];
+    return this.fixEngine.generateFixes(changes, insights);
+  }
+
+  /** Get current health score */
+  async getHealthScore(): Promise<HealthScore> {
+    const context = await this.contextBuilder.build([]);
+    const changes = await this.getGitChanges();
+    const insights = this.currentSession?.insights || [];
+    const score = this.healthEngine.compute(insights, changes, context);
+    this.lastHealthScore = score;
+    return score;
+  }
+
+  /** Format fix suggestions for terminal display */
+  formatFixes(fixes: FixSuggestion[]): string {
+    return this.fixEngine.formatFixes(fixes);
+  }
+
+  /** Format health score for terminal display */
+  formatHealthScore(score: HealthScore): string {
+    return this.healthEngine.formatConsole(score);
+  }
+
+  getLastHealthScore(): HealthScore | null { return this.lastHealthScore; }
+  getLastFixes(): FixSuggestion[] { return this.lastFixes; }
 
   getSession(): BrainSession | null {
     return this.currentSession;
@@ -172,6 +272,9 @@ export class Orchestrator extends EventEmitter {
       provider: this.config.provider,
       model: this.config.model,
       projectDir: this.config.projectDir,
+      healthScore: this.lastHealthScore?.overall ?? null,
+      healthGrade: this.lastHealthScore?.grade ?? null,
+      fixCount: this.lastFixes.length,
     };
   }
 
@@ -239,12 +342,33 @@ export class Orchestrator extends EventEmitter {
         ? await this.adapters[0].readMemory().catch(() => undefined)
         : undefined;
 
-      const insights = await this.analyzer.analyze({
+      let insights = await this.analyzer.analyze({
         changes,
         context,
         activity: activities,
         agentMemory,
       });
+
+      // ── Framework rules ────────────────────────────────────────────
+      const framework = detectFramework(
+        context.structure || [],
+        {},
+        context.language || [],
+      );
+      if (framework !== 'unknown') {
+        const allContent = changes.map(c => c.content || c.diff || '').join('\n');
+        const frameworkResults = applyFrameworkRules(framework, context.structure || [], allContent);
+        for (const r of frameworkResults) {
+          insights.push({
+            type: (r.type as BrainInsight['type']) || 'warning',
+            priority: (r.priority as BrainInsight['priority']) || 'medium',
+            title: `[${framework}] ${r.message}`,
+            content: r.fix || r.message,
+            files: [],
+            timestamp: new Date(),
+          });
+        }
+      }
 
       // Enhance with pattern memory insights
       const patternInsights = this.patternMemory.getPatternInsights(changes);
@@ -259,6 +383,18 @@ export class Orchestrator extends EventEmitter {
 
       for (const insight of insights) {
         insight.timestamp = new Date();
+      }
+
+      // ── Health Score ──────────────────────────────────────────────
+      const healthScore = this.healthEngine.compute(insights, changes, context);
+      this.lastHealthScore = healthScore;
+      this.emit('health-score', { score: healthScore });
+
+      // ── Smart Fix Engine ──────────────────────────────────────────
+      const fixes = this.fixEngine.generateFixes(changes, insights);
+      this.lastFixes = fixes;
+      if (fixes.length > 0) {
+        this.emit('fixes', { fixes });
       }
 
       if (this.config.autoInject) {

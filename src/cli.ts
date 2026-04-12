@@ -1,13 +1,17 @@
 #!/usr/bin/env node
-// src/cli.ts — CLI entry point for Shadow Brain
+// src/cli.ts — CLI entry point for Shadow Brain v1.1.1
 
 import { Command } from 'commander';
 import chalk from 'chalk';
 import Conf from 'conf';
+import * as fs from 'fs';
+import * as path from 'path';
 import { Orchestrator } from './brain/orchestrator.js';
 import { detectRunningAgents, createAdapter } from './adapters/index.js';
 import { BaseAdapter } from './adapters/base-adapter.js';
 import { BrainConfig, BrainInsight, AgentTool, BrainPersonality, LLMProvider } from './types.js';
+
+const VERSION = '1.1.1';
 
 const config: any = new Conf({
   projectName: 'shadow-brain',
@@ -38,7 +42,7 @@ function mergeConfig(cliOpts: any): BrainConfig {
   };
 }
 
-// START command
+// ─── START ────────────────────────────────────────────────────────────────────
 const startCmd = new Command('start')
   .description('Start Shadow Brain in watch mode')
   .argument('[project-dir]', 'Project directory to watch', process.cwd())
@@ -52,7 +56,7 @@ const startCmd = new Command('start')
   .action(async (projectDir: string, opts: any) => {
     const brainConfig = mergeConfig({ ...opts, projectDir });
 
-    console.log(chalk.magenta.bold('\n  SHADOW BRAIN v1.1.0'));
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION}`));
     console.log(chalk.dim('  Watching: ') + chalk.cyan(brainConfig.projectDir));
     console.log(chalk.dim('  Provider: ') + chalk.cyan(brainConfig.provider));
     console.log(chalk.dim('  Personality: ') + chalk.cyan(brainConfig.brainPersonality));
@@ -61,7 +65,16 @@ const startCmd = new Command('start')
 
     const orchestrator = new Orchestrator(brainConfig);
 
-    // Handle graceful shutdown
+    // Forward health-score and fixes events to console when not in dashboard mode
+    orchestrator.on('health-score', ({ score }) => {
+      const color = score.overall >= 85 ? 'green' : score.overall >= 70 ? 'yellow' : 'red';
+      console.log(chalk[color](`  ⬟ Health: ${score.overall}/100 (${score.grade})`));
+    });
+
+    orchestrator.on('fixes', ({ fixes }) => {
+      console.log(chalk.cyan(`  🔧 ${fixes.length} smart fix suggestion(s) available — run: shadow-brain fix`));
+    });
+
     const shutdown = async () => {
       console.log(chalk.yellow('\n  Shutting down Shadow Brain...'));
       await orchestrator.stop();
@@ -81,7 +94,7 @@ const startCmd = new Command('start')
     }
   });
 
-// REVIEW command
+// ─── REVIEW ───────────────────────────────────────────────────────────────────
 const reviewCmd = new Command('review')
   .description('Run a one-shot analysis of the project')
   .argument('[project-dir]', 'Project directory to review', process.cwd())
@@ -90,9 +103,10 @@ const reviewCmd = new Command('review')
   .option('-k, --api-key <key>', 'API key')
   .option('--depth <depth>', 'Review depth (quick|standard|deep)')
   .option('--output <format>', 'Output format (text|json|markdown)', 'text')
+  .option('--show-health', 'Also display health score after review')
+  .option('--show-fixes', 'Also display smart fix suggestions')
   .action(async (projectDir: string, opts: any) => {
     const brainConfig = mergeConfig({ ...opts, projectDir, watchMode: false });
-
     const orchestrator = new Orchestrator(brainConfig);
 
     try {
@@ -101,34 +115,43 @@ const reviewCmd = new Command('review')
 
       if (insights.length === 0) {
         console.log(chalk.dim('  No insights generated.'));
-        return;
+      } else {
+        switch (opts.output) {
+          case 'json':
+            console.log(JSON.stringify(insights, null, 2));
+            break;
+          case 'markdown':
+            for (const insight of insights) {
+              const emoji = insight.priority === 'critical' ? '🚨' : insight.priority === 'high' ? '⚠️' : '💡';
+              console.log(`\n## ${emoji} [${insight.type.toUpperCase()}] ${insight.title}\n`);
+              console.log(`**Priority:** ${insight.priority} | **Type:** ${insight.type}`);
+              if (insight.files?.length) console.log(`**Files:** ${insight.files.map(f => `\`${f}\``).join(', ')}`);
+              console.log(`\n${insight.content}\n`);
+            }
+            break;
+          default: // text
+            console.log(chalk.bold(`\n  Shadow Brain Analysis (${insights.length} insights)\n`));
+            for (const insight of insights) {
+              const color = insight.priority === 'critical' ? 'red' : insight.priority === 'high' ? 'yellow' : insight.priority === 'medium' ? 'blue' : 'gray';
+              console.log(chalk`  {${color}.bold [${insight.priority.toUpperCase()}]} ${insight.title}`);
+              console.log(chalk.dim(`    Type: ${insight.type} | Files: ${insight.files?.join(', ') || 'none'}`));
+              console.log(`    ${insight.content.slice(0, 200)}${insight.content.length > 200 ? '...' : ''}`);
+              console.log();
+            }
+            break;
+        }
       }
 
-      switch (opts.output) {
-        case 'json':
-          console.log(JSON.stringify(insights, null, 2));
-          break;
+      // Optional: show health score inline
+      if (opts.showHealth) {
+        const score = orchestrator.getLastHealthScore();
+        if (score) process.stdout.write(orchestrator.formatHealthScore(score));
+      }
 
-        case 'markdown':
-          for (const insight of insights) {
-            const emoji = insight.priority === 'critical' ? '🚨' : insight.priority === 'high' ? '⚠️' : '💡';
-            console.log(`\n## ${emoji} [${insight.type.toUpperCase()}] ${insight.title}\n`);
-            console.log(`**Priority:** ${insight.priority} | **Type:** ${insight.type}`);
-            if (insight.files?.length) console.log(`**Files:** ${insight.files.map(f => `\`${f}\``).join(', ')}`);
-            console.log(`\n${insight.content}\n`);
-          }
-          break;
-
-        default: // text
-          console.log(chalk.bold(`\n  Shadow Brain Analysis (${insights.length} insights)\n`));
-          for (const insight of insights) {
-            const color = insight.priority === 'critical' ? 'red' : insight.priority === 'high' ? 'yellow' : insight.priority === 'medium' ? 'blue' : 'gray';
-            console.log(chalk`  {${color}.bold [${insight.priority.toUpperCase()}]} ${insight.title}`);
-            console.log(chalk.dim(`    Type: ${insight.type} | Files: ${insight.files?.join(', ') || 'none'}`));
-            console.log(`    ${insight.content.slice(0, 200)}${insight.content.length > 200 ? '...' : ''}`);
-            console.log();
-          }
-          break;
+      // Optional: show fixes inline
+      if (opts.showFixes) {
+        const fixes = orchestrator.getLastFixes();
+        process.stdout.write(orchestrator.formatFixes(fixes));
       }
     } catch (err: any) {
       console.error(chalk.red('  Error:'), err.message);
@@ -136,7 +159,226 @@ const reviewCmd = new Command('review')
     }
   });
 
-// INJECT command
+// ─── REPORT ───────────────────────────────────────────────────────────────────
+const reportCmd = new Command('report')
+  .description('Generate a comprehensive project report')
+  .argument('[project-dir]', 'Project directory to analyze', process.cwd())
+  .option('-p, --provider <provider>', 'LLM provider')
+  .option('-k, --api-key <key>', 'API key')
+  .option('-f, --format <format>', 'Report format: html|markdown|json', 'html')
+  .option('-o, --output <file>', 'Output file path (default: shadow-brain-report.<ext>)')
+  .option('--open', 'Open the HTML report in browser after generation')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ ...opts, projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    const fmt = (opts.format || 'html') as 'html' | 'markdown' | 'json';
+    const extMap = { html: 'html', markdown: 'md', json: 'json' };
+    const ext = extMap[fmt];
+    const outPath = opts.output || path.join(process.cwd(), `shadow-brain-report.${ext}`);
+
+    try {
+      console.log(chalk.cyan('  Analyzing project...'));
+      await orchestrator.reviewOnce();
+
+      console.log(chalk.cyan(`  Generating ${fmt.toUpperCase()} report...`));
+      const content = await orchestrator.generateReport(fmt);
+
+      const dir = path.dirname(outPath);
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(outPath, content, 'utf-8');
+
+      console.log(chalk.green(`\n  ✓ Report saved to: ${outPath}`));
+      console.log(chalk.dim(`    Format: ${fmt} | Size: ${(content.length / 1024).toFixed(1)}KB`));
+
+      if (opts.open && fmt === 'html') {
+        const { exec } = await import('child_process');
+        const openCmd = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
+        exec(`${openCmd} "${outPath}"`);
+        console.log(chalk.dim('  Opening in browser...'));
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── HEALTH ───────────────────────────────────────────────────────────────────
+const healthCmd = new Command('health')
+  .description('Show code health score for the project')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('-p, --provider <provider>', 'LLM provider')
+  .option('-k, --api-key <key>', 'API key')
+  .option('--badge', 'Print health badge as SVG to stdout')
+  .option('--json', 'Output health score as JSON')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ ...opts, projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      console.log(chalk.cyan('  Computing health score...'));
+      await orchestrator.reviewOnce();
+      const score = orchestrator.getLastHealthScore();
+
+      if (!score) {
+        console.log(chalk.dim('  No health data available.'));
+        return;
+      }
+
+      if (opts.json) {
+        console.log(JSON.stringify(score, null, 2));
+        return;
+      }
+
+      if (opts.badge) {
+        // Import the health engine to generate badge
+        const { HealthScoreEngine } = await import('./brain/health-score.js');
+        const engine = new HealthScoreEngine();
+        await engine.load();
+        console.log(engine.generateBadgeSvg(score));
+        return;
+      }
+
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN Health Report\n`));
+      process.stdout.write(orchestrator.formatHealthScore(score));
+      console.log();
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── FIX ──────────────────────────────────────────────────────────────────────
+const fixCmd = new Command('fix')
+  .description('Show smart fix suggestions for current code changes')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('-p, --provider <provider>', 'LLM provider')
+  .option('-k, --api-key <key>', 'API key')
+  .option('--json', 'Output fixes as JSON')
+  .option('--markdown', 'Output fixes as markdown')
+  .option('--category <cat>', 'Filter: security|performance|quality|architecture')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ ...opts, projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      await orchestrator.reviewOnce();
+      let fixes = orchestrator.getLastFixes();
+
+      // Filter by category
+      if (opts.category) {
+        fixes = fixes.filter(f => f.category === opts.category);
+      }
+
+      if (opts.json) {
+        console.log(JSON.stringify(fixes, null, 2));
+        return;
+      }
+
+      if (opts.markdown) {
+        const { SmartFixEngine } = await import('./brain/smart-fix.js');
+        const engine = new SmartFixEngine();
+        console.log(engine.toMarkdown(fixes));
+        return;
+      }
+
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN Smart Fix Engine\n`));
+      process.stdout.write(orchestrator.formatFixes(fixes));
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── CI ───────────────────────────────────────────────────────────────────────
+const ciCmd = new Command('ci')
+  .description('Generate GitHub Actions CI workflow for Shadow Brain')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('-o, --output <file>', 'Output file path', '.github/workflows/shadow-brain.yml')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      const yaml = await orchestrator.generateCIWorkflow();
+      const outPath = path.resolve(projectDir, opts.output);
+      const dir = path.dirname(outPath);
+
+      if (!fs.existsSync(dir)) fs.mkdirSync(dir, { recursive: true });
+      fs.writeFileSync(outPath, yaml, 'utf-8');
+
+      console.log(chalk.green(`\n  ✓ GitHub Actions workflow generated: ${outPath}`));
+      console.log(chalk.dim('  Commit this file to enable Shadow Brain CI reviews on every PR.\n'));
+      console.log(chalk.dim('  The workflow will:'));
+      console.log(chalk.dim('    • Run Shadow Brain analysis on every push/PR'));
+      console.log(chalk.dim('    • Post health score as a PR comment'));
+      console.log(chalk.dim('    • Upload full HTML report as build artifact'));
+      console.log(chalk.dim('    • Run language-specific lint/test jobs'));
+      console.log();
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── HOOK ─────────────────────────────────────────────────────────────────────
+const hookCmd = new Command('hook')
+  .description('Install a pre-commit hook that runs Shadow Brain before each commit')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('--uninstall', 'Remove the pre-commit hook')
+  .action(async (projectDir: string, opts: any) => {
+    const hookPath = path.join(projectDir, '.git', 'hooks', 'pre-commit');
+
+    if (opts.uninstall) {
+      if (fs.existsSync(hookPath)) {
+        const content = fs.readFileSync(hookPath, 'utf-8');
+        if (content.includes('shadow-brain')) {
+          fs.unlinkSync(hookPath);
+          console.log(chalk.green('  ✓ Pre-commit hook removed.'));
+        } else {
+          console.log(chalk.yellow('  ⚠ Hook exists but was not created by Shadow Brain. Skipping.'));
+        }
+      } else {
+        console.log(chalk.dim('  No pre-commit hook found.'));
+      }
+      return;
+    }
+
+    const gitDir = path.join(projectDir, '.git');
+    if (!fs.existsSync(gitDir)) {
+      console.error(chalk.red('  Error: Not a git repository. Run inside a git project.'));
+      process.exit(1);
+    }
+
+    const hooksDir = path.join(gitDir, 'hooks');
+    if (!fs.existsSync(hooksDir)) fs.mkdirSync(hooksDir, { recursive: true });
+
+    if (fs.existsSync(hookPath)) {
+      const existing = fs.readFileSync(hookPath, 'utf-8');
+      if (existing.includes('shadow-brain')) {
+        console.log(chalk.dim('  Pre-commit hook already installed. Run with --uninstall to remove.'));
+        return;
+      }
+      console.log(chalk.yellow('  ⚠ A pre-commit hook already exists. Please add Shadow Brain manually.'));
+      console.log(chalk.dim(`  Hook path: ${hookPath}`));
+      return;
+    }
+
+    const brainConfig = mergeConfig({ projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+    const script = orchestrator.generatePreCommitHook();
+
+    fs.writeFileSync(hookPath, script, { encoding: 'utf-8', mode: 0o755 });
+
+    console.log(chalk.green('\n  ✓ Pre-commit hook installed!'));
+    console.log(chalk.dim(`  Location: ${hookPath}`));
+    console.log(chalk.dim('  Shadow Brain will now analyze your changes before each commit.'));
+    console.log(chalk.dim('  If critical issues are found, the commit will be blocked.'));
+    console.log(chalk.dim('  To bypass: git commit --no-verify'));
+    console.log();
+  });
+
+// ─── INJECT ───────────────────────────────────────────────────────────────────
 const injectCmd = new Command('inject')
   .description('Manually inject a message into agent memory')
   .argument('<message>', 'The insight message to inject')
@@ -161,7 +403,6 @@ const injectCmd = new Command('inject')
         : detected as BaseAdapter[];
 
       if (targets.length === 0) {
-        // Create adapter for specified agent even if not detected
         if (opts.agent) {
           const adapter = createAdapter(opts.agent as AgentTool) as BaseAdapter;
           adapter.setProjectDir(opts.projectDir || process.cwd());
@@ -184,13 +425,13 @@ const injectCmd = new Command('inject')
     }
   });
 
-// STATUS command
+// ─── STATUS ───────────────────────────────────────────────────────────────────
 const statusCmd = new Command('status')
   .description('Show current Shadow Brain configuration and status')
   .action(async () => {
     const saved = config.store;
 
-    console.log(chalk.magenta.bold('\n  SHADOW BRAIN Status\n'));
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} Status\n`));
 
     console.log(chalk.dim('  Provider:   ') + chalk.cyan(saved.provider || 'ollama'));
     console.log(chalk.dim('  Model:      ') + chalk.cyan(saved.model || '(default)'));
@@ -202,7 +443,6 @@ const statusCmd = new Command('status')
     console.log(chalk.dim('  Project:    ') + chalk.cyan(saved.projectDir || process.cwd()));
     console.log();
 
-    // Try to detect running agents
     try {
       const detected = await detectRunningAgents(saved.projectDir || process.cwd());
       if (detected.length > 0) {
@@ -219,7 +459,7 @@ const statusCmd = new Command('status')
     console.log();
   });
 
-// CONFIG command
+// ─── CONFIG ───────────────────────────────────────────────────────────────────
 const configCmd = new Command('config')
   .description('Configure Shadow Brain settings')
   .argument('[key]', 'Config key to set')
@@ -261,7 +501,7 @@ const configCmd = new Command('config')
     console.log(chalk.dim('         shadow-brain config --reset'));
   });
 
-// SETUP command — interactive first-time setup
+// ─── SETUP ────────────────────────────────────────────────────────────────────
 const setupCmd = new Command('setup')
   .description('Interactive setup wizard for first-time configuration')
   .action(async () => {
@@ -269,10 +509,9 @@ const setupCmd = new Command('setup')
     const rl = readline.createInterface({ input: process.stdin, output: process.stdout });
     const ask = (q: string): Promise<string> => new Promise(res => rl.question(q, res));
 
-    console.log(chalk.magenta.bold('\n  SHADOW BRAIN Setup Wizard\n'));
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} Setup Wizard\n`));
     console.log(chalk.dim('  This will configure your Shadow Brain installation.\n'));
 
-    // Provider
     console.log(chalk.cyan('  LLM Providers:'));
     console.log(chalk.dim('    1. ollama    (free, local — default)'));
     console.log(chalk.dim('    2. anthropic (Claude API)'));
@@ -284,7 +523,6 @@ const setupCmd = new Command('setup')
     config.set('provider', chosenProvider);
     console.log(chalk.green(`  ✓ Provider: ${chosenProvider}\n`));
 
-    // API key (if not ollama)
     if (chosenProvider !== 'ollama') {
       const apiKey = await ask(chalk.yellow(`  Enter ${chosenProvider} API key: `));
       if (apiKey.trim()) {
@@ -297,7 +535,6 @@ const setupCmd = new Command('setup')
       console.log(chalk.dim('  Ollama runs locally — no API key needed.\n'));
     }
 
-    // Personality
     console.log(chalk.cyan('  Brain Personalities:'));
     console.log(chalk.dim('    1. balanced    (all perspectives — default)'));
     console.log(chalk.dim('    2. mentor      (teaches & guides)'));
@@ -311,7 +548,6 @@ const setupCmd = new Command('setup')
     config.set('brainPersonality', chosenPersonality);
     console.log(chalk.green(`  ✓ Personality: ${chosenPersonality}\n`));
 
-    // Review depth
     console.log(chalk.cyan('  Review Depth:'));
     console.log(chalk.dim('    1. standard (balanced — default)'));
     console.log(chalk.dim('    2. quick    (fast, minimal context)'));
@@ -321,25 +557,28 @@ const setupCmd = new Command('setup')
     config.set('reviewDepth', depthMap[depth.trim() || '1'] || 'standard');
     console.log(chalk.green('  ✓ Review depth saved\n'));
 
-    // Auto-inject
     const inject = await ask(chalk.yellow('  Enable auto-injection? [Y/n] (default: Y): '));
     config.set('autoInject', inject.trim().toLowerCase() !== 'n');
     console.log(chalk.green(`  ✓ Auto-injection: ${inject.trim().toLowerCase() !== 'n' ? 'enabled' : 'disabled'}\n`));
 
     rl.close();
 
-    // Summary
     console.log(chalk.magenta.bold('  Setup complete!\n'));
     console.log(chalk.dim('  Configuration saved to: ') + chalk.cyan(config.path));
     console.log();
     console.log(chalk.dim('  Next steps:'));
     console.log(chalk.cyan('    shadow-brain start .') + chalk.dim('    # Start watching a project'));
     console.log(chalk.cyan('    shadow-brain review .') + chalk.dim('   # One-shot analysis'));
-    console.log(chalk.cyan('    shadow-brain doctor') + chalk.dim('    # Check health'));
+    console.log(chalk.cyan('    shadow-brain health .') + chalk.dim('   # Health score'));
+    console.log(chalk.cyan('    shadow-brain fix .') + chalk.dim('      # Smart fix suggestions'));
+    console.log(chalk.cyan('    shadow-brain report .') + chalk.dim('   # Generate HTML report'));
+    console.log(chalk.cyan('    shadow-brain ci .') + chalk.dim('       # Generate GitHub Actions CI'));
+    console.log(chalk.cyan('    shadow-brain hook .') + chalk.dim('     # Install pre-commit hook'));
+    console.log(chalk.cyan('    shadow-brain doctor') + chalk.dim('     # Check health'));
     console.log();
   });
 
-// DOCTOR command — health check and diagnostics
+// ─── DOCTOR ───────────────────────────────────────────────────────────────────
 const doctorCmd = new Command('doctor')
   .description('Run health check and diagnostics')
   .action(async () => {
@@ -347,7 +586,6 @@ const doctorCmd = new Command('doctor')
 
     const checks: { name: string; status: 'ok' | 'warn' | 'fail'; detail: string }[] = [];
 
-    // Check 1: Config exists
     try {
       const saved = config.store;
       checks.push({ name: 'Configuration', status: 'ok', detail: `provider=${saved.provider}, personality=${saved.brainPersonality}` });
@@ -355,7 +593,6 @@ const doctorCmd = new Command('doctor')
       checks.push({ name: 'Configuration', status: 'fail', detail: 'Could not read config. Run `shadow-brain setup`.' });
     }
 
-    // Check 2: Provider connectivity
     const provider = config.get('provider') as string || 'ollama';
     if (provider === 'ollama') {
       try {
@@ -379,30 +616,38 @@ const doctorCmd = new Command('doctor')
       }
     }
 
-    // Check 3: Node.js version
     const nodeVersion = process.version;
     const major = parseInt(nodeVersion.slice(1).split('.')[0]);
     checks.push({ name: 'Node.js', status: major >= 18 ? 'ok' : 'warn', detail: `${nodeVersion} ${major >= 18 ? '(supported)' : '(recommend v18+)'}` });
 
-    // Check 4: Project directory
     const projectDir = config.get('projectDir') as string || process.cwd();
     try {
-      const fs = await import('fs');
       const stat = fs.statSync(projectDir);
       checks.push({ name: 'Project directory', status: stat.isDirectory() ? 'ok' : 'fail', detail: projectDir });
     } catch {
       checks.push({ name: 'Project directory', status: 'warn', detail: `${projectDir} (will use cwd at runtime)` });
     }
 
-    // Check 5: Agent detection
+    // Check: git repo
+    const gitDir = path.join(projectDir, '.git');
+    checks.push({ name: 'Git repository', status: fs.existsSync(gitDir) ? 'ok' : 'warn', detail: fs.existsSync(gitDir) ? `${gitDir} found` : 'Not a git repository — git watching will be limited' });
+
+    // Check: pre-commit hook
+    const hookPath = path.join(projectDir, '.git', 'hooks', 'pre-commit');
+    const hookInstalled = fs.existsSync(hookPath) && fs.readFileSync(hookPath, 'utf-8').includes('shadow-brain');
+    checks.push({ name: 'Pre-commit hook', status: hookInstalled ? 'ok' : 'warn', detail: hookInstalled ? 'Installed ✓' : 'Not installed — run: shadow-brain hook .' });
+
+    // Check: GitHub Actions workflow
+    const ciPath = path.join(projectDir, '.github', 'workflows', 'shadow-brain.yml');
+    checks.push({ name: 'GitHub Actions CI', status: fs.existsSync(ciPath) ? 'ok' : 'warn', detail: fs.existsSync(ciPath) ? 'shadow-brain.yml found' : 'Not configured — run: shadow-brain ci .' });
+
     try {
       const detected = await detectRunningAgents(projectDir);
-      checks.push({ name: 'Agent detection', status: detected.length > 0 ? 'ok' : 'warn', detail: detected.length > 0 ? `${detected.length} agent(s) detected: ${detected.map((a: any) => a.displayName).join(', ')}` : 'No agents detected in current project' });
+      checks.push({ name: 'Agent detection', status: detected.length > 0 ? 'ok' : 'warn', detail: detected.length > 0 ? `${detected.length} agent(s): ${detected.map((a: any) => a.displayName).join(', ')}` : 'No agents detected in current project' });
     } catch {
       checks.push({ name: 'Agent detection', status: 'warn', detail: 'Could not scan for agents' });
     }
 
-    // Display results
     for (const check of checks) {
       const icon = check.status === 'ok' ? chalk.green('✓') : check.status === 'warn' ? chalk.yellow('⚠') : chalk.red('✗');
       console.log(`  ${icon} ${chalk.bold(check.name)}: ${chalk.dim(check.detail)}`);
@@ -413,23 +658,92 @@ const doctorCmd = new Command('doctor')
 
     console.log();
     if (failCount === 0 && warnCount === 0) {
-      console.log(chalk.green.bold('  All checks passed! Shadow Brain is ready.\n'));
+      console.log(chalk.green.bold('  All checks passed! Shadow Brain is fully configured.\n'));
     } else if (failCount === 0) {
-      console.log(chalk.yellow(`  ${warnCount} warning(s). Shadow Brain will work but review the items above.\n`));
+      console.log(chalk.yellow(`  ${warnCount} warning(s). Shadow Brain will work — review items above.\n`));
     } else {
       console.log(chalk.red(`  ${failCount} issue(s) found. Fix them before running Shadow Brain.\n`));
     }
   });
 
-// Main program
+// ─── DASH ─────────────────────────────────────────────────────────────────────
+const dashCmd = new Command('dash')
+  .description('Start Shadow Brain with a real-time web dashboard')
+  .argument('[project-dir]', 'Project directory to watch', process.cwd())
+  .option('-p, --provider <provider>', 'LLM provider (anthropic|openai|ollama|openrouter)')
+  .option('-m, --model <model>', 'LLM model name')
+  .option('-k, --api-key <key>', 'API key for the LLM provider')
+  .option('--personality <type>', 'Brain personality (mentor|critic|architect|security|performance|balanced)')
+  .option('--no-inject', 'Disable auto-injection of insights')
+  .option('--depth <depth>', 'Review depth (quick|standard|deep)')
+  .option('--agents <agents>', 'Comma-separated list of agents to watch')
+  .option('--port <port>', 'Dashboard port', '7341')
+  .option('--no-open', 'Do not open browser automatically')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ ...opts, projectDir });
+    const port = parseInt(opts.port || '7341', 10);
+
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Web Dashboard`));
+    console.log(chalk.dim('  Watching: ') + chalk.cyan(brainConfig.projectDir));
+    console.log(chalk.dim('  Provider: ') + chalk.cyan(brainConfig.provider));
+    console.log(chalk.dim('  Personality: ') + chalk.cyan(brainConfig.brainPersonality));
+    console.log();
+
+    const orchestrator = new Orchestrator(brainConfig);
+
+    const { DashboardServer } = await import('./dashboard/server.js');
+    const dashboard = new DashboardServer(orchestrator, {
+      port,
+      openBrowser: opts.open !== false,
+    });
+
+    const shutdown = async () => {
+      console.log(chalk.yellow('\n  Shutting down...'));
+      await orchestrator.stop();
+      await dashboard.stop();
+      process.exit(0);
+    };
+
+    process.on('SIGINT', shutdown);
+    process.on('SIGTERM', shutdown);
+
+    try {
+      const url = await dashboard.start();
+      console.log(chalk.green(`  ✓ Dashboard running at ${url}`));
+      console.log(chalk.dim(`  Open in browser: ${url}`));
+      console.log(chalk.dim('  Press Ctrl+C to stop\n'));
+
+      // Auto-open browser
+      if (opts.open !== false) {
+        try {
+          const { exec } = await import('child_process');
+          const openCmd = process.platform === 'darwin' ? 'open' : process.platform === 'win32' ? 'start' : 'xdg-open';
+          exec(`${openCmd} "${url}"`);
+        } catch { /* ignore */ }
+      }
+
+      await orchestrator.start();
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── MAIN ─────────────────────────────────────────────────────────────────────
 const program = new Command();
 program
   .name('shadow-brain')
   .description('Shadow Brain — AI agent watcher and intelligence injector')
-  .version('1.1.0');
+  .version(VERSION);
 
 program.addCommand(startCmd);
 program.addCommand(reviewCmd);
+program.addCommand(reportCmd);
+program.addCommand(healthCmd);
+program.addCommand(fixCmd);
+program.addCommand(ciCmd);
+program.addCommand(hookCmd);
+program.addCommand(dashCmd);
 program.addCommand(injectCmd);
 program.addCommand(statusCmd);
 program.addCommand(configCmd);

@@ -23,7 +23,7 @@ import { createAdapter, detectRunningAgents } from '../adapters/index.js';
 import { BaseAdapter } from '../adapters/base-adapter.js';
 import {
   BrainConfig, BrainInsight, BrainSession, AgentTool, FileChange, AgentAdapter,
-  CodeMetrics, VulnResult, CustomRule, ProjectConfig,
+  CodeMetrics, VulnResult, CustomRule, ProjectConfig, PRDescription, CommitMessage,
 } from '../types.js';
 
 export class Orchestrator extends EventEmitter {

@@ -192,7 +192,7 @@ export class CodeMetricsEngine {
     out += `  Code:       ${metrics.codeLines.toLocaleString().padStart(8)} lines\n`;
     out += `  Comments:   ${metrics.commentLines.toLocaleString().padStart(8)} lines\n`;
     out += `  Blank:      ${metrics.blankLines.toLocaleString().padStart(8)} lines\n`;
-    out += `  Avg/ file:  ${metrics.avgFiles ? metrics.avgFileSize.toLocaleString() : 'N/A'.padStart(8)} lines\n`;
+    out += `  Avg/ file:  ${metrics.avgFileSize.toLocaleString().padStart(8)} lines\n`;
 
     out += `\n  Languages:\n`;
     const sortedLangs = Object.entries(metrics.languages)
@@ -246,9 +246,5 @@ export class CodeMetricsEngine {
     }
 
     return md;
-  }
-
-  private get avgFiles(): boolean {
-    return this.projectDir.length > 0;
   }
 }

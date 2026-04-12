@@ -1,7 +1,7 @@
 {
   "name": "@theihtisham/agent-shadow-brain",
-  "version": "1.1.1",
-  "description": "A shadow AI brain that runs alongside Claude Code, Kilo Code, Cline, OpenCode, and Codex — watching, reviewing, and injecting intelligence in real-time.",
+  "version": "1.2.0",
+  "description": "A shadow AI brain that runs alongside Claude Code, Kilo Code, Cline, OpenCode, and Codex \u2014 watching, reviewing, and injecting intelligence in real-time.",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
@@ -33,7 +33,7 @@
     "mcp",
     "llm"
   ],
-  "author": "theihtisham",
+  "author": "ihtisham",
   "license": "MIT",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.39.0",
@@ -60,7 +60,10 @@
     "@types/ws": "^8.5.13",
     "ts-node": "^10.9.2",
     "typescript": "^5.5.0",
-    "vitest": "^1.6.0"
+    "vitest": "^1.6.0",
+    "jest": "^29.7.0",
+    "ts-jest": "^29.1.0",
+    "@types/jest": "^29.5.0"
   },
   "engines": {
     "node": ">=18.0.0"
@@ -73,5 +76,13 @@
   "publishConfig": {
     "access": "public"
   },
-  "type": "module"
+  "type": "module",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/theihtisham/agent-shadow-brain.git"
+  },
+  "bugs": {
+    "url": "https://github.com/theihtisham/agent-shadow-brain/issues"
+  },
+  "homepage": "https://github.com/theihtisham/agent-shadow-brain#readme"
 }

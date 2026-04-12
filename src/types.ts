@@ -117,3 +117,94 @@ export interface BrainSession {
   filesReviewed: number;
   suggestionsInjected: number;
 }
+
+// ── v1.2.0 Types ──────────────────────────────────────────────────────────────
+
+export interface CustomRule {
+  id: string;
+  name: string;
+  description: string;
+  pattern: string;
+  flags?: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  category: 'security' | 'performance' | 'quality' | 'architecture' | 'style';
+  suggestion?: string;
+  enabled: boolean;
+}
+
+export interface ProjectConfig {
+  version: string;
+  rules?: {
+    customRules?: CustomRule[];
+    ignorePatterns?: string[];
+    ignorePaths?: string[];
+  };
+  notifications?: {
+    webhook?: string;
+    slack?: string;
+    discord?: string;
+    email?: string;
+    onHealthDrop?: boolean;
+    onCriticalInsight?: boolean;
+    minInterval?: number;
+  };
+  health?: {
+    weights?: Record<string, number>;
+    thresholds?: Record<string, number>;
+  };
+  metrics?: {
+    excludePaths?: string[];
+    complexityThreshold?: number;
+  };
+}
+
+export interface CodeMetrics {
+  totalFiles: number;
+  totalLines: number;
+  codeLines: number;
+  commentLines: number;
+  blankLines: number;
+  languages: Record<string, { files: number; lines: number; percentage: number }>;
+  largestFiles: Array<{ path: string; lines: number }>;
+  complexityHotspots: Array<{ path: string; complexity: number; functions: number }>;
+  fileTypes: Record<string, number>;
+  avgFileSize: number;
+  timestamp: Date;
+}
+
+export interface PRDescription {
+  title: string;
+  body: string;
+  type: 'feat' | 'fix' | 'refactor' | 'docs' | 'test' | 'chore' | 'perf';
+  scope?: string;
+  breaking: boolean;
+}
+
+export interface CommitMessage {
+  conventional: string;
+  short: string;
+  detailed: string;
+}
+
+export interface VulnResult {
+  package: string;
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  title: string;
+  url?: string;
+  patchedIn?: string;
+}
+
+export interface NotificationPayload {
+  type: 'health-drop' | 'critical-insight' | 'analysis-complete' | 'error';
+  title: string;
+  message: string;
+  data?: Record<string, unknown>;
+  timestamp: Date;
+}
+
+export interface ProjectFileChange {
+  path: string;
+  type: 'add' | 'modify' | 'delete';
+  insertions: number;
+  deletions: number;
+}

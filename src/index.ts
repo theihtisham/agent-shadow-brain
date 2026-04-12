@@ -14,6 +14,14 @@ export type {
   FileChange,
   ProjectContext,
   BrainSession,
+  CustomRule,
+  ProjectConfig,
+  CodeMetrics,
+  PRDescription,
+  CommitMessage,
+  VulnResult,
+  NotificationPayload,
+  ProjectFileChange,
 } from './types.js';
 
 // Adapters
@@ -46,6 +54,17 @@ export type { ReportOptions } from './brain/report-generator.js';
 
 // Brain — Framework Presets
 export { detectFramework, applyFrameworkRules } from './brain/framework-presets.js';
+
+// Brain — v1.2.0 Modules
+export { CustomRulesEngine } from './brain/custom-rules.js';
+export { PRGenerator } from './brain/pr-generator.js';
+export { Notifier } from './brain/notifier.js';
+export type { NotifyConfig } from './brain/notifier.js';
+export { CodeMetricsEngine } from './brain/code-metrics.js';
+export { ProjectConfigLoader } from './brain/project-config.js';
+export { VulnScanner } from './brain/vuln-scanner.js';
+export { checkForUpdate, formatUpdateNotice } from './brain/auto-update.js';
+export type { UpdateCheck } from './brain/auto-update.js';
 
 // Dashboard
 export { DashboardServer } from './dashboard/server.js';

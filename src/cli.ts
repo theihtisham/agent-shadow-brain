@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// src/cli.ts — CLI entry point for Shadow Brain v1.1.1
+// src/cli.ts — CLI entry point for Shadow Brain v1.2.0
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -10,8 +10,9 @@ import { Orchestrator } from './brain/orchestrator.js';
 import { detectRunningAgents, createAdapter } from './adapters/index.js';
 import { BaseAdapter } from './adapters/base-adapter.js';
 import { BrainConfig, BrainInsight, AgentTool, BrainPersonality, LLMProvider } from './types.js';
+import { checkForUpdate, formatUpdateNotice } from './brain/auto-update.js';
 
-const VERSION = '1.1.1';
+const VERSION = '1.2.0';
 
 const config: any = new Conf({
   projectName: 'shadow-brain',
@@ -729,6 +730,231 @@ const dashCmd = new Command('dash')
     }
   });
 
+// ─── METRICS ──────────────────────────────────────────────────────────────────
+const metricsCmd = new Command('metrics')
+  .description('Compute and display code metrics for the project')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('--json', 'Output as JSON')
+  .option('--markdown', 'Output as markdown')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      console.log(chalk.cyan('  Computing code metrics...'));
+      const metrics = await orchestrator.computeMetrics();
+
+      if (opts.json) {
+        console.log(orchestrator.formatMetrics(metrics, 'json'));
+      } else if (opts.markdown) {
+        console.log(orchestrator.formatMetrics(metrics, 'markdown'));
+      } else {
+        console.log(chalk.magenta.bold(`\n  SHADOW BRAIN Code Metrics\n`));
+        process.stdout.write(orchestrator.formatMetrics(metrics, 'text'));
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── SCAN (Vulnerability Scanner) ────────────────────────────────────────────
+const scanCmd = new Command('scan')
+  .description('Scan for dependency vulnerabilities and exposed secrets')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('--json', 'Output as JSON')
+  .option('--markdown', 'Output as markdown')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      console.log(chalk.cyan('  Scanning for vulnerabilities...'));
+      const vulns = await orchestrator.runVulnScan();
+
+      if (opts.json) {
+        console.log(orchestrator.formatVulns(vulns, 'json'));
+      } else if (opts.markdown) {
+        console.log(orchestrator.formatVulns(vulns, 'markdown'));
+      } else {
+        console.log(chalk.magenta.bold(`\n  SHADOW BRAIN Vulnerability Scanner\n`));
+        process.stdout.write(orchestrator.formatVulns(vulns, 'text'));
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── PR (PR Description Generator) ───────────────────────────────────────────
+const prCmd = new Command('pr')
+  .description('Generate a PR description from current changes')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('-p, --provider <provider>', 'LLM provider')
+  .option('-k, --api-key <key>', 'API key')
+  .option('-b, --branch <branch>', 'Target branch name')
+  .option('--json', 'Output as JSON')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ ...opts, projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      console.log(chalk.cyan('  Generating PR description...'));
+      await orchestrator.reviewOnce();
+      const changes = await (orchestrator as any).getGitChanges();
+      const pr = await orchestrator.generatePRDescription(changes, opts.branch);
+
+      if (opts.json) {
+        console.log(JSON.stringify(pr, null, 2));
+      } else {
+        console.log(chalk.magenta.bold('\n  SHADOW BRAIN PR Generator\n'));
+        console.log(chalk.bold(`  Title: ${pr.title}`));
+        console.log(chalk.dim(`  Type: ${pr.type}${pr.scope ? ` (${pr.scope})` : ''}${pr.breaking ? ' ⚠ BREAKING' : ''}`));
+        console.log(`\n${pr.body}\n`);
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── COMMIT-MSG (Commit Message Generator) ───────────────────────────────────
+const commitMsgCmd = new Command('commit-msg')
+  .description('Generate a conventional commit message from current changes')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('-p, --provider <provider>', 'LLM provider')
+  .option('-k, --api-key <key>', 'API key')
+  .option('--json', 'Output as JSON')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ ...opts, projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      console.log(chalk.cyan('  Generating commit message...'));
+      await orchestrator.reviewOnce();
+      const changes = await (orchestrator as any).getGitChanges();
+      const msg = await orchestrator.generateCommitMessage(changes);
+
+      if (opts.json) {
+        console.log(JSON.stringify(msg, null, 2));
+      } else {
+        console.log(chalk.magenta.bold('\n  SHADOW BRAIN Commit Message Generator\n'));
+        console.log(chalk.green.bold(`  Conventional: ${msg.conventional}`));
+        console.log(chalk.cyan(`  Short:        ${msg.short}`));
+        console.log(chalk.dim(`  Detailed:     ${msg.detailed}`));
+        console.log();
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── RULES (Custom Rules Management) ─────────────────────────────────────────
+const rulesCmd = new Command('rules')
+  .description('Manage custom analysis rules')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('--add <json>', 'Add a rule (JSON string)')
+  .option('--remove <id>', 'Remove a rule by ID')
+  .option('--json', 'Output as JSON')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      if (opts.add) {
+        const rule = JSON.parse(opts.add);
+        orchestrator.addCustomRule(rule);
+        console.log(chalk.green(`  ✓ Rule added: ${rule.name || rule.id}`));
+        return;
+      }
+
+      if (opts.remove) {
+        orchestrator.removeCustomRule(opts.remove);
+        console.log(chalk.green(`  ✓ Rule removed: ${opts.remove}`));
+        return;
+      }
+
+      const rules = orchestrator.getCustomRules();
+
+      if (opts.json) {
+        console.log(JSON.stringify(rules, null, 2));
+        return;
+      }
+
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN Custom Rules (${rules.length})\n`));
+
+      if (rules.length === 0) {
+        console.log(chalk.dim('  No custom rules configured.'));
+        console.log(chalk.dim('  Add rules via --add or in .shadow-brain.json'));
+      } else {
+        for (const rule of rules) {
+          const icon = rule.enabled ? chalk.green('✓') : chalk.red('✗');
+          const severity = rule.severity === 'critical' ? chalk.red(rule.severity) :
+            rule.severity === 'high' ? chalk.yellow(rule.severity) : chalk.blue(rule.severity);
+          console.log(`  ${icon} ${chalk.bold(rule.name)} [${severity}] ${chalk.dim(`(${rule.category})`)}`);
+          console.log(chalk.dim(`    ${rule.description}`));
+          console.log(chalk.dim(`    Pattern: /${rule.pattern}/${rule.flags || ''}`));
+          if (rule.suggestion) console.log(chalk.dim(`    Suggestion: ${rule.suggestion}`));
+          console.log();
+        }
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// ─── NOTIFY (Test Notifications) ─────────────────────────────────────────────
+const notifyCmd = new Command('notify')
+  .description('Test notification channels (webhook/Slack/Discord)')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('--test', 'Send a test notification to all configured channels')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      if (opts.test) {
+        console.log(chalk.cyan('  Sending test notifications...'));
+        const results = await orchestrator.testNotifications();
+
+        if (results.length === 0) {
+          console.log(chalk.yellow('  No notification channels configured.'));
+          console.log(chalk.dim('  Add channels in .shadow-brain.json under "notifications"'));
+          return;
+        }
+
+        for (const r of results) {
+          const icon = r.success ? chalk.green('✓') : chalk.red('✗');
+          console.log(`  ${icon} ${r.channel}: ${r.success ? 'success' : r.error}`);
+        }
+        return;
+      }
+
+      const projectConfig = orchestrator.getProjectConfig();
+      const nc = projectConfig.notifications;
+
+      console.log(chalk.magenta.bold('\n  SHADOW BRAIN Notification Config\n'));
+
+      if (!nc) {
+        console.log(chalk.dim('  No notifications configured.'));
+        console.log(chalk.dim('  Add to .shadow-brain.json:'));
+        console.log(chalk.dim('  { "notifications": { "slack": "...", "discord": "..." } }'));
+      } else {
+        console.log(chalk.dim('  Webhook: ') + chalk.cyan(nc.webhook || '(not set)'));
+        console.log(chalk.dim('  Slack:   ') + chalk.cyan(nc.slack ? 'configured' : '(not set)'));
+        console.log(chalk.dim('  Discord: ') + chalk.cyan(nc.discord ? 'configured' : '(not set)'));
+        console.log(chalk.dim('  On health drop: ') + chalk.cyan(nc.onHealthDrop !== false ? 'enabled' : 'disabled'));
+        console.log(chalk.dim('  On critical:    ') + chalk.cyan(nc.onCriticalInsight !== false ? 'enabled' : 'disabled'));
+      }
+      console.log();
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 const program = new Command();
 program
@@ -749,5 +975,11 @@ program.addCommand(statusCmd);
 program.addCommand(configCmd);
 program.addCommand(setupCmd);
 program.addCommand(doctorCmd);
+program.addCommand(metricsCmd);
+program.addCommand(scanCmd);
+program.addCommand(prCmd);
+program.addCommand(commitMsgCmd);
+program.addCommand(rulesCmd);
+program.addCommand(notifyCmd);
 
 program.parse();

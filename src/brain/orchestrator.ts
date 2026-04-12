@@ -10,12 +10,20 @@ import { HealthScoreEngine, HealthScore } from './health-score.js';
 import { SmartFixEngine, FixSuggestion } from './smart-fix.js';
 import { detectFramework, applyFrameworkRules } from './framework-presets.js';
 import { ReportGenerator } from './report-generator.js';
+import { CustomRulesEngine } from './custom-rules.js';
+import { PRGenerator } from './pr-generator.js';
+import { Notifier, NotifyConfig } from './notifier.js';
+import { CodeMetricsEngine } from './code-metrics.js';
+import { ProjectConfigLoader } from './project-config.js';
+import { VulnScanner } from './vuln-scanner.js';
+import { checkForUpdate, formatUpdateNotice, UpdateCheck } from './auto-update.js';
 import { FileWatcher } from '../watchers/file-watcher.js';
 import { GitWatcher, GitState } from '../watchers/git-watcher.js';
 import { createAdapter, detectRunningAgents } from '../adapters/index.js';
 import { BaseAdapter } from '../adapters/base-adapter.js';
 import {
   BrainConfig, BrainInsight, BrainSession, AgentTool, FileChange, AgentAdapter,
+  CodeMetrics, VulnResult, CustomRule, ProjectConfig,
 } from '../types.js';
 
 export class Orchestrator extends EventEmitter {
@@ -30,6 +38,12 @@ export class Orchestrator extends EventEmitter {
   private healthEngine: HealthScoreEngine;
   private fixEngine: SmartFixEngine;
   private reportGen: ReportGenerator;
+  private customRulesEngine: CustomRulesEngine;
+  private prGenerator: PRGenerator;
+  private notifier: Notifier | null = null;
+  private metricsEngine: CodeMetricsEngine;
+  private projectConfigLoader: ProjectConfigLoader;
+  private vulnScanner: VulnScanner;
   private running = false;
   private analyzing = false;
   private pendingChanges: FileChange[] = [];
@@ -38,6 +52,9 @@ export class Orchestrator extends EventEmitter {
   private startTime = 0;
   private lastHealthScore: HealthScore | null = null;
   private lastFixes: FixSuggestion[] = [];
+  private lastMetrics: CodeMetrics | null = null;
+  private lastVulns: VulnResult[] = [];
+  private updateCheck: UpdateCheck | null = null;
 
   constructor(config: BrainConfig) {
     super();
@@ -53,8 +70,33 @@ export class Orchestrator extends EventEmitter {
     this.healthEngine = new HealthScoreEngine();
     this.fixEngine = new SmartFixEngine(this.llmClient);
     this.reportGen = new ReportGenerator();
+    this.customRulesEngine = new CustomRulesEngine(config.projectDir);
+    this.prGenerator = new PRGenerator(this.llmClient);
+    this.metricsEngine = new CodeMetricsEngine(config.projectDir);
+    this.projectConfigLoader = new ProjectConfigLoader(config.projectDir);
+    this.vulnScanner = new VulnScanner(config.projectDir);
     this.fileWatcher = new FileWatcher(config.projectDir);
     this.gitWatcher = new GitWatcher(config.projectDir);
+
+    // Load project config and setup notifier if configured
+    const projectConfig = this.projectConfigLoader.load();
+    if (projectConfig.notifications) {
+      const nc = projectConfig.notifications;
+      this.notifier = new Notifier({
+        webhook: nc.webhook,
+        slack: nc.slack,
+        discord: nc.discord,
+        minInterval: nc.minInterval,
+      });
+    }
+
+    // Check for updates asynchronously
+    checkForUpdate().then(check => {
+      this.updateCheck = check;
+      if (check.hasUpdate) {
+        this.emit('info', formatUpdateNotice(check));
+      }
+    }).catch(() => { /* ignore */ });
   }
 
   async start(): Promise<void> {
@@ -177,6 +219,13 @@ export class Orchestrator extends EventEmitter {
       insight.timestamp = new Date();
     }
 
+    // ── Apply custom rules ────────────────────────────────────────────
+    this.customRulesEngine.load();
+    const customInsights = this.customRulesEngine.applyRules(changes);
+    if (customInsights.length > 0) {
+      insights.push(...customInsights);
+    }
+
     // ── Health Score ──────────────────────────────────────────────────
     const healthScore = this.healthEngine.compute(insights, changes, context);
     this.lastHealthScore = healthScore;
@@ -187,6 +236,19 @@ export class Orchestrator extends EventEmitter {
     this.lastFixes = fixes;
     if (fixes.length > 0) {
       this.emit('fixes', { fixes });
+    }
+
+    // ── Notify on critical insights ───────────────────────────────────
+    if (this.notifier) {
+      const criticals = insights.filter(i => i.priority === 'critical');
+      if (criticals.length > 0) {
+        this.notifier.send({
+          type: 'critical-insight',
+          title: `${criticals.length} critical issue(s) found`,
+          message: criticals.map(i => i.title).join('\n'),
+          timestamp: new Date(),
+        }).catch(() => { /* ignore notify failures */ });
+      }
     }
 
     // Inject if auto-inject is enabled
@@ -255,9 +317,85 @@ export class Orchestrator extends EventEmitter {
 
   getLastHealthScore(): HealthScore | null { return this.lastHealthScore; }
   getLastFixes(): FixSuggestion[] { return this.lastFixes; }
+  getLastMetrics(): CodeMetrics | null { return this.lastMetrics; }
+  getLastVulns(): VulnResult[] { return this.lastVulns; }
+  getUpdateCheck(): UpdateCheck | null { return this.updateCheck; }
 
   getSession(): BrainSession | null {
     return this.currentSession;
+  }
+
+  // ── v1.2.0: Custom Rules ────────────────────────────────────────────
+  getCustomRules(): CustomRule[] {
+    return this.customRulesEngine.getRules();
+  }
+
+  addCustomRule(rule: CustomRule): void {
+    this.customRulesEngine.addRule(rule);
+    this.customRulesEngine.save();
+  }
+
+  removeCustomRule(id: string): void {
+    this.customRulesEngine.removeRule(id);
+    this.customRulesEngine.save();
+  }
+
+  // ── v1.2.0: PR Generator ────────────────────────────────────────────
+  async generatePRDescription(changes: FileChange[], branch?: string): Promise<PRDescription> {
+    return this.prGenerator.generatePRDescription(changes, branch);
+  }
+
+  async generateCommitMessage(changes: FileChange[]): Promise<CommitMessage> {
+    return this.prGenerator.generateCommitMessage(changes);
+  }
+
+  // ── v1.2.0: Vulnerability Scanner ────────────────────────────────────
+  async runVulnScan(): Promise<VulnResult[]> {
+    this.lastVulns = await this.vulnScanner.scan();
+    return this.lastVulns;
+  }
+
+  formatVulns(vulns: VulnResult[], format: 'text' | 'json' | 'markdown' = 'text'): string {
+    switch (format) {
+      case 'json': return this.vulnScanner.formatJSON(vulns);
+      case 'markdown': return this.vulnScanner.toMarkdown(vulns);
+      default: return this.vulnScanner.formatConsole(vulns);
+    }
+  }
+
+  // ── v1.2.0: Code Metrics ────────────────────────────────────────────
+  async computeMetrics(): Promise<CodeMetrics> {
+    const projectConfig = this.projectConfigLoader.load();
+    this.lastMetrics = this.metricsEngine.compute();
+    return this.lastMetrics;
+  }
+
+  formatMetrics(metrics: CodeMetrics, format: 'text' | 'json' | 'markdown' = 'text'): string {
+    switch (format) {
+      case 'json': return this.metricsEngine.formatJSON(metrics);
+      case 'markdown': return this.metricsEngine.toMarkdown(metrics);
+      default: return this.metricsEngine.formatConsole(metrics);
+    }
+  }
+
+  // ── v1.2.0: Notifications ────────────────────────────────────────────
+  async sendNotification(type: import('../types.js').NotificationPayload['type'], title: string, message: string): Promise<{ sent: boolean; channels: string[] }> {
+    if (!this.notifier) return { sent: false, channels: [] };
+    return this.notifier.send({ type, title, message, timestamp: new Date() });
+  }
+
+  async testNotifications(): Promise<{ channel: string; success: boolean; error?: string }[]> {
+    if (!this.notifier) return [];
+    return this.notifier.test();
+  }
+
+  // ── v1.2.0: Project Config ───────────────────────────────────────────
+  getProjectConfig(): ProjectConfig {
+    return this.projectConfigLoader.get();
+  }
+
+  saveProjectConfig(config: ProjectConfig): void {
+    this.projectConfigLoader.save(config);
   }
 
   getStatus() {
@@ -275,6 +413,10 @@ export class Orchestrator extends EventEmitter {
       healthScore: this.lastHealthScore?.overall ?? null,
       healthGrade: this.lastHealthScore?.grade ?? null,
       fixCount: this.lastFixes.length,
+      vulnCount: this.lastVulns.length,
+      customRuleCount: this.customRulesEngine.getRules().length,
+      updateAvailable: this.updateCheck?.hasUpdate ?? false,
+      latestVersion: this.updateCheck?.latest ?? null,
     };
   }
 
@@ -373,6 +515,12 @@ export class Orchestrator extends EventEmitter {
       // Enhance with pattern memory insights
       const patternInsights = this.patternMemory.getPatternInsights(changes);
       insights.push(...patternInsights);
+
+      // ── Apply custom rules ────────────────────────────────────────
+      const customInsights = this.customRulesEngine.applyRules(changes);
+      if (customInsights.length > 0) {
+        insights.push(...customInsights);
+      }
 
       // Record patterns
       this.patternMemory.recordFileCorrelation(changes);

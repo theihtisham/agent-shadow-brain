@@ -69,5 +69,5 @@ MIT License - see [LICENSE](LICENSE) for details.
 
 **ihtisham**
 
-- GitHub: [https://github.com/ihtisham](https://github.com/ihtisham)
+- GitHub: [https://github.com/theihtisham](https://github.com/theihtisham)
 - npm: [@theihtisham](https://www.npmjs.com/~theihtisham)

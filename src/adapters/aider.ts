@@ -1,0 +1,156 @@
+// src/adapters/aider.ts — Adapter for Aider (AI pair programming CLI)
+
+import * as fs from 'fs';
+import * as path from 'path';
+import * as os from 'os';
+import { execSync } from 'child_process';
+import { BaseAdapter } from './base-adapter.js';
+import { AgentTool, AgentPaths, AgentActivity, BrainInsight } from '../types.js';
+
+export class AiderAdapter extends BaseAdapter {
+  name: AgentTool = 'aider';
+  displayName = 'Aider';
+
+  async detect(): Promise<boolean> {
+    // Check for .aider.conf.yml in project
+    if (fs.existsSync(path.join(this.projectDir, '.aider.conf.yml'))) return true;
+
+    // Check for .aiderignore
+    if (fs.existsSync(path.join(this.projectDir, '.aiderignore'))) return true;
+
+    // Check for CONVENTIONS.md (common aider convention file)
+    if (fs.existsSync(path.join(this.projectDir, 'CONVENTIONS.md'))) return true;
+
+    // Try running aider --version as last resort
+    try {
+      execSync('aider --version', { timeout: 3000, encoding: 'utf-8' });
+      return true;
+    } catch {
+      return false;
+    }
+  }
+
+  getConfigPaths(): AgentPaths {
+    return {
+      memoryDir: this.projectDir,       // Aider reads from project root
+      rulesDir: this.projectDir,        // Conventions/rules at project root
+      configFile: path.join(this.projectDir, '.aider.conf.yml'),
+    };
+  }
+
+  async readActivity(): Promise<AgentActivity[]> {
+    const activities: AgentActivity[] = [];
+
+    // Aider stores chat history in .aider.chat.history.md and .aider.input.history
+    const chatHistoryFile = path.join(this.projectDir, '.aider.chat.history.md');
+    const inputFile = path.join(this.projectDir, '.aider.input.history');
+
+    // Parse chat history
+    if (fs.existsSync(chatHistoryFile)) {
+      try {
+        const content = fs.readFileSync(chatHistoryFile, 'utf-8');
+        const lines = content.split('\n').filter(l => l.trim());
+
+        for (const line of lines.slice(-30)) {
+          // Chat history lines typically contain timestamps and messages
+          if (line.startsWith('#') || line.length === 0) continue;
+
+          activities.push({
+            timestamp: new Date(),
+            type: 'conversation',
+            detail: line.slice(0, 200),
+          });
+        }
+      } catch {
+        // Skip unreadable history
+      }
+    }
+
+    // Parse input history for file operations
+    if (fs.existsSync(inputFile)) {
+      try {
+        const content = fs.readFileSync(inputFile, 'utf-8');
+        const lines = content.split('\n').filter(l => l.trim());
+
+        for (const line of lines.slice(-20)) {
+          if (line.startsWith('/add') || line.startsWith('/drop')) {
+            const filePath = line.split(/\s+/)[1];
+            activities.push({
+              timestamp: new Date(),
+              type: line.startsWith('/add') ? 'file_read' : 'file_edit',
+              detail: line,
+              file: filePath,
+            });
+          } else if (line.startsWith('/')) {
+            activities.push({
+              timestamp: new Date(),
+              type: 'command',
+              detail: line,
+            });
+          }
+        }
+      } catch {
+        // Skip unreadable input history
+      }
+    }
+
+    return activities;
+  }
+
+  async injectContext(insight: BrainInsight): Promise<boolean> {
+    const conventionsFile = path.join(this.projectDir, 'CONVENTIONS.md');
+
+    const priorityLabel: Record<string, string> = {
+      critical: 'CRITICAL',
+      high: 'HIGH PRIORITY',
+      medium: 'SUGGESTION',
+      low: 'INFO',
+    };
+
+    const insightSection = `
+## Shadow Brain — ${priorityLabel[insight.priority] ?? insight.priority}
+
+> Type: ${insight.type} | Priority: ${insight.priority} | ${insight.timestamp.toISOString()}
+
+${insight.content}
+
+${insight.files?.length ? `### Affected Files\n${insight.files.map(f => `- \`${f}\``).join('\n')}` : ''}
+`;
+
+    try {
+      if (fs.existsSync(conventionsFile)) {
+        const existing = fs.readFileSync(conventionsFile, 'utf-8');
+
+        // Replace existing section for same priority level or append
+        const sectionHeader = `## Shadow Brain — ${priorityLabel[insight.priority] ?? insight.priority}`;
+        if (existing.includes(sectionHeader)) {
+          const parts = existing.split(sectionHeader);
+          // Find where this section ends (next ## heading or end of file)
+          const afterHeader = parts.slice(1).join(sectionHeader);
+          const nextSection = afterHeader.indexOf('\n## ');
+          let replacement: string;
+          if (nextSection !== -1) {
+            replacement = parts[0] + insightSection + afterHeader.slice(nextSection);
+          } else {
+            replacement = parts[0] + insightSection;
+          }
+          fs.writeFileSync(conventionsFile, replacement, 'utf-8');
+        } else {
+          fs.writeFileSync(conventionsFile, existing + '\n' + insightSection, 'utf-8');
+        }
+      } else {
+        const header = `# Project Conventions
+
+<!-- Auto-generated by Agent Shadow Brain -->
+<!-- Aider reads this file to understand project conventions -->
+
+`;
+        fs.writeFileSync(conventionsFile, header + insightSection, 'utf-8');
+      }
+
+      return true;
+    } catch {
+      return false;
+    }
+  }
+}

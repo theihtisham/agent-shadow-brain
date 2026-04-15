@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 300" width="800" height="300">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0f0f23"/>
+      <stop offset="100%" style="stop-color:#1a0a2e"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="300" fill="url(#bg)" rx="10"/>
+
+  <!-- Terminal window chrome -->
+  <rect x="40" y="30" width="720" height="240" rx="8" fill="#0c0c1d" stroke="#1e293b" stroke-width="1"/>
+  <circle cx="62" cy="48" r="5" fill="#ef4444"/>
+  <circle cx="80" cy="48" r="5" fill="#f59e0b"/>
+  <circle cx="98" cy="48" r="5" fill="#22c55e"/>
+  <text x="400" y="52" text-anchor="middle" fill="#475569" font-family="monospace" font-size="10">shadow-brain — bash</text>
+
+  <!-- Terminal content -->
+  <text font-family="monospace" font-size="12">
+    <tspan x="60" y="80" fill="#a855f7" font-weight="bold">$ shadow-brain start .</tspan>
+    <tspan x="60" y="100" fill="#e9d5ff" font-weight="bold">  SHADOW BRAIN v1.2.0</tspan>
+    <tspan x="60" y="115" fill="#64748b">  Watching: </tspan><tspan fill="#67e8f9">/projects/my-app</tspan>
+    <tspan x="60" y="130" fill="#64748b">  Provider: </tspan><tspan fill="#67e8f9">ollama</tspan>
+    <tspan x="60" y="145" fill="#64748b">  Personality: </tspan><tspan fill="#67e8f9">balanced</tspan>
+    <tspan x="60" y="165" fill="#22c55e">  ✓ Detected: Claude Code, Kilo Code</tspan>
+    <tspan x="60" y="185" fill="#64748b">  3 file change(s) detected</tspan>
+    <tspan x="60" y="205" fill="#22c55e">  ⬟ Health: 87/100 (B+)</tspan>
+    <tspan x="60" y="220" fill="#67e8f9">  🔧 4 smart fix suggestion(s) available</tspan>
+    <tspan x="60" y="240" fill="#f59e0b">  🚨 [CRITICAL] Hardcoded API key found in src/config.ts</tspan>
+    <tspan x="60" y="258" fill="#a855f7">  💡 Injected 6 insights into Claude Code memory</tspan>
+  </text>
+</svg>

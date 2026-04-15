@@ -1,0 +1,185 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 400" width="1280" height="400">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a1a;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#1a0a2e;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0a1628;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="brainGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:1"/>
+    </linearGradient>
+    <linearGradient id="accentGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:0"/>
+      <stop offset="50%" style="stop-color:#a855f7;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#6366f1;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="3" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="6" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="nodeGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%" style="stop-color:#a855f7;stop-opacity:0.3"/>
+      <stop offset="100%" style="stop-color:#a855f7;stop-opacity:0"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="400" fill="url(#bg)"/>
+
+  <!-- Grid pattern -->
+  <g opacity="0.05" stroke="#a855f7" stroke-width="0.5">
+    <line x1="0" y1="0" x2="1280" y2="400"/>
+    <line x1="0" y1="100" x2="1280" y2="400"/>
+    <line x1="200" y1="0" x2="1280" y2="300"/>
+    <line x1="1280" y1="0" x2="0" y2="400"/>
+    <line x1="1280" y1="100" x2="0" y2="400"/>
+    <line x1="1080" y1="0" x2="0" y2="300"/>
+    <line x1="0" y1="200" x2="1280" y2="200"/>
+    <line x1="0" y1="300" x2="1280" y2="100"/>
+    <line x1="0" y1="50" x2="1280" y2="50"/>
+    <line x1="0" y1="350" x2="1280" y2="350"/>
+  </g>
+
+  <!-- Floating particles -->
+  <circle cx="100" cy="80" r="2" fill="#a855f7" opacity="0.6" filter="url(#glow)"/>
+  <circle cx="300" cy="320" r="1.5" fill="#6366f1" opacity="0.5" filter="url(#glow)"/>
+  <circle cx="500" cy="60" r="2.5" fill="#c084fc" opacity="0.4" filter="url(#glow)"/>
+  <circle cx="750" cy="350" r="2" fill="#a855f7" opacity="0.5" filter="url(#glow)"/>
+  <circle cx="950" cy="50" r="1.5" fill="#818cf8" opacity="0.6" filter="url(#glow)"/>
+  <circle cx="1100" cy="300" r="2" fill="#6366f1" opacity="0.4" filter="url(#glow)"/>
+  <circle cx="1200" cy="150" r="1.5" fill="#c084fc" opacity="0.5" filter="url(#glow)"/>
+  <circle cx="200" cy="250" r="3" fill="#a855f7" opacity="0.3" filter="url(#softGlow)"/>
+  <circle cx="600" cy="100" r="4" fill="#6366f1" opacity="0.2" filter="url(#softGlow)"/>
+  <circle cx="1000" cy="340" r="3" fill="#c084fc" opacity="0.25" filter="url(#softGlow)"/>
+
+  <!-- Brain Icon -->
+  <g transform="translate(160, 130)" filter="url(#glow)">
+    <ellipse cx="0" cy="0" rx="55" ry="65" fill="none" stroke="url(#brainGlow)" stroke-width="2.5" opacity="0.8"/>
+    <!-- Brain lobes -->
+    <path d="M-20,-45 C-45,-35 -50,-5 -40,20 C-35,35 -15,50 0,55" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.6"/>
+    <path d="M20,-45 C45,-35 50,-5 40,20 C35,35 15,50 0,55" fill="none" stroke="#6366f1" stroke-width="1.5" opacity="0.6"/>
+    <path d="M-30,-20 C-15,-30 15,-30 30,-20" fill="none" stroke="#c084fc" stroke-width="1.5" opacity="0.5"/>
+    <path d="M-25,5 C-10,-5 10,-5 25,5" fill="none" stroke="#818cf8" stroke-width="1.5" opacity="0.5"/>
+    <path d="M-20,25 C-5,15 5,15 20,25" fill="none" stroke="#a855f7" stroke-width="1.5" opacity="0.5"/>
+    <!-- Center eye -->
+    <circle cx="0" cy="-5" r="8" fill="#a855f7" opacity="0.9"/>
+    <circle cx="0" cy="-5" r="4" fill="#e9d5ff"/>
+    <circle cx="0" cy="-5" r="2" fill="#0a0a1a"/>
+  </g>
+
+  <!-- Shadow text behind brain -->
+  <text x="260" y="120" font-family="'Segoe UI',system-ui,sans-serif" font-size="14" fill="#6366f1" opacity="0.4" letter-spacing="8" font-weight="300">SHADOW</text>
+
+  <!-- Title -->
+  <text x="260" y="165" font-family="'Segoe UI',system-ui,sans-serif" font-size="52" fill="white" font-weight="700" letter-spacing="-1">
+    Agent Shadow Brain
+  </text>
+
+  <!-- Tagline -->
+  <text x="262" y="200" font-family="'Segoe UI',system-ui,sans-serif" font-size="18" fill="#c084fc" font-weight="400" letter-spacing="1">
+    Your AI coding agent's second brain
+  </text>
+
+  <!-- Accent line -->
+  <rect x="262" y="215" width="400" height="2" rx="1" fill="url(#accentGrad)" opacity="0.6"/>
+
+  <!-- Feature pills -->
+  <g transform="translate(262, 240)">
+    <rect x="0" y="0" width="110" height="28" rx="14" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.6"/>
+    <text x="55" y="18" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#c084fc" text-anchor="middle" font-weight="500">Real-time</text>
+
+    <rect x="125" y="0" width="140" height="28" rx="14" fill="none" stroke="#6366f1" stroke-width="1" opacity="0.6"/>
+    <text x="195" y="18" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#818cf8" text-anchor="middle" font-weight="500">Code Review</text>
+
+    <rect x="280" y="0" width="155" height="28" rx="14" fill="none" stroke="#a855f7" stroke-width="1" opacity="0.6"/>
+    <text x="357" y="18" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#c084fc" text-anchor="middle" font-weight="500">Smart Injection</text>
+
+    <rect x="450" y="0" width="130" height="28" rx="14" fill="none" stroke="#6366f1" stroke-width="1" opacity="0.6"/>
+    <text x="515" y="18" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#818cf8" text-anchor="middle" font-weight="500">6 AI Modes</text>
+  </g>
+
+  <!-- Agent logos row -->
+  <g transform="translate(262, 290)">
+    <text x="0" y="15" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#666" font-weight="500">WORKS WITH</text>
+
+    <rect x="95" y="0" width="100" height="24" rx="4" fill="#1e1e3a" stroke="#333" stroke-width="0.5"/>
+    <text x="145" y="16" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#f97316" text-anchor="middle" font-weight="600">Claude Code</text>
+
+    <rect x="205" y="0" width="85" height="24" rx="4" fill="#1e1e3a" stroke="#333" stroke-width="0.5"/>
+    <text x="247" y="16" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#22c55e" text-anchor="middle" font-weight="600">Kilo Code</text>
+
+    <rect x="300" y="0" width="60" height="24" rx="4" fill="#1e1e3a" stroke="#333" stroke-width="0.5"/>
+    <text x="330" y="16" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#3b82f6" text-anchor="middle" font-weight="600">Cline</text>
+
+    <rect x="370" y="0" width="95" height="24" rx="4" fill="#1e1e3a" stroke="#333" stroke-width="0.5"/>
+    <text x="417" y="16" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#eab308" text-anchor="middle" font-weight="600">OpenCode</text>
+
+    <rect x="475" y="0" width="80" height="24" rx="4" fill="#1e1e3a" stroke="#333" stroke-width="0.5"/>
+    <text x="515" y="16" font-family="'Segoe UI',system-ui,sans-serif" font-size="11" fill="#10b981" text-anchor="middle" font-weight="600">Codex</text>
+  </g>
+
+  <!-- npm install hint -->
+  <g transform="translate(262, 335)">
+    <rect x="0" y="0" width="380" height="32" rx="6" fill="#111127" stroke="#333" stroke-width="0.5"/>
+    <text x="12" y="21" font-family="'Cascadia Code','Fira Code',monospace" font-size="13" fill="#64748b">npm i -g</text>
+    <text x="95" y="21" font-family="'Cascadia Code','Fira Code',monospace" font-size="13" fill="#c084fc">@theihtisham/agent-shadow-brain</text>
+  </g>
+
+  <!-- Right side: mini flow diagram -->
+  <g transform="translate(880, 60)" opacity="0.85">
+    <!-- Watch -->
+    <g filter="url(#glow)">
+      <rect x="0" y="0" width="120" height="45" rx="8" fill="#1a0a2e" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="60" y="20" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#c084fc" text-anchor="middle" font-weight="600">WATCHING</text>
+      <text x="60" y="35" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#666" text-anchor="middle">Files + Git</text>
+    </g>
+
+    <!-- Arrow -->
+    <line x1="60" y1="50" x2="60" y2="75" stroke="#a855f7" stroke-width="1.5" opacity="0.6"/>
+    <polygon points="53,72 67,72 60,80" fill="#a855f7" opacity="0.6"/>
+
+    <!-- Analyze -->
+    <g filter="url(#glow)">
+      <rect x="0" y="85" width="120" height="45" rx="8" fill="#1a0a2e" stroke="#6366f1" stroke-width="1.5"/>
+      <text x="60" y="105" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#818cf8" text-anchor="middle" font-weight="600">ANALYZING</text>
+      <text x="60" y="120" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#666" text-anchor="middle">LLM + Rules</text>
+    </g>
+
+    <!-- Arrow -->
+    <line x1="60" y1="135" x2="60" y2="160" stroke="#6366f1" stroke-width="1.5" opacity="0.6"/>
+    <polygon points="53,157 67,157 60,165" fill="#6366f1" opacity="0.6"/>
+
+    <!-- Generate -->
+    <g filter="url(#glow)">
+      <rect x="0" y="170" width="120" height="45" rx="8" fill="#1a0a2e" stroke="#a855f7" stroke-width="1.5"/>
+      <text x="60" y="190" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#c084fc" text-anchor="middle" font-weight="600">INSIGHTS</text>
+      <text x="60" y="205" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#666" text-anchor="middle">Review + Suggest</text>
+    </g>
+
+    <!-- Arrow -->
+    <line x1="60" y1="220" x2="60" y2="245" stroke="#a855f7" stroke-width="1.5" opacity="0.6"/>
+    <polygon points="53,242 67,242 60,250" fill="#a855f7" opacity="0.6"/>
+
+    <!-- Inject -->
+    <g filter="url(#glow)">
+      <rect x="0" y="255" width="120" height="45" rx="8" fill="#0a1628" stroke="#22c55e" stroke-width="1.5"/>
+      <text x="60" y="275" font-family="'Segoe UI',system-ui,sans-serif" font-size="10" fill="#4ade80" text-anchor="middle" font-weight="600">INJECT</text>
+      <text x="60" y="290" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#666" text-anchor="middle">Agent Memory</text>
+    </g>
+
+    <!-- Side connections -->
+    <line x1="125" y1="22" x2="175" y2="22" stroke="#a855f7" stroke-width="0.8" opacity="0.3" stroke-dasharray="3,3"/>
+    <text x="185" y="26" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#555">chokidar + simple-git</text>
+
+    <line x1="125" y1="107" x2="175" y2="107" stroke="#6366f1" stroke-width="0.8" opacity="0.3" stroke-dasharray="3,3"/>
+    <text x="185" y="111" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#555">Anthropic/OpenAI/Ollama</text>
+
+    <line x1="125" y1="277" x2="175" y2="277" stroke="#22c55e" stroke-width="0.8" opacity="0.3" stroke-dasharray="3,3"/>
+    <text x="185" y="281" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#555">memory + rules files</text>
+  </g>
+</svg>

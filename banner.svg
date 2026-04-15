@@ -1,0 +1,232 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 520" width="1280" height="520">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#020014"/>
+      <stop offset="40%" stop-color="#0a0525"/>
+      <stop offset="100%" stop-color="#050020"/>
+    </linearGradient>
+    <linearGradient id="titleGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#c084fc"/>
+      <stop offset="35%" stop-color="#a855f7"/>
+      <stop offset="65%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="line1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0"/>
+      <stop offset="20%" stop-color="#a855f7" stop-opacity="1"/>
+      <stop offset="50%" stop-color="#06b6d4" stop-opacity="1"/>
+      <stop offset="80%" stop-color="#22d3ee" stop-opacity="1"/>
+      <stop offset="100%" stop-color="#22d3ee" stop-opacity="0"/>
+    </linearGradient>
+    <radialGradient id="glow1" cx="50%" cy="40%" r="30%">
+      <stop offset="0%" stop-color="#a855f7" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="glow2" cx="50%" cy="45%" r="22%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="purpleBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#a855f7"/>
+    </linearGradient>
+    <linearGradient id="cyanBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#22d3ee"/>
+    </linearGradient>
+    <linearGradient id="amberBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#d97706"/>
+      <stop offset="100%" stop-color="#f59e0b"/>
+    </linearGradient>
+    <linearGradient id="greenBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#059669"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+    <linearGradient id="pinkBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#db2777"/>
+      <stop offset="100%" stop-color="#ec4899"/>
+    </linearGradient>
+    <linearGradient id="redBar" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#dc2626"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1280" height="520" fill="url(#bg)"/>
+
+  <!-- Subtle grid -->
+  <g opacity="0.04" stroke="#a855f7" stroke-width="0.5">
+    <line x1="320" y1="0" x2="320" y2="520"/>
+    <line x1="640" y1="0" x2="640" y2="520"/>
+    <line x1="960" y1="0" x2="960" y2="520"/>
+    <line x1="0" y1="130" x2="1280" y2="130"/>
+    <line x1="0" y1="260" x2="1280" y2="260"/>
+    <line x1="0" y1="390" x2="1280" y2="390"/>
+  </g>
+
+  <!-- Central glow -->
+  <ellipse cx="640" cy="155" rx="380" ry="120" fill="url(#glow1)"/>
+  <ellipse cx="640" cy="155" rx="200" ry="80" fill="url(#glow2)"/>
+
+  <!-- Neural network lines -->
+  <g stroke="#a855f7" stroke-width="0.5" opacity="0.15">
+    <line x1="120" y1="180" x2="300" y2="130"/>
+    <line x1="120" y1="180" x2="300" y2="230"/>
+    <line x1="300" y1="130" x2="480" y2="170"/>
+    <line x1="300" y1="230" x2="480" y2="170"/>
+    <line x1="800" y1="170" x2="980" y2="130"/>
+    <line x1="800" y1="170" x2="980" y2="230"/>
+    <line x1="980" y1="130" x2="1160" y2="180"/>
+    <line x1="980" y1="230" x2="1160" y2="180"/>
+  </g>
+  <g stroke="#06b6d4" stroke-width="0.4" opacity="0.1">
+    <line x1="480" y1="170" x2="560" y2="140"/>
+    <line x1="480" y1="170" x2="560" y2="200"/>
+    <line x1="720" y1="140" x2="800" y2="170"/>
+    <line x1="720" y1="200" x2="800" y2="170"/>
+  </g>
+
+  <!-- Network nodes -->
+  <g opacity="0.35">
+    <circle cx="120" cy="180" r="3" fill="#a855f7"/>
+    <circle cx="300" cy="130" r="3" fill="#c084fc"/>
+    <circle cx="300" cy="230" r="3" fill="#7c3aed"/>
+    <circle cx="480" cy="170" r="4" fill="#a855f7"/>
+    <circle cx="800" cy="170" r="4" fill="#06b6d4"/>
+    <circle cx="980" cy="130" r="3" fill="#22d3ee"/>
+    <circle cx="980" cy="230" r="3" fill="#0891b2"/>
+    <circle cx="1160" cy="180" r="3" fill="#06b6d4"/>
+    <circle cx="560" cy="140" r="2.5" fill="#c084fc"/>
+    <circle cx="560" cy="200" r="2.5" fill="#a855f7"/>
+    <circle cx="720" cy="140" r="2.5" fill="#22d3ee"/>
+    <circle cx="720" cy="200" r="2.5" fill="#06b6d4"/>
+  </g>
+
+  <!-- Brain icon -->
+  <g transform="translate(640,145)">
+    <!-- Outer shell -->
+    <path d="M-42,-32 C-42,-52 -22,-58 0,-52 C22,-58 42,-52 42,-32 C52,-27 56,-12 52,4 C56,18 47,32 32,32 C27,42 12,47 0,42 C-12,47 -27,42 -32,32 C-47,32 -56,18 -52,4 C-56,-12 -52,-27 -42,-32Z" fill="none" stroke="#a855f7" stroke-width="2" opacity="0.7"/>
+    <!-- Hemispheres -->
+    <path d="M-2,-42 C-26,-38 -36,-18 -34,4 C-32,22 -22,34 -2,36" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.35"/>
+    <path d="M2,-42 C26,-38 36,-18 34,4 C32,22 22,34 2,36" fill="none" stroke="#7c3aed" stroke-width="1" opacity="0.35"/>
+    <!-- Folds -->
+    <path d="M-16,-28 C-6,-16 6,-16 16,-28" fill="none" stroke="#06b6d4" stroke-width="1.5" opacity="0.5"/>
+    <path d="M-24,-10 C-10,-4 10,-4 24,-10" fill="none" stroke="#22d3ee" stroke-width="1.5" opacity="0.5"/>
+    <path d="M-20,10 C-8,5 8,5 20,10" fill="none" stroke="#c084fc" stroke-width="1.5" opacity="0.5"/>
+    <!-- Core nodes -->
+    <circle cx="0" cy="-24" r="3.5" fill="#a855f7" opacity="0.9"/>
+    <circle cx="0" cy="-6" r="3.5" fill="#06b6d4" opacity="0.9"/>
+    <circle cx="0" cy="12" r="3.5" fill="#22d3ee" opacity="0.9"/>
+  </g>
+
+  <!-- Orbiting nodes -->
+  <circle cx="510" cy="130" r="4" fill="#a855f7" opacity="0.7"/>
+  <circle cx="770" cy="130" r="4" fill="#06b6d4" opacity="0.7"/>
+  <circle cx="540" cy="210" r="3.5" fill="#22d3ee" opacity="0.6"/>
+  <circle cx="740" cy="210" r="3.5" fill="#c084fc" opacity="0.6"/>
+  <line x1="510" y1="130" x2="540" y2="210" stroke="#a855f7" stroke-width="0.7" opacity="0.25"/>
+  <line x1="770" y1="130" x2="740" y2="210" stroke="#06b6d4" stroke-width="0.7" opacity="0.25"/>
+
+  <!-- Title -->
+  <text x="640" y="285" text-anchor="middle" font-family="Segoe UI,system-ui,-apple-system,sans-serif" font-size="52" font-weight="800" fill="url(#titleGrad)">AGENT SHADOW BRAIN</text>
+
+  <!-- Subtitle -->
+  <text x="640" y="312" text-anchor="middle" font-family="Segoe UI,system-ui,-apple-system,sans-serif" font-size="14" fill="#94a3b8" letter-spacing="7">HYPER-INTELLIGENCE EDITION</text>
+
+  <!-- Version badge -->
+  <rect x="565" y="324" width="150" height="26" rx="13" fill="#0d0a2e" stroke="#a855f7" stroke-width="1.2"/>
+  <text x="640" y="342" text-anchor="middle" font-family="Courier New,monospace" font-size="13" font-weight="700" fill="#a855f7">v4.0.1</text>
+
+  <!-- Top accent line -->
+  <rect x="200" y="365" width="880" height="1.5" fill="url(#line1)" opacity="0.4"/>
+
+  <!-- ===== v4.0.0 MODULE CARDS (2 rows x 4) ===== -->
+
+  <!-- Row 1 -->
+  <!-- TurboQuant Memory -->
+  <g transform="translate(80,385)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#a855f7" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#purpleBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#a855f7">TURBOQUANT MEMORY</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">3 bits/dim compression</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">ICLR 2026 · Infinite retention</text>
+  </g>
+
+  <!-- SSSP Router -->
+  <g transform="translate(365,385)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#06b6d4" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#cyanBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#06b6d4">SSSP ROUTER</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">O(m log²/³ n) deterministic</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">arXiv 2504.17033 · BMSSP</text>
+  </g>
+
+  <!-- Cross-Agent Protocol -->
+  <g transform="translate(650,385)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#22d3ee" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#cyanBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#22d3ee">CROSS-AGENT PROTOCOL</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">Multi-agent CAIP broadcast</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">7 AI agents · Real-time sync</text>
+  </g>
+
+  <!-- Self-Evolution -->
+  <g transform="translate(935,385)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#f59e0b" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#amberBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#f59e0b">SELF-EVOLUTION</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">Genetic algorithm optimization</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">Tournament k=5 · Gaussian</text>
+  </g>
+
+  <!-- Row 2 -->
+  <!-- Swarm Intelligence -->
+  <g transform="translate(80,447)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#10b981" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#greenBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#10b981">SWARM INTELLIGENCE</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">Ant Colony pheromone routing</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">File prioritization · Evaporation</text>
+  </g>
+
+  <!-- Knowledge Graph -->
+  <g transform="translate(365,447)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#c084fc" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#purpleBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#c084fc">KNOWLEDGE GRAPH</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">PageRank impact analysis</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">Damping 0.85 · Entity tracking</text>
+  </g>
+
+  <!-- Predictive Engine -->
+  <g transform="translate(650,447)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#ec4899" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#pinkBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#ec4899">PREDICTIVE ENGINE</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">Bug risk &amp; debt forecasting</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">Anomaly detection · Scoring</text>
+  </g>
+
+  <!-- Adversarial Defense -->
+  <g transform="translate(935,447)">
+    <rect width="260" height="52" rx="8" fill="#0d0a2e" stroke="#ef4444" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="52" rx="2" fill="url(#redBar)"/>
+    <text x="18" y="20" font-family="Segoe UI,sans-serif" font-size="11" font-weight="700" fill="#ef4444">ADVERSARIAL DEFENSE</text>
+    <text x="18" y="36" font-family="Segoe UI,sans-serif" font-size="9" fill="#94a3b8">Hallucination detection</text>
+    <text x="18" y="47" font-family="Courier New,monospace" font-size="7.5" fill="#64748b">Cross-reference verification</text>
+  </g>
+
+  <!-- Corner decorations -->
+  <path d="M0,0 L60,0 L60,2.5 L2.5,2.5 L2.5,60 L0,60Z" fill="#a855f7" opacity="0.3"/>
+  <path d="M1280,0 L1220,0 L1220,2.5 L1277.5,2.5 L1277.5,60 L1280,60Z" fill="#06b6d4" opacity="0.3"/>
+  <path d="M0,520 L60,520 L60,517.5 L2.5,517.5 L2.5,460 L0,460Z" fill="#06b6d4" opacity="0.3"/>
+  <path d="M1280,520 L1220,520 L1220,517.5 L1277.5,517.5 L1277.5,460 L1280,460Z" fill="#a855f7" opacity="0.3"/>
+
+  <!-- Side accent bars -->
+  <rect x="0" y="180" width="2" height="120" fill="#a855f7" opacity="0.12"/>
+  <rect x="1278" y="180" width="2" height="120" fill="#06b6d4" opacity="0.12"/>
+
+  <!-- Bottom accent line -->
+  <rect x="140" y="507" width="1000" height="1" fill="url(#line1)" opacity="0.3"/>
+</svg>

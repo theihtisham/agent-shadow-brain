@@ -1,0 +1,190 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1100 750" width="1100" height="750">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#050510"/>
+      <stop offset="100%" style="stop-color:#0d0a2e"/>
+    </linearGradient>
+    <linearGradient id="purple" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#a855f7"/>
+      <stop offset="100%" style="stop-color:#7c3aed"/>
+    </linearGradient>
+    <linearGradient id="cyan" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#06b6d4"/>
+      <stop offset="100%" style="stop-color:#0891b2"/>
+    </linearGradient>
+    <linearGradient id="green" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#22c55e"/>
+      <stop offset="100%" style="stop-color:#16a34a"/>
+    </linearGradient>
+    <linearGradient id="red" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#ef4444"/>
+      <stop offset="100%" style="stop-color:#dc2626"/>
+    </linearGradient>
+    <linearGradient id="yellow" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#f59e0b"/>
+      <stop offset="100%" style="stop-color:#d97706"/>
+    </linearGradient>
+    <filter id="glow"><feGaussianBlur stdDeviation="2" result="b"/><feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge></filter>
+    <filter id="shadow"><feDropShadow dx="0" dy="2" stdDeviation="4" flood-color="#000" flood-opacity="0.5"/></filter>
+  </defs>
+
+  <rect width="1100" height="750" fill="url(#bg)"/>
+
+  <!-- Title -->
+  <text x="550" y="35" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="20" font-weight="700" fill="#a855f7" filter="url(#glow)">v4.0.0 HYPER-INTELLIGENCE ARCHITECTURE</text>
+  <rect x="350" y="42" width="400" height="1" fill="#a855f7" opacity="0.3"/>
+
+  <!-- AI Agents row (top) -->
+  <g filter="url(#shadow)">
+    <rect x="30" y="65" width="130" height="50" rx="8" fill="#1a1a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="95" y="95" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc">Claude Code</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="175" y="65" width="110" height="50" rx="8" fill="#1a1a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="230" y="95" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc">Kilo Code</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="300" y="65" width="90" height="50" rx="8" fill="#1a1a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="345" y="95" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc">Cline</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="405" y="65" width="110" height="50" rx="8" fill="#1a1a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="460" y="95" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc">OpenCode</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="530" y="65" width="90" height="50" rx="8" fill="#1a1a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="575" y="95" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc">Codex</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="635" y="65" width="110" height="50" rx="8" fill="#1a1a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="690" y="95" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc">Roo Code</text>
+  </g>
+  <g filter="url(#shadow)">
+    <rect x="760" y="65" width="90" height="50" rx="8" fill="#1a1a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <text x="805" y="95" text-anchor="middle" font-family="monospace" font-size="11" fill="#c084fc">Aider</text>
+  </g>
+  <text x="950" y="90" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="11" fill="#64748b">7 AI Agents</text>
+
+  <!-- Arrow down to orchestrator -->
+  <line x1="440" y1="118" x2="440" y2="145" stroke="#a855f7" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="435,143 445,143 440,150" fill="#a855f7" opacity="0.6"/>
+  <line x1="560" y1="118" x2="560" y2="145" stroke="#a855f7" stroke-width="1.5" opacity="0.6"/>
+  <polygon points="555,143 565,143 560,150" fill="#a855f7" opacity="0.6"/>
+
+  <!-- ORCHESTRATOR (central) -->
+  <rect x="300" y="152" width="400" height="55" rx="10" fill="#1a0a2e" stroke="#a855f7" stroke-width="2" filter="url(#shadow)"/>
+  <text x="500" y="175" text-anchor="middle" font-family="'Segoe UI',sans-serif" font-size="14" font-weight="700" fill="#a855f7" filter="url(#glow)">ORCHESTRATOR</text>
+  <text x="500" y="195" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">Event Loop · Pipeline · LLM · Analysis Engine</text>
+
+  <!-- Arrows from orchestrator to v4 modules -->
+  <line x1="350" y1="210" x2="130" y2="265" stroke="#06b6d4" stroke-width="1" opacity="0.5" stroke-dasharray="4,2"/>
+  <line x1="400" y1="210" x2="320" y2="265" stroke="#06b6d4" stroke-width="1" opacity="0.5" stroke-dasharray="4,2"/>
+  <line x1="450" y1="210" x2="460" y2="265" stroke="#06b6d4" stroke-width="1" opacity="0.5" stroke-dasharray="4,2"/>
+  <line x1="500" y1="210" x2="580" y2="265" stroke="#f59e0b" stroke-width="1" opacity="0.5" stroke-dasharray="4,2"/>
+  <line x1="550" y1="210" x2="720" y2="265" stroke="#f59e0b" stroke-width="1" opacity="0.5" stroke-dasharray="4,2"/>
+  <line x1="600" y1="210" x2="860" y2="265" stroke="#ef4444" stroke-width="1" opacity="0.5" stroke-dasharray="4,2"/>
+
+  <!-- v4.0.0 MODULES (row 3) -->
+  <!-- TurboMemory -->
+  <rect x="30" y="268" width="170" height="110" rx="8" fill="#0d1117" stroke="#06b6d4" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="30" y="268" width="170" height="22" rx="8" fill="#06b6d4" opacity="0.2"/>
+  <text x="115" y="284" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#06b6d4">TurboQuant Memory</text>
+  <text x="115" y="305" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">PolarQuant: 2 bit/dim</text>
+  <text x="115" y="320" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">QJL: 1 bit/dim</text>
+  <text x="115" y="335" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">= 6x Compression</text>
+  <text x="115" y="355" text-anchor="middle" font-family="monospace" font-size="9" fill="#22d3ee" font-weight="700">INFINITE RETENTION</text>
+  <text x="115" y="370" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Google Research ICLR'26</text>
+
+  <!-- SSSP Router -->
+  <rect x="220" y="268" width="170" height="110" rx="8" fill="#0d1117" stroke="#06b6d4" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="220" y="268" width="170" height="22" rx="8" fill="#06b6d4" opacity="0.2"/>
+  <text x="305" y="284" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#06b6d4">SSSP Router</text>
+  <text x="305" y="305" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">BMSSP Algorithm</text>
+  <text x="305" y="320" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">O(m log^(2/3) n)</text>
+  <text x="305" y="335" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Deterministic Routing</text>
+  <text x="305" y="355" text-anchor="middle" font-family="monospace" font-size="9" fill="#22d3ee" font-weight="700">BREAKS SORT BARRIER</text>
+  <text x="305" y="370" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">arXiv: 2504.17033</text>
+
+  <!-- Cross-Agent Protocol -->
+  <rect x="410" y="268" width="170" height="110" rx="8" fill="#0d1117" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="410" y="268" width="170" height="22" rx="8" fill="#f59e0b" opacity="0.2"/>
+  <text x="495" y="284" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#f59e0b">Cross-Agent (CAIP)</text>
+  <text x="495" y="305" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Agent Broadcast</text>
+  <text x="495" y="320" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Insight Sharing</text>
+  <text x="495" y="335" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Multi-Agent Sync</text>
+  <text x="495" y="355" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24" font-weight="700">7 AGENTS TALK</text>
+  <text x="495" y="370" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Zero-Config Protocol</text>
+
+  <!-- Self-Evolution -->
+  <rect x="600" y="268" width="170" height="110" rx="8" fill="#0d1117" stroke="#f59e0b" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="600" y="268" width="170" height="22" rx="8" fill="#f59e0b" opacity="0.2"/>
+  <text x="685" y="284" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#f59e0b">Self-Evolution</text>
+  <text x="685" y="305" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Genetic Algorithm</text>
+  <text x="685" y="320" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Tournament k=5</text>
+  <text x="685" y="335" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Gaussian Mutation</text>
+  <text x="685" y="355" text-anchor="middle" font-family="monospace" font-size="9" fill="#fbbf24" font-weight="700">RULES WRITE THEMSELVES</text>
+  <text x="685" y="370" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Bayesian Meta-Learning</text>
+
+  <!-- Adversarial Defense -->
+  <rect x="790" y="268" width="170" height="110" rx="8" fill="#0d1117" stroke="#ef4444" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="790" y="268" width="170" height="22" rx="8" fill="#ef4444" opacity="0.2"/>
+  <text x="875" y="284" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#ef4444">Adversarial Defense</text>
+  <text x="875" y="305" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Hallucination Detector</text>
+  <text x="875" y="320" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Cross-Reference Verify</text>
+  <text x="875" y="335" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Evidence Scoring</text>
+  <text x="875" y="355" text-anchor="middle" font-family="monospace" font-size="9" fill="#fca5a5" font-weight="700">TRUST NOTHING</text>
+  <text x="875" y="370" text-anchor="middle" font-family="monospace" font-size="8" fill="#64748b">Verify Everything</text>
+
+  <!-- Row 4: Swarm + KnowledgeGraph + Predictive -->
+  <rect x="120" y="410" width="230" height="95" rx="8" fill="#0d1117" stroke="#22c55e" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="120" y="410" width="230" height="22" rx="8" fill="#22c55e" opacity="0.2"/>
+  <text x="235" y="426" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#22c55e">Swarm Intelligence</text>
+  <text x="235" y="448" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Ant Colony Optimization</text>
+  <text x="235" y="463" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Pheromone Deposit/Evaporate</text>
+  <text x="235" y="478" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Adaptive File Prioritization</text>
+  <text x="235" y="495" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80" font-weight="700">SMART HOTSPOT DETECTION</text>
+
+  <rect x="380" y="410" width="230" height="95" rx="8" fill="#0d1117" stroke="#22c55e" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="380" y="410" width="230" height="22" rx="8" fill="#22c55e" opacity="0.2"/>
+  <text x="495" y="426" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#22c55e">Knowledge Graph</text>
+  <text x="495" y="448" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">PageRank (d=0.85)</text>
+  <text x="495" y="463" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Impact Propagation</text>
+  <text x="495" y="478" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Entity Extraction</text>
+  <text x="495" y="495" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80" font-weight="700">CODE IMPACT RADAR</text>
+
+  <rect x="640" y="410" width="230" height="95" rx="8" fill="#0d1117" stroke="#22c55e" stroke-width="1.5" filter="url(#shadow)"/>
+  <rect x="640" y="410" width="230" height="22" rx="8" fill="#22c55e" opacity="0.2"/>
+  <text x="755" y="426" text-anchor="middle" font-family="monospace" font-size="10" font-weight="700" fill="#22c55e">Predictive Engine</text>
+  <text x="755" y="448" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Bug Risk Scoring</text>
+  <text x="755" y="463" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Debt Forecasting</text>
+  <text x="755" y="478" text-anchor="middle" font-family="monospace" font-size="9" fill="#94a3b8">Code Age Analysis</text>
+  <text x="755" y="495" text-anchor="middle" font-family="monospace" font-size="9" fill="#4ade80" font-weight="700">PREDICT BEFORE BREAK</text>
+
+  <!-- Legacy v2-v3 modules -->
+  <rect x="150" y="540" width="800" height="50" rx="8" fill="#0d1117" stroke="#64748b" stroke-width="1" filter="url(#shadow)"/>
+  <text x="550" y="562" text-anchor="middle" font-family="monospace" font-size="10" fill="#94a3b8">v1-v3 CORE: Neural Mesh · Pattern Memory · Learning Engine · Health Score · Vuln Scanner · Smart Fix · Semantic Analyzer · Dependency Graph · Code Similarity · Team Mode · MCP Server</text>
+  <text x="550" y="580" text-anchor="middle" font-family="monospace" font-size="9" fill="#64748b">Shannon Entropy · Bayesian Inference · Cosine Similarity · Tarjan's SCC · Winnowing · BFS Depth</text>
+
+  <!-- Data stores -->
+  <rect x="100" y="620" width="200" height="40" rx="6" fill="#0d1117" stroke="#a855f7" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="200" y="645" text-anchor="middle" font-family="monospace" font-size="10" fill="#c084fc">TurboQuant Store</text>
+  <rect x="330" y="620" width="200" height="40" rx="6" fill="#0d1117" stroke="#06b6d4" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="430" y="645" text-anchor="middle" font-family="monospace" font-size="10" fill="#22d3ee">Knowledge Graph DB</text>
+  <rect x="560" y="620" width="200" height="40" rx="6" fill="#0d1117" stroke="#22c55e" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="660" y="645" text-anchor="middle" font-family="monospace" font-size="10" fill="#4ade80">Evolution Archive</text>
+  <rect x="790" y="620" width="200" height="40" rx="6" fill="#0d1117" stroke="#f59e0b" stroke-width="1" stroke-dasharray="3,3"/>
+  <text x="890" y="645" text-anchor="middle" font-family="monospace" font-size="10" fill="#fbbf24">Mesh Knowledge Bus</text>
+
+  <!-- Legend -->
+  <g transform="translate(100,690)">
+    <text x="0" y="0" font-family="monospace" font-size="10" fill="#64748b">LEGEND:</text>
+    <rect x="80" y="-9" width="12" height="12" rx="2" fill="#06b6d4" opacity="0.5"/><text x="98" y="0" font-family="monospace" font-size="10" fill="#94a3b8">v4.0 Quantum</text>
+    <rect x="230" y="-9" width="12" height="12" rx="2" fill="#f59e0b" opacity="0.5"/><text x="248" y="0" font-family="monospace" font-size="10" fill="#94a3b8">v4.0 Intelligence</text>
+    <rect x="400" y="-9" width="12" height="12" rx="2" fill="#ef4444" opacity="0.5"/><text x="418" y="0" font-family="monospace" font-size="10" fill="#94a3b8">v4.0 Defense</text>
+    <rect x="540" y="-9" width="12" height="12" rx="2" fill="#22c55e" opacity="0.5"/><text x="558" y="0" font-family="monospace" font-size="10" fill="#94a3b8">v4.0 Analytics</text>
+    <rect x="680" y="-9" width="12" height="12" rx="2" fill="#64748b" opacity="0.5"/><text x="698" y="0" font-family="monospace" font-size="10" fill="#94a3b8">v1-v3 Legacy</text>
+  </g>
+
+  <!-- Stats bar -->
+  <text x="550" y="730" text-anchor="middle" font-family="monospace" font-size="10" fill="#475569">63 Exports · 29 Brain Modules · 40+ CLI Commands · 7 Agent Adapters · Infinite Memory · Self-Evolving Rules</text>
+</svg>

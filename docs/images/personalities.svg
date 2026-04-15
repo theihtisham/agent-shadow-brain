@@ -1,0 +1,105 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 280" width="900" height="280">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0a0a1a;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#0a1628;stop-opacity:1"/>
+    </linearGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+      <feMerge><feMergeNode in="coloredBlur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="shadow">
+      <feDropShadow dx="0" dy="2" stdDeviation="3" flood-color="#000" flood-opacity="0.3"/>
+    </filter>
+  </defs>
+
+  <rect width="900" height="280" fill="url(#bg)" rx="12"/>
+
+  <!-- Title -->
+  <text x="450" y="35" font-family="'Segoe UI',system-ui,sans-serif" font-size="18" fill="white" text-anchor="middle" font-weight="700">6 Brain Personalities</text>
+  <rect x="325" y="44" width="250" height="2" rx="1" fill="#a855f7" opacity="0.5"/>
+
+  <!-- MENTOR -->
+  <g filter="url(#shadow)" transform="translate(30, 65)">
+    <rect width="130" height="190" rx="12" fill="#1a0a2e" stroke="#22c55e" stroke-width="1.5"/>
+    <circle cx="65" cy="40" r="25" fill="none" stroke="#22c55e" stroke-width="1.5" filter="url(#glow)"/>
+    <text x="65" y="46" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" text-anchor="middle" fill="#22c55e">🎓</text>
+    <text x="65" y="85" font-family="'Segoe UI',system-ui,sans-serif" font-size="13" fill="#4ade80" text-anchor="middle" font-weight="700">Mentor</text>
+    <text x="65" y="105" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#888" text-anchor="middle">Teaches &amp; explains</text>
+    <line x1="20" y1="115" x2="110" y2="115" stroke="#333" stroke-width="0.5"/>
+    <text x="65" y="133" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Code quality</text>
+    <text x="65" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Best practices</text>
+    <text x="65" y="163" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Learning tips</text>
+    <text x="65" y="178" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Clean code</text>
+  </g>
+
+  <!-- CRITIC -->
+  <g filter="url(#shadow)" transform="translate(175, 65)">
+    <rect width="130" height="190" rx="12" fill="#1a0a2e" stroke="#ef4444" stroke-width="1.5"/>
+    <circle cx="65" cy="40" r="25" fill="none" stroke="#ef4444" stroke-width="1.5" filter="url(#glow)"/>
+    <text x="65" y="46" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" text-anchor="middle" fill="#ef4444">🔍</text>
+    <text x="65" y="85" font-family="'Segoe UI',system-ui,sans-serif" font-size="13" fill="#f87171" text-anchor="middle" font-weight="700">Critic</text>
+    <text x="65" y="105" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#888" text-anchor="middle">Thorough reviews</text>
+    <line x1="20" y1="115" x2="110" y2="115" stroke="#333" stroke-width="0.5"/>
+    <text x="65" y="133" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Bug detection</text>
+    <text x="65" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Logic errors</text>
+    <text x="65" y="163" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Edge cases</text>
+    <text x="65" y="178" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Dead code</text>
+  </g>
+
+  <!-- ARCHITECT -->
+  <g filter="url(#shadow)" transform="translate(320, 65)">
+    <rect width="130" height="190" rx="12" fill="#1a0a2e" stroke="#6366f1" stroke-width="1.5"/>
+    <circle cx="65" cy="40" r="25" fill="none" stroke="#6366f1" stroke-width="1.5" filter="url(#glow)"/>
+    <text x="65" y="46" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" text-anchor="middle" fill="#6366f1">🏗</text>
+    <text x="65" y="85" font-family="'Segoe UI',system-ui,sans-serif" font-size="13" fill="#818cf8" text-anchor="middle" font-weight="700">Architect</text>
+    <text x="65" y="105" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#888" text-anchor="middle">Big-picture thinking</text>
+    <line x1="20" y1="115" x2="110" y2="115" stroke="#333" stroke-width="0.5"/>
+    <text x="65" y="133" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Modularity</text>
+    <text x="65" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Scalability</text>
+    <text x="65" y="163" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Design patterns</text>
+    <text x="65" y="178" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Dependencies</text>
+  </g>
+
+  <!-- SECURITY -->
+  <g filter="url(#shadow)" transform="translate(465, 65)">
+    <rect width="130" height="190" rx="12" fill="#1a0a2e" stroke="#f97316" stroke-width="1.5"/>
+    <circle cx="65" cy="40" r="25" fill="none" stroke="#f97316" stroke-width="1.5" filter="url(#glow)"/>
+    <text x="65" y="46" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" text-anchor="middle" fill="#f97316">🛡</text>
+    <text x="65" y="85" font-family="'Segoe UI',system-ui,sans-serif" font-size="13" fill="#fb923c" text-anchor="middle" font-weight="700">Security</text>
+    <text x="65" y="105" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#888" text-anchor="middle">Paranoid mode</text>
+    <line x1="20" y1="115" x2="110" y2="115" stroke="#333" stroke-width="0.5"/>
+    <text x="65" y="133" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">OWASP top 10</text>
+    <text x="65" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Injection attacks</text>
+    <text x="65" y="163" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Secret leaks</text>
+    <text x="65" y="178" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Auth flaws</text>
+  </g>
+
+  <!-- PERFORMANCE -->
+  <g filter="url(#shadow)" transform="translate(610, 65)">
+    <rect width="130" height="190" rx="12" fill="#1a0a2e" stroke="#eab308" stroke-width="1.5"/>
+    <circle cx="65" cy="40" r="25" fill="none" stroke="#eab308" stroke-width="1.5" filter="url(#glow)"/>
+    <text x="65" y="46" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" text-anchor="middle" fill="#eab308">⚡</text>
+    <text x="65" y="85" font-family="'Segoe UI',system-ui,sans-serif" font-size="13" fill="#facc15" text-anchor="middle" font-weight="700">Performance</text>
+    <text x="65" y="105" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#888" text-anchor="middle">Speed obsessed</text>
+    <line x1="20" y1="115" x2="110" y2="115" stroke="#333" stroke-width="0.5"/>
+    <text x="65" y="133" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">N+1 queries</text>
+    <text x="65" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Memory leaks</text>
+    <text x="65" y="163" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Bundle size</text>
+    <text x="65" y="178" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Async patterns</text>
+  </g>
+
+  <!-- BALANCED -->
+  <g filter="url(#shadow)" transform="translate(755, 65)">
+    <rect width="130" height="190" rx="12" fill="#1a0a2e" stroke="#a855f7" stroke-width="1.5"/>
+    <circle cx="65" cy="40" r="25" fill="none" stroke="#a855f7" stroke-width="1.5" filter="url(#glow)"/>
+    <text x="65" y="46" font-family="'Segoe UI',system-ui,sans-serif" font-size="22" text-anchor="middle" fill="#a855f7">🧠</text>
+    <text x="65" y="85" font-family="'Segoe UI',system-ui,sans-serif" font-size="13" fill="#c084fc" text-anchor="middle" font-weight="700">Balanced</text>
+    <text x="65" y="105" font-family="'Segoe UI',system-ui,sans-serif" font-size="9" fill="#888" text-anchor="middle">All perspectives</text>
+    <line x1="20" y1="115" x2="110" y2="115" stroke="#333" stroke-width="0.5"/>
+    <text x="65" y="133" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Quality</text>
+    <text x="65" y="148" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Security</text>
+    <text x="65" y="163" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Performance</text>
+    <text x="65" y="178" font-family="'Segoe UI',system-ui,sans-serif" font-size="8" fill="#666" text-anchor="middle">Architecture</text>
+  </g>
+</svg>

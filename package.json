@@ -1,7 +1,7 @@
 {
   "name": "@theihtisham/agent-shadow-brain",
-  "version": "4.0.2",
-  "description": "World's #1 AI coding intelligence layer — TurboQuant infinite memory (6x compression, zero forgetting), SSSP O(m log²/³ n) neural routing, cross-agent protocol (Claude/Kilo/Cline/OpenCode talk to each other), self-evolving genetic rules, predictive bug forecasting, knowledge graph with PageRank, swarm intelligence, and adversarial hallucination defense. Nothing like this exists.",
+  "version": "5.0.0",
+  "description": "World's #1 AI coding intelligence layer — Infinite hierarchical memory (4-tier compression, zero forgetting), context-triggered associative recall, multi-agent consensus protocol, collective cross-project learning, TurboQuant 6x compression, SSSP neural routing, cross-agent protocol, self-evolving genetic rules, predictive bug forecasting, knowledge graph with PageRank, swarm intelligence, and adversarial hallucination defense. v5.0.0 Infinite Intelligence Edition.",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
@@ -34,6 +34,10 @@
     "llm",
     "turbo-quant",
     "infinite-memory",
+    "hierarchical-memory",
+    "context-recall",
+    "consensus-engine",
+    "collective-learning",
     "sssp",
     "cross-agent",
     "self-evolution",

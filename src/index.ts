@@ -1,4 +1,4 @@
-// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v4.0.0
+// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v5.0.0
 
 // Types
 export type {
@@ -97,6 +97,19 @@ export type {
   EnsembleVote,
   AdversarialLog,
   ThreatVector,
+  // v5.0.0 Infinite Intelligence types
+  MemoryTier,
+  HierarchicalMemoryEntry,
+  HierarchicalMemoryStats,
+  RecallTrigger,
+  RecallResult,
+  RecallContext,
+  ConsensusProposal,
+  ConsensusVote,
+  ConsensusResult,
+  TrustScore,
+  CollectiveRule,
+  CollectiveLearningStats,
 } from './types.js';
 
 // Adapters
@@ -182,6 +195,12 @@ export { PredictiveEngine } from './brain/predictive-engine.js';
 export { KnowledgeGraph } from './brain/knowledge-graph.js';
 export { SwarmIntelligence } from './brain/swarm-intelligence.js';
 export { AdversarialDefense } from './brain/adversarial-defense.js';
+
+// Brain — v5.0.0 Infinite Intelligence Modules
+export { HierarchicalMemory } from './brain/hierarchical-memory.js';
+export { ContextRecall } from './brain/context-recall.js';
+export { ConsensusEngine } from './brain/consensus-engine.js';
+export { CollectiveLearning } from './brain/collective-learning.js';
 
 // Dashboard
 export { DashboardServer } from './dashboard/server.js';

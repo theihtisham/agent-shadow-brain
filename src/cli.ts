@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// src/cli.ts — CLI entry point for Shadow Brain v4.0.0
+// src/cli.ts — CLI entry point for Shadow Brain v5.0.0
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -12,7 +12,7 @@ import { BaseAdapter } from './adapters/base-adapter.js';
 import { BrainConfig, BrainInsight, AgentTool, BrainPersonality, LLMProvider } from './types.js';
 import { checkForUpdate, formatUpdateNotice } from './brain/auto-update.js';
 
-const VERSION = '4.0.0';
+const VERSION = '5.0.0';
 
 const config: any = new Conf({
   projectName: 'shadow-brain',
@@ -2350,11 +2350,265 @@ const v4Cmd = new Command('v4')
     }
   });
 
+// ─── v5.0.0 INFINITE INTELLIGENCE COMMANDS ──────────────────────────────────
+
+const memoryCmd = new Command('memory')
+  .description('v5.0.0 — Hierarchical infinite memory (raw → summary → pattern → principle)')
+  .addCommand(new Command('stats')
+    .description('Show hierarchical memory statistics')
+    .action(async () => {
+      const { HierarchicalMemory } = await import('./brain/hierarchical-memory.js');
+      const hm = new HierarchicalMemory();
+      const stats = hm.stats();
+      console.log(chalk.magenta.bold(`\n  HIERARCHICAL MEMORY STATS\n`));
+      console.log(chalk`  {cyan Raw entries:}      ${stats.rawCount}`);
+      console.log(chalk`  {cyan Summary entries:}  ${stats.summaryCount}`);
+      console.log(chalk`  {cyan Pattern entries:}  ${stats.patternCount}`);
+      console.log(chalk`  {cyan Principle entries:} ${stats.principleCount}`);
+      console.log(chalk`  {cyan Total entries:}    ${stats.totalEntries}`);
+      console.log(chalk`  {cyan Total size:}       ${stats.totalSizeMB.toFixed(3)} MB`);
+      console.log(chalk`  {cyan Compression ratio:} ${(stats.compressionRatio * 100).toFixed(1)}%`);
+      console.log(chalk`  {cyan Retention:}        INFINITE`);
+      console.log(chalk`  {cyan Drill-down depth:} ${stats.drillDownDepth} tiers\n`);
+    }))
+  .addCommand(new Command('search')
+    .description('Search hierarchical memory')
+    .argument('<query>', 'Search query')
+    .action(async (query: string) => {
+      const { HierarchicalMemory } = await import('./brain/hierarchical-memory.js');
+      const hm = new HierarchicalMemory();
+      const results = hm.search(query, 10);
+      if (results.length === 0) {
+        console.log(chalk.yellow('  No results found.'));
+        return;
+      }
+      console.log(chalk.magenta.bold(`\n  MEMORY SEARCH: "${query}"\n`));
+      for (const entry of results) {
+        const tierColors: Record<string, string> = { raw: 'dim', summary: 'cyan', pattern: 'magenta', principle: 'green' };
+        const color = tierColors[entry.tier] || 'white';
+        console.log(chalk`  {${color} [${entry.tier.toUpperCase()}]} ${entry.content.slice(0, 120).replace(/\n/g, ' ')}...`);
+        console.log(chalk`  {dim Category: ${entry.category} | Confidence: ${(entry.confidence * 100).toFixed(0)}% | Importance: ${entry.importance.toFixed(2)}}`);
+      }
+      console.log();
+    }))
+  .addCommand(new Command('drilldown')
+    .description('Drill down from a higher-tier entry to raw sources')
+    .argument('<id>', 'Entry ID (first 8 chars)')
+    .action(async (id: string) => {
+      const { HierarchicalMemory } = await import('./brain/hierarchical-memory.js');
+      const hm = new HierarchicalMemory();
+      const allEntries = [...hm.getByTier('principle'), ...hm.getByTier('pattern'), ...hm.getByTier('summary')];
+      const match = allEntries.find(e => e.id.startsWith(id));
+      if (!match) { console.log(chalk.yellow('  Entry not found.')); return; }
+      const levels = hm.drillDown(match.id);
+      console.log(chalk.magenta.bold(`\n  DRILL-DOWN from [${match.tier}] ${match.content.slice(0, 80)}...\n`));
+      for (let i = 0; i < levels.length; i++) {
+        const tier = levels[i][0]?.tier ?? '?';
+        console.log(chalk`  {cyan Level ${i} [${tier}]}: ${levels[i].length} entries`);
+        for (const entry of levels[i].slice(0, 3)) {
+          console.log(chalk`    {dim ${entry.content.slice(0, 100).replace(/\n/g, ' ')}}`);
+        }
+      }
+      console.log();
+    }));
+
+const recallCmd = new Command('recall')
+  .description('v5.0.0 — Context-triggered associative recall')
+  .addCommand(new Command('activate')
+    .description('Activate memories for a specific file/context')
+    .argument('<file>', 'File path or context description')
+    .option('-c, --category <cat>', 'Category filter')
+    .option('-k, --keywords <kw>', 'Comma-separated keywords')
+    .action(async (file: string, opts: any) => {
+      const { HierarchicalMemory } = await import('./brain/hierarchical-memory.js');
+      const { ContextRecall } = await import('./brain/context-recall.js');
+      const hm = new HierarchicalMemory();
+      const cr = new ContextRecall(hm);
+      const now = new Date();
+      const results = cr.recall({
+        currentFile: file,
+        currentCategory: opts.category || 'general',
+        recentEdits: [],
+        projectType: 'auto',
+        keywords: opts.keywords?.split(',') || [],
+        timeOfDay: now.getHours(),
+        dayOfWeek: now.getDay(),
+      }, 15);
+      if (results.length === 0) {
+        console.log(chalk.yellow('  No memories activated for this context.'));
+        return;
+      }
+      console.log(chalk.magenta.bold(`\n  CONTEXT RECALL: ${file}\n`));
+      console.log(chalk`  {cyan Activated ${results.length} memories}\n`);
+      for (const r of results) {
+        const pct = (r.relevanceScore * 100).toFixed(0);
+        const triggers = r.activatedTriggers.join(', ');
+        console.log(chalk`  {green ${pct}%} [{dim ${r.entry.tier}}] ${r.entry.content.slice(0, 100).replace(/\n/g, ' ')}`);
+        console.log(chalk`    {dim Triggers: ${triggers}}`);
+      }
+      console.log();
+    }))
+  .addCommand(new Command('summary')
+    .description('Get a summary of what the brain knows about current context')
+    .argument('<file>', 'File path')
+    .action(async (file: string) => {
+      const { HierarchicalMemory } = await import('./brain/hierarchical-memory.js');
+      const { ContextRecall } = await import('./brain/context-recall.js');
+      const hm = new HierarchicalMemory();
+      const cr = new ContextRecall(hm);
+      const summary = cr.getContextSummary({ currentFile: file } as any);
+      console.log(chalk.magenta.bold(`\n  CONTEXT SUMMARY\n`));
+      console.log(summary);
+      console.log();
+    }));
+
+const consensusCmd = new Command('consensus')
+  .description('v5.0.0 — Multi-agent consensus protocol')
+  .addCommand(new Command('stats')
+    .description('Show consensus engine statistics')
+    .action(async () => {
+      const { ConsensusEngine } = await import('./brain/consensus-engine.js');
+      const ce = new ConsensusEngine();
+      const stats = ce.getStats();
+      console.log(chalk.magenta.bold(`\n  CONSENSUS ENGINE STATS\n`));
+      console.log(chalk`  {cyan Total proposals:}   ${stats.totalProposals}`);
+      console.log(chalk`  {cyan Accepted:}          ${stats.acceptedCount}`);
+      console.log(chalk`  {cyan Rejected:}          ${stats.rejectedCount}`);
+      console.log(chalk`  {cyan Conflicts:}         ${stats.conflictCount}`);
+      console.log(chalk`  {cyan Pending:}           ${stats.pendingCount}`);
+      console.log(chalk`  {cyan Avg agreement:}     ${(stats.averageAgreement * 100).toFixed(1)}%`);
+      console.log(chalk`  {cyan Known agents:}      ${stats.agentCount}`);
+      if (stats.topTrustedAgents.length > 0) {
+        console.log(chalk`\n  {bold Top Trusted Agents:}`);
+        for (const agent of stats.topTrustedAgents) {
+          console.log(chalk`    {green ${agent.agent}}: trust=${(agent.score * 100).toFixed(0)}%, accuracy=${(agent.accuracy * 100).toFixed(0)}%`);
+        }
+      }
+      console.log();
+    }))
+  .addCommand(new Command('trust')
+    .description('Show trust scores for all agents')
+    .action(async () => {
+      const { ConsensusEngine } = await import('./brain/consensus-engine.js');
+      const ce = new ConsensusEngine();
+      const scores = ce.getTrustScores();
+      if (scores.length === 0) {
+        console.log(chalk.yellow('  No trust scores recorded yet.'));
+        return;
+      }
+      console.log(chalk.magenta.bold(`\n  AGENT TRUST SCORES\n`));
+      for (const t of scores) {
+        const bar = '█'.repeat(Math.round(t.score * 20));
+        console.log(chalk`  {cyan ${t.agent.slice(0, 20)}}: ${(t.score * 100).toFixed(0)}% ${bar}`);
+      }
+      console.log();
+    }));
+
+const collectiveCmd = new Command('collective')
+  .description('v5.0.0 — Cross-project collective learning')
+  .addCommand(new Command('stats')
+    .description('Show collective learning statistics')
+    .action(async () => {
+      const { CollectiveLearning } = await import('./brain/collective-learning.js');
+      const cl = new CollectiveLearning(process.cwd());
+      const stats = cl.getStats();
+      console.log(chalk.magenta.bold(`\n  COLLECTIVE LEARNING STATS\n`));
+      console.log(chalk`  {cyan Total rules:}       ${stats.totalRules}`);
+      console.log(chalk`  {cyan Verified rules:}    ${stats.verifiedRules}`);
+      console.log(chalk`  {cyan Avg accuracy:}      ${(stats.averageAccuracy * 100).toFixed(1)}%`);
+      console.log(chalk`  {cyan Consensus rate:}    ${(stats.consensusRate * 100).toFixed(1)}%`);
+      console.log(chalk`  {cyan Network size:}      ${stats.networkSize} projects`);
+      console.log(chalk`  {cyan Recent adoptions:}  ${stats.recentAdoptions}`);
+      if (stats.topCategories.length > 0) {
+        console.log(chalk`\n  {bold Top Categories:}`);
+        for (const cat of stats.topCategories.slice(0, 5)) {
+          console.log(chalk`    ${cat.category}: ${cat.count} rules`);
+        }
+      }
+      console.log();
+    }))
+  .addCommand(new Command('rules')
+    .description('List verified collective rules')
+    .option('-c, --category <cat>', 'Filter by category')
+    .action(async (opts: any) => {
+      const { CollectiveLearning } = await import('./brain/collective-learning.js');
+      const cl = new CollectiveLearning(process.cwd());
+      const rules = cl.getVerifiedRules();
+      if (rules.length === 0) {
+        console.log(chalk.yellow('  No verified collective rules yet.'));
+        return;
+      }
+      console.log(chalk.magenta.bold(`\n  VERIFIED COLLECTIVE RULES (${rules.length})\n`));
+      for (const rule of rules.slice(0, 20)) {
+        const acc = (rule.accuracy * 100).toFixed(0);
+        const viral = (rule.viralScore * 100).toFixed(0);
+        console.log(chalk`  {green [${rule.category}]} ${rule.content.slice(0, 100)}`);
+        console.log(chalk`    {dim Accuracy: ${acc}% | Viral: ${viral}% | Verified by: ${rule.verifiedBy.length} projects}`);
+      }
+      console.log();
+    }));
+
+const v5Cmd = new Command('v5')
+  .description('Run ALL v5.0.0 infinite intelligence analyses at once')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('--json', 'Output as JSON')
+  .action(async (projectDir: string, opts: any) => {
+    const brainConfig = mergeConfig({ projectDir, watchMode: false });
+    const orchestrator = new Orchestrator(brainConfig);
+
+    try {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — v5.0.0 Infinite Intelligence Full Scan\n`));
+      console.log(chalk.cyan('  Running ALL modules: v3.0.0 + v4.0.0 + v5.0.0...'));
+      console.log(chalk.dim('  Hierarchical Memory | Context Recall | Consensus | Collective Learning'));
+      console.log(chalk.dim('  TurboQuant | SSSP | CAIP | Self-Evolution | Predictive | Knowledge Graph | Swarm | Adversarial\n'));
+
+      const results = await orchestrator.runFullHyperAnalysis();
+
+      // v5.0.0 Infinite Intelligence results
+      const status = orchestrator.getStatus();
+      const hmStats = status.hierarchicalMemoryStats as any;
+      const crStats = status.contextRecallStats as any;
+      const ceStats = status.consensusStats as any;
+      const clStats = status.collectiveLearningStats as any;
+
+      console.log(chalk.bold('  v5.0.0 Infinite Intelligence:'));
+      if (hmStats) {
+        console.log(chalk`  {magenta Hierarchical Memory:} ${hmStats.totalEntries} entries (${hmStats.rawCount} raw, ${hmStats.summaryCount} summary, ${hmStats.patternCount} pattern, ${hmStats.principleCount} principle)`);
+        console.log(chalk`  {magenta Compression:} ${(hmStats.compressionRatio * 100).toFixed(1)}% | Retention: INFINITE`);
+      }
+      if (crStats) {
+        console.log(chalk`  {magenta Context Recall:} ${crStats.triggerCount} learned triggers, ${crStats.linkCount} activation links`);
+      }
+      if (ceStats) {
+        console.log(chalk`  {magenta Consensus:} ${ceStats.totalProposals} proposals, ${ceStats.acceptedCount} accepted, ${ceStats.agentCount} agents`);
+      }
+      if (clStats) {
+        console.log(chalk`  {magenta Collective:} ${clStats.totalRules} rules, ${clStats.verifiedRules} verified, ${(clStats.averageAccuracy * 100).toFixed(0)}% avg accuracy`);
+      }
+
+      // v4.0.0 results
+      console.log(chalk.bold('\n  v4.0.0 Hyper-Intelligence:'));
+      const turbo = results.turboMemoryStats;
+      console.log(chalk`  {cyan TurboQuant:} ${turbo ? `${turbo.totalEntries} entries, ${(turbo.compressionRatio * 100).toFixed(1)}% compressed` : 'N/A'}`);
+      console.log(chalk`  {cyan Evolution:} gen ${results.evolutionSnapshot?.generation ?? 0}, fitness ${results.evolutionSnapshot?.bestFitness?.toFixed(3) ?? 'N/A'}`);
+
+      // v3.0.0 results
+      console.log(chalk.bold(`\n  v3.0.0 Findings: ${results.total}\n`));
+
+      if (opts.json) {
+        console.log(JSON.stringify({ v3: results, v5: { hmStats, crStats, ceStats, clStats } }, null, 2));
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
 // ─── MAIN ─────────────────────────────────────────────────────────────────────
 const program = new Command();
 program
   .name('shadow-brain')
-  .description('Shadow Brain v4.0.0 — Hyper-Intelligence Layer for AI Coding Agents with Infinite Memory & Self-Evolution')
+  .description('Shadow Brain v5.0.0 — Infinite Intelligence Layer for AI Coding Agents with Hierarchical Memory, Context Recall, Consensus & Collective Learning')
   .version(VERSION);
 
 program.addCommand(startCmd);
@@ -2410,5 +2664,10 @@ program.addCommand(graphCmd);
 program.addCommand(swarmCmd);
 program.addCommand(defenseCmd);
 program.addCommand(v4Cmd);
+program.addCommand(memoryCmd);
+program.addCommand(recallCmd);
+program.addCommand(consensusCmd);
+program.addCommand(collectiveCmd);
+program.addCommand(v5Cmd);
 
 program.parse();

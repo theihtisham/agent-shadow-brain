@@ -54,6 +54,11 @@ import { PredictiveEngine } from './predictive-engine.js';
 import { KnowledgeGraph } from './knowledge-graph.js';
 import { SwarmIntelligence } from './swarm-intelligence.js';
 import { AdversarialDefense } from './adversarial-defense.js';
+// v5.0.0 Infinite Intelligence Modules
+import { HierarchicalMemory } from './hierarchical-memory.js';
+import { ContextRecall } from './context-recall.js';
+import { ConsensusEngine } from './consensus-engine.js';
+import { CollectiveLearning } from './collective-learning.js';
 import {
   BrainConfig, BrainInsight, BrainSession, AgentTool, FileChange, AgentAdapter,
   CodeMetrics, VulnResult, CustomRule, ProjectConfig, PRDescription, CommitMessage,
@@ -121,6 +126,12 @@ export class Orchestrator extends EventEmitter {
   private knowledgeGraph: KnowledgeGraph | null = null;
   private swarmIntelligence: SwarmIntelligence;
   private adversarialDefense: AdversarialDefense;
+
+  // v5.0.0 Infinite Intelligence Modules
+  private hierarchicalMemory: HierarchicalMemory;
+  private contextRecall: ContextRecall;
+  private consensusEngine: ConsensusEngine;
+  private collectiveLearning: CollectiveLearning;
 
   private running = false;
   private analyzing = false;
@@ -194,6 +205,12 @@ export class Orchestrator extends EventEmitter {
     this.knowledgeGraph = new KnowledgeGraph(config.projectDir);
     this.swarmIntelligence = new SwarmIntelligence();
     this.adversarialDefense = new AdversarialDefense();
+
+    // v5.0.0 Infinite Intelligence Modules
+    this.hierarchicalMemory = new HierarchicalMemory();
+    this.contextRecall = new ContextRecall(this.hierarchicalMemory);
+    this.consensusEngine = new ConsensusEngine();
+    this.collectiveLearning = new CollectiveLearning(config.projectDir);
 
     // Load project config and setup notifier if configured
     const projectConfig = this.projectConfigLoader.load();
@@ -447,6 +464,29 @@ export class Orchestrator extends EventEmitter {
       insights: insights.slice(0, 5),
       healthScore: healthScore.overall,
     }).catch(() => {});
+
+    // v5.0.0: Store in hierarchical memory + collective learning
+    try {
+      for (const insight of insights.filter(i => i.priority === 'critical' || i.priority === 'high')) {
+        await this.hierarchicalMemory.store(
+          `${insight.title}\n${insight.content || ''}`,
+          insight.type || 'general',
+          insight.priority === 'critical' ? 0.95 : 0.8,
+          { type: insight.type, files: insight.files || [] },
+        );
+      }
+    } catch { /* hierarchical memory is best-effort */ }
+
+    try {
+      for (const insight of insights.filter(i => i.priority === 'critical').slice(0, 3)) {
+        this.collectiveLearning.proposeRule(
+          `${insight.type}: ${insight.title}`,
+          insight.type || 'general',
+          'shadow-brain',
+          insight.files || [],
+        );
+      }
+    } catch { /* collective learning is best-effort */ }
 
     return insights;
   }
@@ -877,6 +917,11 @@ export class Orchestrator extends EventEmitter {
     defenseStats: AdversarialLog | null;
     evolutionSnapshot: EvolutionSnapshot | null;
     knowledgeGraphEntityCount: number;
+    // v5.0.0 results
+    hierarchicalMemoryStats: import('../types.js').HierarchicalMemoryStats | null;
+    contextRecallStats: any;
+    consensusStats: any;
+    collectiveLearningStats: import('../types.js').CollectiveLearningStats | null;
     total: number;
   }> {
     const maxFiles = opts?.maxFiles ?? 200;
@@ -908,9 +953,16 @@ export class Orchestrator extends EventEmitter {
       }
     } catch { /* best-effort */ }
 
+    // v5.0.0 Infinite Intelligence analyses
+    const hierarchicalMemoryStats = this.hierarchicalMemory?.stats?.() ?? null;
+    const contextRecallStats = this.contextRecall?.getStats?.() ?? null;
+    const consensusStats = this.consensusEngine?.getStats?.() ?? null;
+    const collectiveLearningStats = this.collectiveLearning?.getStats?.() ?? null;
+
     return {
       ast, a11y, i18n, deadCode, mutation, codeAge, apiContract, env, license, configDrift,
       turboMemoryStats, swarmState, defenseStats, evolutionSnapshot, knowledgeGraphEntityCount,
+      hierarchicalMemoryStats, contextRecallStats, consensusStats, collectiveLearningStats,
       total: ast.length + a11y.length + i18n.length + deadCode.length + mutation.length +
              codeAge.length + apiContract.length + env.length + license.length + configDrift.length,
     };
@@ -919,7 +971,7 @@ export class Orchestrator extends EventEmitter {
   getStatus() {
     return {
       running: this.running,
-      version: '4.0.0',
+      version: '5.0.0',
       agents: this.adapters.map(a => `${a.displayName} (${a.name})`),
       insightsGenerated: this.currentSession?.insights.length || 0,
       filesReviewed: this.currentSession?.filesReviewed || 0,
@@ -959,6 +1011,11 @@ export class Orchestrator extends EventEmitter {
       swarmConvergence: (this.swarmIntelligence?.getState?.() as any)?.convergenceScore ?? 0,
       knowledgeGraphEntities: this.knowledgeGraph ? ((this.knowledgeGraph as any).getStats?.()?.entityCount ?? 0) : 0,
       adversarialStats: this.adversarialDefense?.getDefenseStats?.() ?? null,
+      // v5.0.0 Infinite Intelligence
+      hierarchicalMemoryStats: this.hierarchicalMemory?.stats?.() ?? null,
+      contextRecallStats: this.contextRecall?.getStats?.() ?? null,
+      consensusStats: this.consensusEngine?.getStats?.() ?? null,
+      collectiveLearningStats: this.collectiveLearning?.getStats?.() ?? null,
     };
   }
 
@@ -1348,6 +1405,66 @@ export class Orchestrator extends EventEmitter {
           );
         }
       } catch { /* self-evolution is best-effort */ }
+
+      // ── v5.0.0: Infinite Intelligence Enhancements ──────────────────
+      // Store all insights in HierarchicalMemory for infinite retention
+      try {
+        for (const insight of insights.filter(i => i.priority !== 'low')) {
+          await this.hierarchicalMemory.store(
+            `${insight.title}\n${insight.content || ''}`,
+            insight.type || 'general',
+            insight.priority === 'critical' ? 0.95 : insight.priority === 'high' ? 0.85 : 0.7,
+            {
+              type: insight.type,
+              priority: insight.priority,
+              files: insight.files || [],
+            },
+          );
+        }
+      } catch { /* hierarchical memory is best-effort */ }
+
+      // Context-triggered associative recall — surface related past insights
+      try {
+        const now = new Date();
+        const recallContext: import('../types.js').RecallContext = {
+          currentFile: changes[0]?.path || '',
+          currentCategory: insights[0]?.type || 'general',
+          recentEdits: changes.slice(0, 5).map(c => c.path),
+          projectType: 'auto',
+          keywords: insights.slice(0, 5).flatMap(i => i.title.split(/\s+/).slice(0, 3)),
+          timeOfDay: now.getHours(),
+          dayOfWeek: now.getDay(),
+        };
+        const recalled = this.contextRecall.recall(recallContext, 5);
+        if (recalled.length > 0) {
+          for (const r of recalled.slice(0, 3)) {
+            if (r.relevanceScore > 0.6) {
+              insights.push({
+                type: 'pattern',
+                priority: 'info' as BrainInsight['priority'],
+                title: `[recall] Related past insight: ${r.entry.content.slice(0, 80).replace(/\n/g, ' ')}`,
+                content: `Previously discovered (tier: ${r.entry.tier}): ${r.entry.content.slice(0, 200)}`,
+                files: (r.entry.metadata?.files as string[]) || [],
+                timestamp: new Date(),
+              });
+            }
+          }
+        }
+      } catch { /* context recall is best-effort */ }
+
+      // Collective learning — propose high-confidence patterns as rules
+      try {
+        for (const insight of insights.filter(i =>
+          i.priority === 'critical' || i.priority === 'high'
+        ).slice(0, 5)) {
+          this.collectiveLearning.proposeRule(
+            `${insight.type}: ${insight.title}`,
+            insight.type || 'general',
+            'shadow-brain',
+            insight.files || [],
+          );
+        }
+      } catch { /* collective learning is best-effort */ }
     } catch (err: any) {
       this.emit('error', { error: err });
     } finally {

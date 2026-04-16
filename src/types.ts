@@ -947,3 +947,139 @@ export interface ThreatVector {
   pattern: string;
   timestamp: Date;
 }
+
+// ── v5.0.0 Infinite Intelligence Types ────────────────────────────────────────
+
+// Hierarchical Memory — 4-tier compression: raw → summary → pattern → principle
+export type MemoryTier = 'raw' | 'summary' | 'pattern' | 'principle';
+
+export interface HierarchicalMemoryEntry {
+  id: string;
+  tier: MemoryTier;
+  content: string;
+  category: string;
+  confidence: number;
+  importance: number; // 0-1, determines promotion/demotion
+  accessCount: number;
+  createdAt: Date;
+  lastAccessed: Date;
+  promotedAt: Date | null;
+  parentIds: string[]; // link to entries this was compressed from
+  childIds: string[]; // link to entries compressed into this
+  vector: number[]; // semantic embedding for associative recall
+  metadata: Record<string, unknown>;
+  compressedSize: number; // bytes after compression
+  originalSize: number; // bytes before compression
+}
+
+export interface HierarchicalMemoryStats {
+  rawCount: number;
+  summaryCount: number;
+  patternCount: number;
+  principleCount: number;
+  totalEntries: number;
+  totalSizeMB: number;
+  compressionRatio: number;
+  promotionRate: number; // entries promoted to higher tier per day
+  retentionDays: number; // Infinity
+  drillDownDepth: number;
+}
+
+// Context-Triggered Associative Recall
+export interface RecallTrigger {
+  /** What activates this memory — file path patterns, keywords, categories, code patterns */
+  patterns: string[];
+  /** How strongly this trigger activates (0-1) */
+  strength: number;
+  /** Recency boost — newer triggers get slight priority */
+  recency: number;
+}
+
+export interface RecallResult {
+  entry: HierarchicalMemoryEntry;
+  relevanceScore: number;
+  activatedTriggers: string[];
+  activationPath: string[]; // chain of associations that led here
+}
+
+export interface RecallContext {
+  currentFile: string;
+  currentCategory: string;
+  recentEdits: string[];
+  projectType: string;
+  keywords: string[];
+  timeOfDay: number; // hour 0-23
+  dayOfWeek: number; // 0-6
+}
+
+// Consensus Engine — Multi-agent agreement protocol
+export interface ConsensusProposal {
+  id: string;
+  proposer: string;
+  content: string;
+  category: string;
+  confidence: number;
+  evidence: string[];
+  timestamp: Date;
+}
+
+export interface ConsensusVote {
+  voter: string;
+  proposalId: string;
+  vote: 'agree' | 'disagree' | 'abstain';
+  confidence: number;
+  reasoning: string;
+  timestamp: Date;
+}
+
+export interface ConsensusResult {
+  proposal: ConsensusProposal;
+  votes: ConsensusVote[];
+  verdict: 'accepted' | 'rejected' | 'pending' | 'conflicted';
+  agreementScore: number; // 0-1
+  confidenceInterval: [number, number];
+  resolvedAt: Date | null;
+  conflictResolution?: string;
+}
+
+export interface TrustScore {
+  agent: string;
+  score: number; // 0-1
+  totalProposals: number;
+  acceptedProposals: number;
+  rejectedProposals: number;
+  accuracyHistory: number[];
+  lastUpdated: Date;
+}
+
+// Collective Learning — Cross-project knowledge sharing
+export interface CollectiveRule {
+  id: string;
+  content: string;
+  category: string;
+  originProject: string;
+  originAgent: string;
+  verifiedBy: string[]; // agents/projects that confirmed this rule
+  verifiedCount: number;
+  contradictCount: number;
+  trustScore: number; // 0-1
+  applicability: string[]; // project types, languages, frameworks this applies to
+  exceptions: string[]; // known cases where this rule doesn't apply
+  createdAt: Date;
+  lastVerifiedAt: Date;
+  timesApplied: number;
+  timesCorrect: number;
+  accuracy: number;
+  viralScore: number; // how widely this has spread
+}
+
+export interface CollectiveLearningStats {
+  totalRules: number;
+  verifiedRules: number;
+  averageAccuracy: number;
+  topCategories: Array<{ category: string; count: number; avgAccuracy: number }>;
+  recentAdoptions: number;
+  consensusRate: number;
+  networkSize: number; // number of connected projects/agents
+  knowledgeBaseSizeMB: number;
+}

@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// src/cli.ts — CLI entry point for Shadow Brain v5.0.0
+// src/cli.ts — CLI entry point for Shadow Brain v5.0.1
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -12,7 +12,7 @@ import { BaseAdapter } from './adapters/base-adapter.js';
 import { BrainConfig, BrainInsight, AgentTool, BrainPersonality, LLMProvider } from './types.js';
 import { checkForUpdate, formatUpdateNotice } from './brain/auto-update.js';
 
-const VERSION = '5.0.0';
+const VERSION = '5.0.1';
 
 const config: any = new Conf({
   projectName: 'shadow-brain',
@@ -2608,7 +2608,7 @@ const v5Cmd = new Command('v5')
 const program = new Command();
 program
   .name('shadow-brain')
-  .description('Shadow Brain v5.0.0 — Infinite Intelligence Layer for AI Coding Agents with Hierarchical Memory, Context Recall, Consensus & Collective Learning')
+  .description('Shadow Brain v5.0.1 — Infinite Intelligence Layer for AI Coding Agents with Zero-Config Setup, MCP Server, Rich Dashboard, Hierarchical Memory, Context Recall, Consensus & Collective Learning')
   .version(VERSION);
 
 program.addCommand(startCmd);
@@ -2669,5 +2669,181 @@ program.addCommand(recallCmd);
 program.addCommand(consensusCmd);
 program.addCommand(collectiveCmd);
 program.addCommand(v5Cmd);
+
+// ─── v5.0.1 COMMANDS ────────────────────────────────────────────────────────────
+
+// off — Stop Shadow Brain (alias for killing the process, clean shutdown)
+const offCmd = new Command('off')
+  .description('Stop Shadow Brain and clean up')
+  .action(async () => {
+    console.log(chalk.magenta.bold('\n  SHADOW BRAIN v' + VERSION + ' — Shutting down'));
+    try {
+      const { default: execaDefault } = await import('execa');
+      const exec = execaDefault;
+      try {
+        if (process.platform === 'win32') {
+          await exec('taskkill', ['/F', '/IM', 'node.exe', '/FI', 'WINDOWTITLE eq shadow-brain*'], { reject: false });
+        } else {
+          await exec('pkill', ['-f', 'shadow-brain'], { reject: false });
+        }
+      } catch { /* no process found */ }
+      console.log(chalk.green('  Shadow Brain stopped successfully.'));
+    } catch {
+      console.log(chalk.yellow('  No running Shadow Brain instance found.'));
+    }
+    process.exit(0);
+  });
+
+// ask — Natural language query against brain state
+const askCmd = new Command('ask')
+  .description('Ask Shadow Brain a question about your project')
+  .argument('<question>', 'Natural language question')
+  .option('-p, --provider <provider>', 'LLM provider')
+  .option('-m, --model <model>', 'LLM model')
+  .action(async (question: string, opts: any) => {
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Ask`));
+    console.log(chalk.dim('  Question: ') + chalk.cyan(question));
+    try {
+      const brainConfig = mergeConfig({ ...opts, projectDir: process.cwd() });
+      const orchestrator = new Orchestrator(brainConfig);
+      await orchestrator.start();
+
+      // Get project context and build a prompt
+      const status = orchestrator.getStatus();
+      const prompt = `You are Shadow Brain, an expert AI coding intelligence layer. Based on the following project context, answer the user's question concisely.\n\nProject: ${status.projectDir}\nProvider: ${status.provider}\nHealth Score: ${status.healthScore || 'N/A'}\nInsights Generated: ${status.insightsGenerated}\nFiles Reviewed: ${status.filesReviewed}\n\nQuestion: ${question}\n\nAnswer:`;
+
+      // Use the LLM client directly via the analyzer's prompt builder
+      const llm = new (await import('./brain/llm-client.js')).LLMClient({
+        provider: brainConfig.provider,
+        apiKey: brainConfig.apiKey,
+        model: brainConfig.model,
+      });
+      const answer = await llm.complete(prompt);
+      console.log(chalk.green('\n  ' + answer));
+      await orchestrator.stop();
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// export — Export brain state
+const exportCmd = new Command('export')
+  .description('Export full brain state to a portable JSON file')
+  .option('-o, --output <dir>', 'Output directory for the export')
+  .action(async (opts: any) => {
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Export`));
+    try {
+      const { BrainPortability } = await import('./brain/brain-portability.js');
+      const portability = new BrainPortability(process.cwd(), opts.output);
+      const result = await portability.exportBrain();
+      console.log(chalk.green('  Brain state exported successfully!'));
+      console.log(chalk.dim('  File: ') + chalk.cyan(result.filePath));
+      console.log(chalk.dim('  Size: ') + chalk.cyan((result.sizeBytes / 1024).toFixed(1) + ' KB'));
+      console.log(chalk.dim('  SHA-256: ') + chalk.dim(result.checksum.slice(0, 16) + '...'));
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// import — Import brain state
+const importCmd = new Command('import')
+  .description('Import brain state from an export file')
+  .argument('<file>', 'Path to the export JSON file')
+  .option('--merge', 'Merge with existing state instead of replacing')
+  .option('--skip <modules>', 'Comma-separated list of modules to skip')
+  .action(async (file: string, opts: any) => {
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Import`));
+    try {
+      const { BrainPortability } = await import('./brain/brain-portability.js');
+      const portability = new BrainPortability(process.cwd());
+      const result = await portability.importBrain(file, {
+        merge: opts.merge || false,
+        skipModules: opts.skip?.split(',') || [],
+      });
+      console.log(chalk.green('  Brain state imported successfully!'));
+      console.log(chalk.dim('  Imported: ') + chalk.green(result.imported.join(', ') || 'none'));
+      console.log(chalk.dim('  Skipped: ') + chalk.yellow(result.skipped.join(', ') || 'none'));
+      if (result.errors.length > 0) {
+        console.log(chalk.dim('  Errors: ') + chalk.red(result.errors.join('; ')));
+      }
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+// plugin — Manage plugins
+const pluginCmd = new Command('plugin')
+  .description('Manage Shadow Brain plugins')
+  .addCommand(new Command('list')
+    .description('List installed plugins')
+    .action(async () => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Plugins`));
+      try {
+        const { PluginSystem } = await import('./brain/plugin-system.js');
+        const ps = new PluginSystem(process.cwd());
+        await ps.loadAll();
+        const plugins = ps.getPlugins();
+        if (plugins.length === 0) {
+          console.log(chalk.dim('  No plugins found.'));
+          console.log(chalk.dim('  Add plugins to: ') + chalk.cyan('shadow-brain-plugins/'));
+          return;
+        }
+        for (const p of plugins) {
+          const status = p.enabled ? chalk.green('active') : chalk.red('disabled');
+          console.log(`  ${status} ${chalk.bold(p.manifest.name)} v${p.manifest.version} — ${chalk.dim(p.manifest.description)}`);
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }))
+  .addCommand(new Command('create')
+    .description('Create a new plugin from template')
+    .argument('<name>', 'Plugin name')
+    .action(async (name: string) => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Create Plugin`));
+      try {
+        const { PluginSystem } = await import('./brain/plugin-system.js');
+        const ps = new PluginSystem(process.cwd());
+        const dir = ps.createTemplate(name);
+        console.log(chalk.green('  Plugin template created!'));
+        console.log(chalk.dim('  Directory: ') + chalk.cyan(dir));
+        console.log(chalk.dim('  Edit manifest.json and index.js to customize.'));
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+        process.exit(1);
+      }
+    }))
+  .addCommand(new Command('stats')
+    .description('Show plugin system statistics')
+    .action(async () => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Plugin Stats`));
+      try {
+        const { PluginSystem } = await import('./brain/plugin-system.js');
+        const ps = new PluginSystem(process.cwd());
+        await ps.loadAll();
+        const stats = ps.getStats();
+        console.log(chalk.dim('  Total plugins: ') + chalk.cyan(String(stats.totalPlugins)));
+        console.log(chalk.dim('  Enabled: ') + chalk.green(String(stats.enabledPlugins)));
+        console.log(chalk.dim('  Disabled: ') + chalk.red(String(stats.disabledPlugins)));
+        console.log(chalk.dim('  Total hooks: ') + chalk.cyan(String(stats.totalHooks)));
+        if (Object.keys(stats.hooksByEvent).length > 0) {
+          console.log(chalk.dim('  Hooks by event:'));
+          for (const [event, count] of Object.entries(stats.hooksByEvent)) {
+            console.log(`    ${chalk.cyan(event)}: ${count}`);
+          }
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }));
+
+program.addCommand(offCmd);
+program.addCommand(askCmd);
+program.addCommand(exportCmd);
+program.addCommand(importCmd);
+program.addCommand(pluginCmd);
 
 program.parse();

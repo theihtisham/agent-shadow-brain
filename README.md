@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/v5-banner.svg" alt="Agent Shadow Brain v5.0.0 — Infinite Intelligence Edition" width="100%">
+<img src="docs/images/v5-banner.svg" alt="Agent Shadow Brain v5.0.1 — Infinite Intelligence Edition" width="100%">
 
 <br/>
 
@@ -11,16 +11,19 @@
 [![GitHub stars](https://img.shields.io/github/stars/theihtisham/agent-shadow-brain?color=f59e0b&labelColor=1a0a2e&style=for-the-badge&logo=github)](https://github.com/theihtisham/agent-shadow-brain/stargazers)
 [![arXiv](https://img.shields.io/badge/arXiv-2504.17033-ef4444?labelColor=1a0a2e&style=for-the-badge)](https://arxiv.org/abs/2504.17033)
 [![ICLR 2026](https://img.shields.io/badge/ICLR-2026_TurboQuant-06b6d4?labelColor=1a0a2e&style=for-the-badge)](https://openreview.net/forum?id=TbqSEUXWaO)
+[![Zero Config](https://img.shields.io/badge/zero-config-auto_setup-22c55e?labelColor=1a0a2e&style=for-the-badge)](#)
+[![MCP](https://img.shields.io/badge/MCP-Cursor_+_Claude-8b5cf6?labelColor=1a0a2e&style=for-the-badge)](#)
+[![Dashboard](https://img.shields.io/badge/dashboard-real_time-06b6d4?labelColor=1a0a2e&style=for-the-badge)](#)
 
 <br/>
 
-### **The World's First Infinite-Intelligence AI Coding Brain**
+### **The World's #1 Infinite-Intelligence AI Coding Brain**
 
-**Shadow Brain** is a self-evolving, infinite-memory intelligence layer for AI coding agents. It watches your code, applies **mathematically proven algorithms** from cutting-edge research, learns across sessions with **zero forgetting**, and makes every AI agent write **better, safer, faster code** — forever.
+**Shadow Brain** is a zero-config, self-evolving, infinite-memory intelligence layer that makes **every AI coding agent** write better, safer, faster code. Install it once, and it automatically detects your project, your AI tools, your frameworks — and starts making your agents smarter forever.
 
-> **v5.0.0 — Infinite Intelligence Edition**: 4-tier hierarchical memory compression (raw → summary → pattern → principle), context-triggered associative recall, multi-agent consensus protocol with trust scoring, collective cross-project learning, TurboQuant 6x compression, SSSP O(m log<sup>2/3</sup>n) routing, self-evolving genetic rules, cross-agent protocol, adversarial hallucination defense, swarm intelligence, knowledge graph with PageRank, predictive bug forecasting.
+> **v5.0.1 — Infinite Intelligence Edition**: Zero-config auto-setup with MCP server for **Claude Code + Cursor + 8 AI tools**, rich web dashboard with real-time WebSocket updates, natural language brain queries, plugin system, brain export/import for team sync, git hook integration, and all v5.0.0 infinite intelligence features — 4-tier hierarchical memory, context-triggered associative recall, multi-agent consensus, collective cross-project learning, TurboQuant 6x compression, SSSP routing, self-evolving genetic rules, adversarial hallucination defense, swarm intelligence, knowledge graph with PageRank, and predictive bug forecasting.
 
-[**Install Now**](#-getting-started) · [**v5.0.0 Modules**](#-v50-infinite-intelligence-engine) · [**Algorithms**](#-algorithms--research) · [**CLI Reference**](#-cli-reference) · [**Architecture**](#-architecture)
+[**Install Now**](#-getting-started-30-seconds) · [**Dashboard**](#-web-dashboard) · [**v5.0.1 New**](#-v501-whats-new) · [**Algorithms**](#-algorithms--research) · [**CLI Reference**](#-cli-reference) · [**Architecture**](#-architecture)
 
 </div>
 
@@ -33,50 +36,236 @@ You use AI coding agents. They're powerful, but:
 | Problem | Impact |
 |---|---|
 | Agents **forget everything** between sessions | Same mistakes, zero learning |
-| Multiple agents **don't communicate** | Claude doesn't know what Cline learned |
+| Multiple agents **don't communicate** | Claude doesn't know what Cursor learned |
 | Generated code has **hallucinations** | LLMs fabricate APIs that don't exist |
 | No **cross-session memory** | Every conversation starts from zero |
 | No **cross-project learning** | Discoveries in one project don't help others |
-| Agents can't **predict bugs** | Reactive, not proactive |
-| No **self-improvement** | Rules never get better on their own |
+| Setup is **complicated** | 30 minutes of config before anything works |
+| Each tool needs **separate config** | Claude, Cursor, Cline all need different setup |
 
 ## The Solution
 
-**Shadow Brain v5.0.0** runs alongside your agents as an *infinite-intelligence shadow layer*:
+**Shadow Brain v5.0.1** — zero-config, auto-detecting, infinite-intelligence shadow layer:
 
 ```
-┌──────────────┐    watches     ┌──────────────────────────────────────────┐    injects    ┌──────────────┐
-│  AI Agents   │ ─────────────▶ │         SHADOW BRAIN v5.0.0              │ ────────────▶ │  AI Agents   │
-│ Claude Code  │  file changes  │                                          │  insights +  │   Smarter    │
-│ Kilo Code    │  git commits   │  ┌─ INFINITE MEMORY ──────────────────┐  │  context +   │   Safer      │
-│ Cline        │  activity      │  │ Hierarchical 4-tier compression    │  │  fixes +     │   Faster     │
-│ OpenCode     │                │  │ Context-Triggered Associative      │  │  predictions │   Connected  │
-│ Codex        │                │  │ Recall — auto-activate memories    │  │              │   Evolving   │
-│ Roo Code     │                │  └────────────────────────────────────┘  │              │   Predictive │
-│ Aider        │                │  ┌─ MULTI-AGENT INTELLIGENCE ─────────┐  │              │   Trusted    │
-└──────────────┘                │  │ Consensus Protocol — voting +      │  │              │   Infinite   │
-         ▲                      │  │   trust scoring + conflict resolve │  │              └──────────────┘
-         │                      │  │ Collective Learning — cross-project│  │                       ▲
-         │                      │  │   rule sharing with verification   │  │                       │
-         │                      │  └────────────────────────────────────┘  │                       │
-         │                      │  ┌─ HYPER-INTELLIGENCE (v4) ──────────┐  │                       │
-         │                      │  │ TurboQuant ─── 6x Compression       │  │                       │
-         │                      │  │ SSSP BMSSP ─── Quantum Routing      │  │                       │
-         │                      │  │ Self-Evolution ─ Living Rules       │  │                       │
-         │                      │  │ CAIP ───────── Cross-Agent Sync     │  │                       │
-         │                      │  │ Swarm ──────── File Hotspots        │  │                       │
-         │                      │  │ PageRank ───── Impact Radar         │  │                       │
-         │                      │  │ Adversarial ── Trust Verification   │  │                       │
-         │                      │  └────────────────────────────────────┘  │                       │
-         └──────────────────────┴──────────────────────────────────────────┴───────────────────────┘
-                    shares insights across all agents via Cross-Agent Intelligence Protocol
+┌──────────────┐    auto-detect     ┌──────────────────────────────────────────┐
+│  AI Agents   │ ◀────────────────  │         SHADOW BRAIN v5.0.1              │
+│ Claude Code  │  MCP auto-install  │                                          │
+│ Cursor       │  zero-config       │  ┌─ ZERO-CONFIG (v5.0.1 NEW) ────────┐  │
+│ Kilo Code    │                    │  │ Auto-detect project, tools, langs  │  │
+│ Cline        │    watches         │  │ MCP server for ALL AI tools        │  │
+│ OpenCode     │ ──────────────▶   │  │ Rich web dashboard (real-time)     │  │
+│ Codex        │  file changes      │  │ Natural language brain queries     │  │
+│ Roo Code     │  git commits       │  │ Plugin system + export/import      │  │
+│ Aider        │  activity          │  └────────────────────────────────────┘  │
+│ Windsurf     │                    │  ┌─ INFINITE MEMORY (v5.0.0) ────────┐  │
+└──────────────┘                    │  │ 4-tier hierarchical compression    │  │
+         ▲                          │  │ Context-triggered recall            │  │
+         │                          │  │ Multi-agent consensus + trust       │  │
+         │                          │  │ Collective cross-project learning   │  │
+         │                          │  └────────────────────────────────────┘  │
+         │                          │  ┌─ HYPER-INTELLIGENCE (v4) ──────────┐  │
+         │                          │  │ TurboQuant 6x Compression           │  │
+         │                          │  │ SSSP BMSSP Quantum Routing          │  │
+         │                          │  │ Self-Evolution + CAIP + Swarm       │  │
+         │                          │  │ PageRank + Predictive + Adversarial │  │
+         └──────────────────────────┴──────────────────────────────────────────┘
+```
+
+---
+
+## v5.0.1 — What's New
+
+### Zero-Config Auto-Setup
+
+Install it. That's it. Shadow Brain automatically:
+
+- Detects your project type (frontend, backend, fullstack, mobile, game, systems, data-science)
+- Detects 25+ languages, 15+ frameworks, 5+ build tools, 5+ test frameworks
+- Detects which AI tools are installed (Claude Code, Cursor, Kilo Code, Cline, OpenCode, Codex, Aider, Windsurf)
+- Auto-installs MCP server configuration for every detected AI tool
+- Auto-installs git pre-commit and pre-push hooks
+- Generates an optimal brain config based on project complexity
+
+```bash
+npm install @theihtisham/agent-shadow-brain
+# → Shadow Brain v5.0.1 auto-configured for my-app (fullstack)
+# → AI tools detected: Claude Code, Cursor
+# → Run: shadow-brain start
+```
+
+### MCP Server — Works with EVERY AI Tool
+
+The brain exposes itself as a **Model Context Protocol (MCP) server** with 19 tools that any AI tool can call:
+
+| MCP Tool | What It Does |
+|---|---|
+| `brain_status` | Get full brain status |
+| `brain_analyze` | Trigger code analysis |
+| `brain_health` | Get health score (A-F) |
+| `brain_insights` | Get recent insights |
+| `brain_fixes` | Get smart fix suggestions |
+| `brain_memory_store` | Store knowledge in hierarchical memory |
+| `brain_memory_search` | Search across all memory tiers |
+| `brain_memory_stats` | Memory compression statistics |
+| `brain_recall` | Context-triggered associative recall |
+| `brain_consensus_propose` | Submit a proposal for agent consensus |
+| `brain_consensus_vote` | Vote on a pending proposal |
+| `brain_collective_propose` | Propose a cross-project rule |
+| `brain_collective_search` | Search collective learning rules |
+| `brain_turbo_search` | Semantic search in compressed memory |
+| `brain_predict` | Predict bug risk for files |
+| `brain_graph_query` | Query knowledge graph |
+| `brain_defense_scan` | Scan for hallucination patterns |
+| `brain_evolve_status` | Get self-evolution status |
+| `brain_dashboard_url` | Get dashboard URL |
+
+Works with **Claude Code**, **Cursor**, **Kilo Code**, **Cline**, **OpenCode**, and any MCP-compatible AI tool.
+
+```bash
+# Start MCP server (auto-started by AI tools)
+shadow-brain mcp
+
+# Cursor compatibility (root path POST + /v1/chat)
+# Claude Code compatibility (JSON-RPC 2.0 over stdio/HTTP)
+```
+
+### Rich Web Dashboard
+
+Real-time browser dashboard at `http://localhost:7341` with WebSocket live updates:
+
+- **Stats Topbar**: 8 live counters — Insights, Fixes, Memory KB, Modules, AI Tools, Evolution Gen, Swarm Convergence, Turbo Compression
+- **Health Score**: A-F grading with dimension breakdown (Security, Quality, Performance, Architecture, Maintainability, Test Coverage)
+- **Memory Tiers**: Visual bars showing Raw (50K), Summary (10K), Pattern (2K), Principle (500) with Turbo compression ratio
+- **Live Insights Stream**: Real-time feed of brain insights with priority badges
+- **Smart Fixes**: Actionable fix suggestions with file/line references
+- **AI Tools Panel**: 8 tools showing connected/detected status
+- **Brain Modules**: 13 modules with active/idle/error indicators
+- **Control Buttons**: Trigger analysis on-demand, refresh data
+
+```bash
+shadow-brain start .     # Dashboard auto-starts at http://localhost:7341
+shadow-brain dash .      # Dashboard only mode
+```
+
+### Natural Language Queries
+
+Ask your brain questions in plain English:
+
+```bash
+shadow-brain ask "What security issues exist in the auth module?"
+shadow-brain ask "Which files have the highest bug risk?"
+shadow-brain ask "What patterns have we learned about React hooks?"
+```
+
+### Brain Export/Import — Team Sync
+
+Export your brain state and share it with your team:
+
+```bash
+shadow-brain export                    # Full export with all modules
+shadow-brain export -o ./team-brain    # Custom output directory
+shadow-brain import brain-export.json  # Import + merge
+shadow-brain import brain-export.json --merge --skip swarm,evolution
+```
+
+### Plugin System
+
+Extend Shadow Brain with custom plugins:
+
+```bash
+shadow-brain plugin list               # List installed plugins
+shadow-brain plugin create my-plugin   # Create from template
+shadow-brain plugin stats              # Plugin system statistics
+```
+
+Plugins can hook into `pre-analysis` and `post-analysis` pipelines to add custom insights, filter results, or integrate with external services.
+
+### 5 New Commands
+
+```bash
+shadow-brain off          # Clean shutdown
+shadow-brain ask "..."    # Natural language query
+shadow-brain export       # Export brain state
+shadow-brain import FILE  # Import brain state
+shadow-brain plugin CMD   # Plugin management
+```
+
+---
+
+## Getting Started — 30 Seconds
+
+```bash
+# Install globally
+npm install -g @theihtisham/agent-shadow-brain
+
+# Or use npx (no install needed)
+npx @theihtisham/agent-shadow-brain start .
+```
+
+That's literally it. Shadow Brain will:
+1. **Auto-detect** your project, languages, frameworks, AI tools (zero config)
+2. **Auto-install** MCP server config for Claude Code, Cursor, Kilo Code, Cline, etc.
+3. **Auto-install** git hooks for pre-commit and pre-push
+4. Watch your project files for changes
+5. Analyze every change with LLM + 13 brain modules
+6. Inject expert insights into your agent's memory
+7. Store all knowledge in hierarchical memory for infinite retention
+8. Activate past memories automatically based on context
+9. Share verified patterns across projects via collective learning
+10. Compress knowledge with TurboQuant for infinite retention
+11. Evolve its own rules via genetic algorithm
+12. Share insights across agents via CAIP
+13. Detect hallucinations with adversarial verification
+14. Run consensus when multiple agents disagree
+15. Serve a rich web dashboard at `localhost:7341`
+
+### Quick Review (No Watch Mode)
+
+```bash
+shadow-brain review .                    # One-shot analysis
+shadow-brain review . --show-health      # + health score
+shadow-brain review . --show-fixes       # + fix suggestions
+shadow-brain review . --output json      # JSON for scripting
+```
+
+---
+
+## Web Dashboard
+
+The v5.0.1 dashboard provides a real-time view into your brain:
+
+```
+┌──────────────────────────────────────────────────────────────────────────┐
+│  Shadow Brain v5.0.1                                     [Analyze] [↻] │
+├──────────────────────────────────────────────────────────────────────────┤
+│  Insights: 142 │ Fixes: 38 │ Memory: 247KB │ Modules: 13/13 │ ...     │
+├──────────────┬─────────────────────────────────────┬───────────────────┤
+│ Health: 87%  │  Live Insights Stream               │ AI Tools          │
+│ ████████░░   │  ● [HIGH] SQL injection in login.ts │ ● Claude Code ✓  │
+│ Security: A  │  ● [MED] Missing error handling     │ ● Cursor    ✓    │
+│ Quality: B+  │  ● [LOW] Unused import in utils     │ ● Kilo Code ✓    │
+│ Perf:    A-  │  ● [CRIT] Exposed API key           │ ● Cline     —    │
+│ Arch:    B   │                                     │ ● OpenCode  —    │
+│ Maintain: A  ├─────────────────────────────────────┤ ● Codex     —    │
+│ Tests:   C+  │  Smart Fixes                        │ ● Aider     —    │
+│              │  1. Add parameterized query...       │ ● Windsurf  —    │
+├──────────────┤  2. Wrap in try/catch with...       ├───────────────────┤
+│ Memory Tiers │  3. Remove unused import on L42     │ Brain Modules     │
+│ Raw:   8421  │                                     │ ● Hierarchical ✓  │
+│ Summ:  1203  │                                     │ ● TurboMemory  ✓  │
+│ Patt:   187  │                                     │ ● Consensus    ✓  │
+│ Princ:    24 │                                     │ ● Swarm        ✓  │
+│ Turbo: 6.2x  │                                     │ ● Evolution    ✓  │
+│              │                                     │ ● Adversarial  ✓  │
+└──────────────┴─────────────────────────────────────┴───────────────────┘
 ```
 
 ---
 
 ## v5.0.0 Infinite Intelligence Engine
 
-### 4 New Breakthrough Modules
+### 4 Breakthrough Modules
 
 <table>
 <tr>
@@ -129,10 +318,10 @@ When multiple AI agents observe the same codebase, they may produce conflicting 
 5. Tracks long-term agent trust based on proposal accuracy
 
 ```bash
-shadow-brain consensus status       # 47 proposals | 89% acceptance rate
+shadow-brain consensus status
 shadow-brain consensus propose "Use bcrypt for all password hashing" security 0.95
 shadow-brain consensus vote <id> agree 0.9 "Industry standard"
-shadow-brain consensus results      # All resolved proposals
+shadow-brain consensus results
 ```
 
 **Collective Learning** — discoveries flow across all projects.
@@ -145,9 +334,9 @@ When you discover a pattern in Project A, it becomes a verified rule available i
 - Trust scores for rule sources
 
 ```bash
-shadow-brain collective status      # 234 rules | 12 categories
+shadow-brain collective status
 shadow-brain collective propose "Always validate file upload MIME types" security
-shadow-brain collective search performance  # Cross-project performance rules
+shadow-brain collective search performance
 ```
 
 </td>
@@ -158,7 +347,7 @@ shadow-brain collective search performance  # Cross-project performance rules
 
 ## v4.0.0 Hyper-Intelligence Engine
 
-### 8 Breakthrough Modules (included in v5.0.0)
+### 8 Breakthrough Modules (included in v5.0.1)
 
 <table>
 <tr>
@@ -175,7 +364,7 @@ Based on Google Research's **TurboQuant** (ICLR 2026):
 - **Result**: Infinite retention — old knowledge is compressed, never deleted
 
 ```bash
-shadow-brain turbo stats    # Compression stats
+shadow-brain turbo stats
 shadow-brain turbo search "authentication patterns"
 ```
 
@@ -186,7 +375,7 @@ Based on **"Breaking the Sorting Barrier"** (arXiv 2504.17033, Duan et al.):
 - **Deterministic**: No randomization, provably correct
 
 ```bash
-shadow-brain route status   # Mesh routing status
+shadow-brain route status
 shadow-brain route find node-A node-B
 ```
 
@@ -200,8 +389,8 @@ shadow-brain route find node-A node-B
 - **Population**: 50 genetic rule chromosomes
 - **Selection**: Tournament (k=5) — survival of the fittest
 - **Crossover**: Single-point recombination
-- **Mutation**: Gaussian noise (Box-Muller transform, σ=0.1)
-- **Fitness**: accuracy × coverage × (1 / falsePositiveRate)
+- **Mutation**: Gaussian noise (Box-Muller transform, sigma=0.1)
+- **Fitness**: accuracy x coverage x (1 / falsePositiveRate)
 
 ```bash
 shadow-brain evolve status
@@ -211,7 +400,7 @@ shadow-brain evolve best-rules security
 
 **Cross-Agent Intelligence Protocol (CAIP)** — agents that talk to each other.
 
-Your Claude Code session learns what your Cline session discovered:
+Your Claude Code session learns what your Cursor session discovered:
 - Zero-config broadcast protocol
 - Agent identification + insight tagging
 - Multi-agent consensus building
@@ -284,13 +473,13 @@ shadow-brain predict bugs .
 
 ## Algorithms & Research
 
-Shadow Brain v5.0.0 implements algorithms from **peer-reviewed research**:
+Shadow Brain v5.0.1 implements algorithms from **peer-reviewed research**:
 
 | Algorithm | Paper / Origin | Application | Complexity |
 |---|---|---|---|
 | **Hierarchical Compression** | Novel 4-tier system | Infinite memory with drill-down | O(n) per tier |
-| **Associative Recall** | Spreading activation model | Context-triggered memory activation | O(n × k) |
-| **Consensus Protocol** | Byzantine fault tolerance | Multi-agent agreement with trust | O(v × log v) |
+| **Associative Recall** | Spreading activation model | Context-triggered memory activation | O(n x k) |
+| **Consensus Protocol** | Byzantine fault tolerance | Multi-agent agreement with trust | O(v x log v) |
 | **TurboQuant** | Google Research, ICLR 2026 | Vector compression (PolarQuant + QJL) | O(n) per vector |
 | **BMSSP (SSSP)** | arXiv 2504.17033, Duan et al. | Neural mesh message routing | O(m log<sup>2/3</sup> n) |
 | **Shannon Entropy** | Claude Shannon, 1948 | Cross-project insight relevance scoring | O(n) |
@@ -300,54 +489,30 @@ Shadow Brain v5.0.0 implements algorithms from **peer-reviewed research**:
 | **Tarjan's SCC** | Robert Tarjan, 1972 | Dependency cycle detection | O(V + E) |
 | **Winnowing** | Schleimer et al., 2003 | Code duplicate fingerprinting | O(n) |
 | **Box-Muller** | Box & Muller, 1958 | Gaussian mutation in genetic algorithm | O(1) per sample |
-| **Ant Colony (ACO)** | Dorigo, 1992 | File priority pheromone system | O(n × m) |
+| **Ant Colony (ACO)** | Dorigo, 1992 | File priority pheromone system | O(n x m) |
 | **Tournament Selection** | Goldberg, 1989 | Genetic rule selection (k=5) | O(k) per selection |
 
 ### TurboQuant Pipeline Detail
 
 ```
 Input Vector (64-dim, float64)
-     │
-     ▼
-┌─────────────┐
-│  PolarQuant  │── Cartesian → Polar coordinates
-│  2 bits/dim  │── Quantize angles to 4 levels (2 bits each)
-└──────┬──────┘   Pack into Uint8Array
-       │
-       ▼
-┌─────────────┐
-│  QJL Residual│── Random rotation (Hadamard-like)
-│  1 bit/dim   │── Sign extraction (1 bit per dim)
-└──────┬──────┘   Pack into Uint8Array
-       │
-       ▼
+     |
+     v
++-------------+
+|  PolarQuant  |-- Cartesian -> Polar coordinates
+|  2 bits/dim  |-- Quantize angles to 4 levels (2 bits each)
++------+-------+   Pack into Uint8Array
+       |
+       v
++-------------+
+|  QJL Residual|-- Random rotation (Hadamard-like)
+|  1 bit/dim   |-- Sign extraction (1 bit per dim)
++------+-------+   Pack into Uint8Array
+       |
+       v
   TurboVector { polar: Uint8Array, qjl: Uint8Array, dim: number, radius: number }
   = 3 bits/dim total = 6x compression from float64
-  = ZERO FORGETTING — compressed knowledge stays searchable forever
-```
-
-### Hierarchical Memory Drill-Down
-
-```
-   ┌─────────────┐
-   │  PRINCIPLE   │  500 entries — timeless design rules
-   │  (top tier)  │  "Always validate inputs at system boundaries"
-   └──────┬──────┘
-          │ drill-down
-   ┌──────┴──────┐
-   │   PATTERN    │  2K entries — recurring patterns
-   │              │  "Input validation pattern: zod schema → middleware → handler"
-   └──────┬──────┘
-          │ drill-down
-   ┌──────┴──────┐
-   │   SUMMARY    │  10K entries — condensed key points
-   │              │  "auth/login.ts uses JWT with bcrypt — verified secure"
-   └──────┬──────┘
-          │ drill-down
-   ┌──────┴──────┐
-   │     RAW      │  50K entries — full detail, hot path
-   │  (base tier) │  Complete analysis of login.ts with all evidence
-   └─────────────┘
+  = ZERO FORGETTING -- compressed knowledge stays searchable forever
 ```
 
 ---
@@ -356,6 +521,18 @@ Input Vector (64-dim, float64)
 
 <table>
 <tr>
+<td width="25%">
+
+### Zero Config (v5.0.1)
+- Auto-detect project + tools
+- MCP for ALL AI tools
+- Rich web dashboard
+- Natural language queries
+- Plugin system
+- Brain export/import
+- Git hook auto-install
+
+</td>
 <td width="25%">
 
 ### Infinite Intelligence (v5)
@@ -380,23 +557,14 @@ Input Vector (64-dim, float64)
 </td>
 <td width="25%">
 
-### Real-Time Intelligence
-- File watching (chokidar)
-- Git monitoring (commits, diffs)
-- LLM analysis (Anthropic, OpenAI, Ollama)
-- Pattern memory across sessions
-- Learning engine (automatic)
-
-</td>
-<td width="25%">
-
 ### Developer Experience
-- **45+ CLI commands** — full terminal control
-- MCP Server — Model Context Protocol
-- Web dashboard — `localhost:7341`
-- Terminal UI — Ink/React dashboard
-- Pre-commit hooks — block bad commits
-- GitHub Actions — CI integration
+- **50+ CLI commands**
+- MCP Server (19 tools)
+- Web dashboard (real-time)
+- Terminal UI (Ink/React)
+- Pre-commit hooks
+- GitHub Actions CI
+- Plugin architecture
 
 </td>
 </tr>
@@ -406,18 +574,21 @@ Input Vector (64-dim, float64)
 
 ## Architecture
 
-<img src="docs/images/v5-banner.svg" alt="v5.0.0 Architecture Overview" width="100%">
-
-### v5.0.0 Module Map
+### v5.0.1 Module Map (16 modules)
 
 | Module | File | What It Does | Since |
 |---|---|---|---|
-| **Hierarchical Memory** | `brain/hierarchical-memory.ts` | 4-tier infinite memory with drill-down | v5.0.0 |
-| **Context Recall** | `brain/context-recall.ts` | Associative memory activation engine | v5.0.0 |
-| **Consensus Engine** | `brain/consensus-engine.ts` | Multi-agent voting + trust scoring | v5.0.0 |
+| **Auto Setup** | `brain/auto-setup.ts` | Zero-config project + tool detection | v5.0.1 |
+| **MCP Server** | `brain/mcp-server.ts` | 19-tool MCP server for all AI tools | v5.0.1 |
+| **Plugin System** | `brain/plugin-system.ts` | Hookable analysis pipeline | v5.0.1 |
+| **Brain Portability** | `brain/brain-portability.ts` | Export/import brain state | v5.0.1 |
+| **Dashboard** | `dashboard/server.ts` | Real-time WebSocket dashboard | v5.0.1 |
+| **Hierarchical Memory** | `brain/hierarchical-memory.ts` | 4-tier infinite memory | v5.0.0 |
+| **Context Recall** | `brain/context-recall.ts` | Associative memory activation | v5.0.0 |
+| **Consensus Engine** | `brain/consensus-engine.ts` | Multi-agent voting + trust | v5.0.0 |
 | **Collective Learning** | `brain/collective-learning.ts` | Cross-project rule sharing | v5.0.0 |
 | **TurboMemory** | `brain/turbo-memory.ts` | 6x compressed infinite memory | v4.0.0 |
-| **SSSP Router** | `brain/sssp-router.ts` | Sub-sorting-complexity routing | v4.0.0 |
+| **SSSP Router** | `brain/sssp-router.ts` | Sub-sorting routing | v4.0.0 |
 | **Self-Evolution** | `brain/self-evolution.ts` | Genetic rule optimization | v4.0.0 |
 | **Cross-Agent** | `brain/cross-agent-protocol.ts` | Multi-agent broadcast | v4.0.0 |
 | **Adversarial** | `brain/adversarial-defense.ts` | Hallucination detection | v4.0.0 |
@@ -427,110 +598,14 @@ Input Vector (64-dim, float64)
 
 ---
 
-## Getting Started
-
-### Install
-
-```bash
-# Install globally
-npm install -g @theihtisham/agent-shadow-brain
-
-# Or use with npx (no install needed)
-npx @theihtisham/agent-shadow-brain review .
-```
-
-### One-Command Setup
-
-```bash
-shadow-brain setup
-```
-
-### Start Watching
-
-```bash
-shadow-brain start .
-```
-
-That's it. Shadow Brain will:
-1. Auto-detect which AI agents are running (7 supported)
-2. Watch your project files for changes
-3. Analyze every change with LLM + mathematical algorithms
-4. Inject expert insights into your agent's memory
-5. Store all knowledge in hierarchical memory for infinite retention
-6. Activate past memories automatically based on context
-7. Share verified patterns across projects via collective learning
-8. Compress knowledge with TurboQuant for infinite retention
-9. Evolve its own rules via genetic algorithm
-10. Share insights across agents via CAIP
-11. Detect hallucinations with adversarial verification
-12. Run consensus when multiple agents disagree
-
-### Quick Review (No Watch Mode)
-
-```bash
-shadow-brain review .                    # One-shot analysis
-shadow-brain review . --show-health      # + health score
-shadow-brain review . --show-fixes       # + fix suggestions
-shadow-brain review . --output json      # JSON for scripting
-```
-
-### v5.0.0 Commands
-
-```bash
-# Infinite hierarchical memory
-shadow-brain memory stats                # 4-tier compression stats
-shadow-brain memory store "knowledge"    # Store at raw tier
-shadow-brain memory search "auth"        # Cross-tier search
-
-# Context-triggered recall
-shadow-brain recall . --file src/auth.ts --keywords "jwt,token"
-
-# Multi-agent consensus
-shadow-brain consensus status            # Proposal + trust stats
-shadow-brain consensus propose "..." security 0.95
-shadow-brain consensus vote <id> agree 0.9 "Reason"
-shadow-brain consensus results           # All resolved proposals
-
-# Collective cross-project learning
-shadow-brain collective status           # Rule count + categories
-shadow-brain collective propose "Rule" security
-shadow-brain collective search performance
-
-# Run EVERYTHING at once
-shadow-brain v5 .                        # Full v5.0.0 infinite-intelligence analysis
-```
-
-### v4.0.0 Commands (still available)
-
-```bash
-shadow-brain turbo stats                 # TurboQuant compression stats
-shadow-brain turbo search "auth"         # Semantic search in compressed memory
-shadow-brain route status                # SSSP mesh routing status
-shadow-brain route find node-A node-B    # Shortest path between brain nodes
-shadow-brain caip status                 # Connected agents
-shadow-brain caip broadcast "message"    # Broadcast to all agents
-shadow-brain evolve status               # Genetic algorithm stats
-shadow-brain evolve run                  # Evolve one generation
-shadow-brain evolve best-rules security  # Top evolved security rules
-shadow-brain predict bugs .              # Bug risk scoring
-shadow-brain graph build .               # Build + PageRank
-shadow-brain graph pagerank              # Top impact entities
-shadow-brain swarm status                # Convergence + pheromone stats
-shadow-brain swarm priorities            # File hotspot ranking
-shadow-brain defense status              # Accuracy + blocked count
-shadow-brain defense scan "claim text"   # Verify a specific claim
-shadow-brain v4 .                        # Full v4.0.0 hyper-analysis
-```
-
----
-
 ## CLI Reference
 
 ### Core Commands
 
 | Command | Description |
 |---|---|
-| `shadow-brain start [dir]` | Start real-time watching |
+| `shadow-brain start [dir]` | Start real-time watching + dashboard + MCP |
+| `shadow-brain off` | Clean shutdown |
 | `shadow-brain review [dir]` | One-shot code analysis |
 | `shadow-brain health [dir]` | Health score (A-F grading) |
 | `shadow-brain fix [dir]` | Smart fix suggestions |
@@ -542,10 +617,24 @@ shadow-brain v4 .                        # Full v4.0.0 hyper-analysis
 | `shadow-brain ci [dir]` | GitHub Actions workflow |
 | `shadow-brain hook [dir]` | Pre-commit hook |
 | `shadow-brain dash [dir]` | Web dashboard |
+| `shadow-brain mcp` | MCP server mode |
 | `shadow-brain inject <msg>` | Inject into agent memory |
 | `shadow-brain status` | Current configuration |
 | `shadow-brain setup` | Interactive setup wizard |
 | `shadow-brain doctor` | Health check & diagnostics |
+| `shadow-brain ask <question>` | Natural language brain query |
+
+### v5.0.1 Commands (NEW)
+
+| Command | Description |
+|---|---|
+| `shadow-brain off` | Clean shutdown of all brain processes |
+| `shadow-brain ask <question>` | Natural language query to the brain |
+| `shadow-brain export [-o dir]` | Export full brain state to JSON |
+| `shadow-brain import <file> [--merge]` | Import brain state |
+| `shadow-brain plugin list` | List installed plugins |
+| `shadow-brain plugin create <name>` | Create plugin from template |
+| `shadow-brain plugin stats` | Plugin system statistics |
 
 ### v5.0.0 Infinite Intelligence Commands
 
@@ -585,28 +674,6 @@ shadow-brain v4 .                        # Full v4.0.0 hyper-analysis
 | `shadow-brain defense scan <text>` | Scan text for hallucination patterns |
 | `shadow-brain v4 [dir]` | Run ALL v4.0.0 analyses |
 
-### Super-Intelligence Commands (v2.0+)
-
-| Command | Description |
-|---|---|
-| `shadow-brain semantic [dir]` | Symbol extraction, dead code |
-| `shadow-brain deps [dir]` | Dependency graph, cycles, hubs |
-| `shadow-brain duplicates [dir]` | Duplicate code detection |
-| `shadow-brain adr [dir]` | Architecture Decision Records |
-| `shadow-brain typesafety [dir]` | TypeScript type analysis |
-| `shadow-brain perf [dir]` | Performance profiling |
-| `shadow-brain knowledge [dir]` | Project knowledge base |
-| `shadow-brain learn [dir]` | Extract patterns & lessons |
-
-### Neural Mesh Commands (v2.1+)
-
-| Command | Description |
-|---|---|
-| `shadow-brain mesh status` | Mesh state + quantum state |
-| `shadow-brain mesh insights` | Cross-session insights |
-| `shadow-brain mesh knowledge` | Shared knowledge base |
-| `shadow-brain mesh nodes` | Connected brain nodes |
-
 ---
 
 ## Programmatic API
@@ -614,6 +681,9 @@ shadow-brain v4 .                        # Full v4.0.0 hyper-analysis
 ```typescript
 import {
   Orchestrator,
+  AutoSetup,
+  PluginSystem,
+  BrainPortability,
   HierarchicalMemory,
   ContextRecall,
   ConsensusEngine,
@@ -629,20 +699,36 @@ import {
   NeuralMesh,
 } from '@theihtisham/agent-shadow-brain';
 
+// v5.0.1 — Zero-config auto-setup
+const setup = new AutoSetup('./my-project');
+const config = await setup.detect();
+// → { projectType: 'fullstack', languages: ['typescript','python'], frameworks: ['next.js'], aiTools: [...] }
+await setup.installMCPForTools(['Claude Code', 'Cursor']);
+await setup.installGitHooks();
+
 // Create the brain
 const brain = new Orchestrator({
   provider: 'anthropic',
   projectDir: './my-project',
-  agents: ['claude-code', 'cline', 'roo-code'],
+  agents: ['claude-code', 'cursor', 'cline'],
   watchMode: true,
   autoInject: true,
   brainPersonality: 'balanced',
 });
 
+// v5.0.1 — Plugin system
+const plugins = new PluginSystem('./my-project');
+await plugins.loadAll();
+await plugins.preAnalysis({ files: ['src/auth.ts'], projectDir: './my-project' });
+
+// v5.0.1 — Brain portability
+const porter = new BrainPortability('./my-project');
+const { filePath, sizeBytes, checksum } = await porter.exportBrain();
+
 // v5.0.0 — Infinite Intelligence
 const hmem = new HierarchicalMemory();
 await hmem.store('JWT rotation pattern: rotate every 24h with refresh tokens', 'security', 0.9);
-const results = hmem.search('jwt');  // Cross-tier search
+const results = hmem.search('jwt');
 
 const recall = new ContextRecall(hmem);
 const activated = recall.recall({
@@ -651,27 +737,10 @@ const activated = recall.recall({
   recentEdits: ['src/auth/login.ts', 'src/middleware/auth.ts'],
   projectType: 'node',
   keywords: ['jwt', 'authentication', 'session'],
-  timeOfDay: 14,
-  dayOfWeek: 2,
 });
 
 const consensus = new ConsensusEngine('my-agent');
 const proposalId = consensus.propose('Use bcrypt cost factor 12', 'security', 0.95);
-consensus.vote(proposalId, 'agree', 0.9, 'Industry standard per OWASP');
-
-const collective = new CollectiveLearning();
-collective.proposeRule('Validate file upload MIME types', 'security', 'my-agent', ['./uploads']);
-
-// v4.0.0 — Direct module access
-const turbo = new TurboMemory({ maxEntries: 100000 });
-await turbo.store('auth-pattern', vector, { category: 'security' });
-
-const evolution = new SelfEvolution({ populationSize: 50 });
-const snapshot = await evolution.evolve(insights);
-
-const kg = new KnowledgeGraph('./my-project');
-await kg.build();
-const topEntities = kg.getTopEntities(10);
 
 // Start everything
 await brain.start();
@@ -694,14 +763,25 @@ await brain.start();
 
 ## Version History
 
-### v5.0.0 — Infinite Intelligence Edition (Current)
-- **Hierarchical Memory Compression** — 4-tier pyramid (raw → summary → pattern → principle) with drill-down/up
-- **Context-Triggered Associative Recall** — automatic memory activation based on file paths, keywords, categories, co-occurrence networks
-- **Multi-Agent Consensus Protocol** — trust-weighted voting, confidence intervals, conflict resolution, long-term trust scoring
-- **Collective Cross-Project Learning** — verified rule sharing, viral propagation, accuracy tracking, category-based organization
+### v5.0.1 — Zero-Config Intelligence Edition (Current)
+- **Zero-Config Auto-Setup** — auto-detect project, AI tools, languages, frameworks; auto-install MCP config + git hooks
+- **MCP Server** — 19-tool Model Context Protocol server for Claude Code, Cursor, and all AI tools
+- **Rich Web Dashboard** — real-time WebSocket dashboard with 8 panels (health, memory tiers, insights, fixes, AI tools, modules, stats, controls)
+- **Natural Language Queries** — `shadow-brain ask "..."` for plain-English brain interaction
+- **Plugin System** — hookable analysis pipeline with npm plugin discovery
+- **Brain Export/Import** — full brain state portability for team sync and backup
+- **5 new CLI commands** — off, ask, export, import, plugin
+- **Cursor MCP Compatibility** — root path POST + /v1/chat endpoint support
+- **Postinstall Auto-Setup** — runs automatically after npm install
+- **50+ npm keywords** for discoverability
+- All v5.0.0 and v4.0.0 features included and enhanced
+
+### v5.0.0 — Infinite Intelligence Edition
+- **Hierarchical Memory Compression** — 4-tier pyramid (raw -> summary -> pattern -> principle) with drill-down/up
+- **Context-Triggered Associative Recall** — automatic memory activation based on file paths, keywords, categories
+- **Multi-Agent Consensus Protocol** — trust-weighted voting, confidence intervals, conflict resolution
+- **Collective Cross-Project Learning** — verified rule sharing, viral propagation, accuracy tracking
 - **5 new CLI commands** — memory, recall, consensus, collective, v5
-- **4 new modules**, 2,000+ lines of new code
-- All v4.0.0 features included and enhanced
 
 ### v4.0.0 — Hyper-Intelligence Edition
 - **TurboQuant Infinite Memory** — 6x compression, zero forgetting (Google Research, ICLR 2026)
@@ -712,42 +792,34 @@ await brain.start();
 - **Swarm Intelligence** — Ant Colony pheromone file prioritization
 - **Knowledge Graph + PageRank** — code impact radar with d=0.85 damping
 - **Predictive Engine** — bug risk scoring, debt forecasting, anomaly detection
-- **9 new CLI commands** — turbo, route, caip, evolve, predict, graph, swarm, defense, v4
 
 ### v3.0.0 — Hyper-Intelligence Edition
-- Cognitive load analysis
-- Security audit engine
-- Influence map (cross-file impact)
+- Cognitive load analysis, security audit engine, influence map
 
 ### v2.1.0 — Quantum Neural Mesh
-- Cross-session shared intelligence
-- Shannon entropy relevance scoring
-- Cosine similarity knowledge dedup
-- Bayesian confidence updating
+- Cross-session shared intelligence, Shannon entropy, cosine similarity, Bayesian confidence
 
 ### v2.0.0 — Super-Intelligence Edition
-- Semantic analyzer, dependency graph, code similarity
-- ADR engine, type safety, performance profiler
-- MCP Server, team mode, multi-project
+- Semantic analyzer, dependency graph, code similarity, MCP Server, team mode
 
 ### v1.x — Foundation
-- 7 agent adapters, health scoring, smart fixes
-- Vulnerability scanning, custom rules, notifications
-- CI/CD integration, pre-commit hooks
+- 7 agent adapters, health scoring, smart fixes, vulnerability scanning, CI/CD
 
 ---
 
-## Supported Agents
+## Supported Agents & Tools
 
-| Agent | Status | Injection Target |
-|---|---|---|
-| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Full Support | `CLAUDE.md`, `.claude/` |
-| [Kilo Code](https://kilocode.ai/) | Full Support | `.kilocode/rules.md` |
-| [Cline](https://github.com/cline/cline) | Full Support | `.clinerules` |
-| [OpenCode](https://github.com/opencode-ai/opencode) | Full Support | `AGENT.md` |
-| [Codex](https://github.com/openai/codex) | Full Support | `AGENTS.md` |
-| [Roo Code](https://roocode.com/) | Full Support | `.roo/rules.md` |
-| [Aider](https://aider.chat/) | Full Support | `.aider.conf.yml` |
+| Agent | Status | MCP Support | Injection Target |
+|---|---|---|---|
+| [Claude Code](https://docs.anthropic.com/en/docs/claude-code) | Full Support | Auto-install | `CLAUDE.md`, `.claude/` |
+| [Cursor](https://cursor.sh/) | Full Support | Auto-install | `.cursor/mcp.json` |
+| [Kilo Code](https://kilocode.ai/) | Full Support | Auto-install | `.kilocode/rules.md` |
+| [Cline](https://github.com/cline/cline) | Full Support | Auto-install | `.clinerules` |
+| [OpenCode](https://github.com/opencode-ai/opencode) | Full Support | Yes | `AGENT.md` |
+| [Codex](https://github.com/openai/codex) | Full Support | Yes | `AGENTS.md` |
+| [Roo Code](https://roocode.com/) | Full Support | Yes | `.roo/rules.md` |
+| [Aider](https://aider.chat/) | Full Support | Yes | `.aider.conf.yml` |
+| [Windsurf](https://codeium.com/windsurf) | Detection | Yes | `.windsurfrules` |
 
 ---
 
@@ -776,11 +848,15 @@ npm test
 - [x] ~~Context-triggered associative recall~~ (v5.0)
 - [x] ~~Multi-agent consensus protocol~~ (v5.0)
 - [x] ~~Collective cross-project learning~~ (v5.0)
+- [x] ~~Zero-config auto-setup~~ (v5.0.1)
+- [x] ~~MCP server for Cursor + all tools~~ (v5.0.1)
+- [x] ~~Rich web dashboard with real-time WebSocket~~ (v5.0.1)
+- [x] ~~Plugin system + brain export/import~~ (v5.0.1)
 - [ ] **IDE extensions** — VS Code extension for inline insights
 - [ ] **Custom LLM fine-tuning** — train on your codebase patterns
 - [ ] **Docker image** — one-command containerized deployment
-- [ ] **Web dashboard v2** — React-based interactive analytics
 - [ ] **Language server** — LSP protocol for real-time feedback
+- [ ] **Web dashboard v3** — collaborative team dashboard
 
 ---
 
@@ -807,6 +883,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 **Built with brains by [theihtisham](https://github.com/theihtisham)**
 
-**Topics:** `ai` `artificial-intelligence` `llm` `claude-code` `cline` `kilo-code` `codex` `roo-code` `aider` `opencode` `code-review` `static-analysis` `developer-tools` `npm-package` `typescript` `ollama` `openai` `anthropic` `code-quality` `security-scanner` `health-score` `smart-fix` `vulnerability-scanner` `pattern-learning` `agent-tools` `ai-agent` `code-metrics` `pre-commit-hook` `github-actions` `developer-productivity` `neural-mesh` `quantum-computing` `shannon-entropy` `bayesian-inference` `mcp-server` `semantic-analysis` `dependency-graph` `turboquant` `sssp-algorithm` `genetic-algorithm` `swarm-intelligence` `pagerank` `knowledge-graph` `hallucination-detection` `cross-agent` `self-evolving` `predictive-engine` `ant-colony` `infinite-memory` `vector-compression` `iclr-2026` `arxiv` `super-intelligence` `hyper-intelligence` `autonomous-agents` `ai-engineering` `agentic-coding` `vibe-coding` `hierarchical-memory` `context-recall` `consensus-engine` `collective-learning` `infinite-intelligence`
+**Topics:** `ai` `artificial-intelligence` `llm` `claude-code` `cursor` `cline` `kilo-code` `codex` `roo-code` `aider` `opencode` `windsurf` `code-review` `static-analysis` `developer-tools` `npm-package` `typescript` `ollama` `openai` `anthropic` `code-quality` `security-scanner` `health-score` `smart-fix` `vulnerability-scanner` `pattern-learning` `agent-tools` `ai-agent` `code-metrics` `pre-commit-hook` `github-actions` `developer-productivity` `neural-mesh` `quantum-computing` `shannon-entropy` `bayesian-inference` `mcp-server` `model-context-protocol` `semantic-analysis` `dependency-graph` `turboquant` `sssp-algorithm` `genetic-algorithm` `swarm-intelligence` `pagerank` `knowledge-graph` `hallucination-detection` `cross-agent` `self-evolving` `predictive-engine` `ant-colony` `infinite-memory` `vector-compression` `iclr-2026` `arxiv` `super-intelligence` `hyper-intelligence` `autonomous-agents` `ai-engineering` `agentic-coding` `vibe-coding` `cursor-ai` `zero-config` `auto-setup` `dashboard` `plugin-system` `brain-export` `natural-language` `real-time` `websocket` `team-collaboration` `ci-cd` `open-source` `trending` `hierarchical-memory` `context-recall` `consensus-engine` `collective-learning` `infinite-intelligence` `coding-assistant`
 
 </div>

@@ -1,4 +1,4 @@
-// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v5.0.0
+// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v5.0.1
 
 // Types
 export type {
@@ -201,6 +201,11 @@ export { HierarchicalMemory } from './brain/hierarchical-memory.js';
 export { ContextRecall } from './brain/context-recall.js';
 export { ConsensusEngine } from './brain/consensus-engine.js';
 export { CollectiveLearning } from './brain/collective-learning.js';
+
+// Brain — v5.0.1 Zero-Config & Portability Modules
+export { AutoSetup } from './brain/auto-setup.js';
+export { PluginSystem } from './brain/plugin-system.js';
+export { BrainPortability } from './brain/brain-portability.js';
 
 // Dashboard
 export { DashboardServer } from './dashboard/server.js';

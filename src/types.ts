@@ -8,7 +8,8 @@ export type AgentTool =
   | 'codex'
   | 'roo-code'
   | 'aider'
-  | 'cursor';
+  | 'cursor'
+  | 'windsurf';
 
 export interface AgentAdapter {
   name: AgentTool;
@@ -1082,4 +1083,87 @@ export interface CollectiveLearningStats {
   consensusRate: number;
   networkSize: number; // number of connected projects/agents
   knowledgeBaseSizeMB: number;
+}
+
+// ── v5.0.1 Types ────────────────────────────────────────────────────────────────
+
+export interface AutoConfigResult {
+  projectDir: string;
+  projectName: string;
+  projectType: string;
+  languages: string[];
+  frameworks: string[];
+  buildTools: string[];
+  packageManager: 'npm' | 'yarn' | 'pnpm' | 'bun' | 'unknown';
+  aiTools: Array<{ name: string; path: string; detected: boolean }>;
+  testFrameworks: string[];
+  linters: string[];
+  formatters: string[];
+  cicd: string[];
+  hasGit: boolean;
+  hasDocker: boolean;
+  config: Partial<BrainConfig>;
+  timestamp: Date;
+}
+
+export interface PluginManifest {
+  name: string;
+  version: string;
+  description: string;
+  author: string;
+  main: string;
+  hooks: PluginHook[];
+  dependencies?: string[];
+}
+
+export interface PluginHook {
+  event: 'pre-analysis' | 'post-analysis' | 'pre-insight' | 'post-insight' | 'pre-fix' | 'post-fix' | 'on-start' | 'on-stop' | 'on-file-change';
+  handler: string; // function name exported from plugin main
+  priority?: number; // lower = runs first
+}
+
+export interface PluginInstance {
+  manifest: PluginManifest;
+  enabled: boolean;
+  loadedAt: Date;
+  errorCount: number;
+  lastError?: string;
+}
+
+export interface BrainExportData {
+  version: string;
+  exportedAt: Date;
+  projectName: string;
+  projectDir: string;
+  hierarchicalMemory: any;
+  patternMemory: any;
+  learningEngine: any;
+  neuralMesh: any;
+  consensusState: any;
+  recallState: any;
+  collectiveRules: any;
+  turboMemory: any;
+  knowledgeGraph: any;
+  swarmState: any;
+  evolutionState: any;
+  customRules: any;
+  plugins: PluginManifest[];
+}
+
+export interface ConnectedTool {
+  name: string;
+  type: AgentTool;
+  status: 'connected' | 'disconnected' | 'unknown';
+  lastSeen: Date;
+  capabilities: string[];
+}
+
+export interface BrainModuleStatus {
+  name: string;
+  version: string;
+  status: 'active' | 'idle' | 'error';
+  entries?: number;
+  memoryMB?: number;
+  lastActivity?: Date;
+  details?: Record<string, unknown>;
 }

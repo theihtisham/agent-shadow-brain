@@ -18,6 +18,7 @@ export const ALL_ADAPTERS: Record<AgentTool, () => AgentAdapter> = {
   'roo-code': () => new RooCodeAdapter(),
   'aider': () => new AiderAdapter(),
   'cursor': () => new ClineAdapter(),      // Similar VS Code pattern
+  'windsurf': () => new ClineAdapter(),    // Similar VS Code pattern
 };
 
 export function createAdapter(tool: AgentTool): AgentAdapter {

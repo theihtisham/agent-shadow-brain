@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="docs/images/v5-banner.svg" alt="Agent Shadow Brain v5.0.1 — Infinite Intelligence Edition" width="100%">
+<img src="banner.svg" alt="Agent Shadow Brain v5.0.1 — Infinite Intelligence Edition" width="100%">
 
 <br/>
 

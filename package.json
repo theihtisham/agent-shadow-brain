@@ -1,7 +1,7 @@
 {
   "name": "@theihtisham/agent-shadow-brain",
-  "version": "5.0.1",
-  "description": "World's #1 AI coding intelligence layer — Zero-config auto-setup, MCP server for Claude Code + Cursor + any AI tool, rich web dashboard, infinite hierarchical memory (4-tier compression, zero forgetting), context-triggered associative recall, multi-agent consensus protocol, collective cross-project learning, TurboQuant 6x compression, SSSP neural routing, cross-agent protocol, self-evolving genetic rules, predictive bug forecasting, knowledge graph with PageRank, swarm intelligence, adversarial hallucination defense, plugin system, brain export/import, and natural language queries. v5.0.1 Infinite Intelligence Edition.",
+  "version": "5.1.1",
+  "description": "World's #1 AI coding intelligence layer — Zero-config auto-setup, MCP server for Claude Code + Cursor + any AI tool, built-in LSP server for real-time editor feedback, custom LLM fine-tuning engine (trains on YOUR codebase patterns), multi-tier smart cache with predictive prefetch, developer intent prediction, Code DNA fingerprinting for style consistency, temporal intelligence with velocity tracking and bug prediction, rich web dashboard, infinite hierarchical memory, context-triggered recall, multi-agent consensus, collective learning, TurboQuant compression, SSSP routing, cross-agent protocol, self-evolving rules, swarm intelligence, adversarial defense, plugin system, and 60+ CLI commands. v5.1.1 Hyper-Cognitive Intelligence Edition.",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"

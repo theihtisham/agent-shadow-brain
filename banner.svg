@@ -149,91 +149,109 @@
   <text x="640" y="225" text-anchor="middle" font-family="Segoe UI,system-ui,-apple-system,sans-serif" font-size="50" font-weight="800" fill="url(#titleGrad)">AGENT SHADOW BRAIN</text>
 
   <!-- Subtitle -->
-  <text x="640" y="250" text-anchor="middle" font-family="Segoe UI,system-ui,-apple-system,sans-serif" font-size="13" fill="#94a3b8" letter-spacing="7">INFINITE INTELLIGENCE EDITION</text>
+  <text x="640" y="250" text-anchor="middle" font-family="Segoe UI,system-ui,-apple-system,sans-serif" font-size="13" fill="#94a3b8" letter-spacing="7">HYPER-COGNITIVE INTELLIGENCE EDITION</text>
 
   <!-- Version badge -->
   <rect x="565" y="262" width="150" height="24" rx="12" fill="#0d0a2e" stroke="#22d3ee" stroke-width="1.2"/>
-  <text x="640" y="279" text-anchor="middle" font-family="Courier New,monospace" font-size="12" font-weight="700" fill="#22d3ee">v5.0.1</text>
+  <text x="640" y="279" text-anchor="middle" font-family="Courier New,monospace" font-size="12" font-weight="700" fill="#22d3ee">v5.1.1</text>
 
   <!-- Top accent line -->
   <rect x="200" y="298" width="880" height="1.5" fill="url(#line1)" opacity="0.4"/>
 
-  <!-- ===== ROW 1: v5.0.1 NEW FEATURES ===== -->
-  <text x="80" y="325" font-family="Segoe UI,sans-serif" font-size="10" fill="#22d3ee" letter-spacing="3" font-weight="600">v5.0.1 NEW</text>
+  <!-- ===== ROW 1: v5.1.1 HYPER-COGNITIVE ===== -->
+  <text x="80" y="325" font-family="Segoe UI,sans-serif" font-size="10" fill="#22d3ee" letter-spacing="3" font-weight="600">v5.1.1 HYPER-COGNITIVE</text>
 
-  <!-- Zero-Config Auto-Setup -->
+  <!-- LSP Server -->
   <g transform="translate(80,332)">
-    <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#22d3ee" stroke-width="0.8" opacity="0.9"/>
+    <rect width="175" height="48" rx="7" fill="#0d0a2e" stroke="#22d3ee" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#skyBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#38bdf8">ZERO-CONFIG AUTO-SETUP</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Auto-detect project + AI tools</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">25+ langs · 15+ frameworks · MCP auto</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#38bdf8">LSP SERVER</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Real-time IDE feedback</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">stdio + TCP · JSON-RPC 2.0</text>
   </g>
 
-  <!-- MCP Server -->
-  <g transform="translate(365,332)">
-    <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#a78bfa" stroke-width="0.8" opacity="0.9"/>
+  <!-- Fine-Tuning Engine -->
+  <g transform="translate(272,332)">
+    <rect width="175" height="48" rx="7" fill="#0d0a2e" stroke="#a78bfa" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#violetBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#a78bfa">MCP SERVER — 19 TOOLS</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Works with ALL AI coding agents</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Claude Code · Cursor · Cline · Kilo + 5</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#a78bfa">FINE-TUNING ENGINE</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Train on codebase patterns</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Style rules · Naming · Types</text>
   </g>
 
-  <!-- Dashboard -->
-  <g transform="translate(650,332)">
-    <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#2dd4bf" stroke-width="0.8" opacity="0.9"/>
+  <!-- Smart Cache -->
+  <g transform="translate(464,332)">
+    <rect width="175" height="48" rx="7" fill="#0d0a2e" stroke="#2dd4bf" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#tealBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#2dd4bf">REAL-TIME DASHBOARD</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">WebSocket live updates · 8 panels</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Health · Memory · Insights · Modules</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#2dd4bf">SMART CACHE</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">3-tier hot/warm/cold + prefetch</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">LRU · TTL · Predictive warmup</text>
   </g>
 
-  <!-- Plugin System + Export -->
-  <g transform="translate(935,332)">
-    <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#34d399" stroke-width="0.8" opacity="0.9"/>
+  <!-- Intent Engine -->
+  <g transform="translate(656,332)">
+    <rect width="175" height="48" rx="7" fill="#0d0a2e" stroke="#34d399" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#emeraldBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#34d399">PLUGINS + EXPORT/IMPORT</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Hookable pipeline · Team sync</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">npm plugins · NL queries · Brain port</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#34d399">INTENT ENGINE</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Predict developer actions</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">22 action types · Context-aware</text>
   </g>
 
-  <!-- ===== ROW 2: v5.0.0 INFINITE INTELLIGENCE ===== -->
-  <text x="80" y="402" font-family="Segoe UI,sans-serif" font-size="10" fill="#a855f7" letter-spacing="3" font-weight="600">v5.0.0 INFINITE INTELLIGENCE</text>
+  <!-- Code DNA -->
+  <g transform="translate(848,332)">
+    <rect width="175" height="48" rx="7" fill="#0d0a2e" stroke="#fb7185" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="48" rx="2" fill="url(#roseBar)"/>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#fb7185">CODE DNA</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Fingerprint style consistency</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">9 gene categories · Drift detect</text>
+  </g>
 
-  <!-- Hierarchical Memory -->
+  <!-- Temporal Intelligence -->
+  <g transform="translate(1040,332)">
+    <rect width="175" height="48" rx="7" fill="#0d0a2e" stroke="#f59e0b" stroke-width="0.8" opacity="0.9"/>
+    <rect width="4" height="48" rx="2" fill="url(#amberBar)"/>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#f59e0b">TEMPORAL INTEL</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Velocity · Heatmaps · Predict</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Bug forecast · Anomaly detect</text>
+  </g>
+
+  <!-- ===== ROW 2: v5.0.1 ZERO-CONFIG ===== -->
+  <text x="80" y="402" font-family="Segoe UI,sans-serif" font-size="10" fill="#a855f7" letter-spacing="3" font-weight="600">v5.0.1 ZERO-CONFIG PLATFORM</text>
+
+  <!-- Zero-Config + MCP -->
   <g transform="translate(80,409)">
     <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#a855f7" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#purpleBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#a855f7">HIERARCHICAL MEMORY</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">4-tier pyramid · Never forgets</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Raw 50K → Summ 10K → Pat 2K → Princ 500</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#a855f7">ZERO-CONFIG + MCP SERVER</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Auto-detect · 19 MCP tools</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">25+ langs · 9 AI agents · Auto-install</text>
   </g>
 
-  <!-- Context Recall -->
+  <!-- Hierarchical Memory -->
   <g transform="translate(365,409)">
     <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#06b6d4" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#cyanBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#06b6d4">CONTEXT-TRIGGERED RECALL</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Associative memory activation</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">File paths · Keywords · Co-occurrence</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#06b6d4">HIERARCHICAL MEMORY</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">4-tier pyramid · Never forgets</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Raw 50K · Summ 10K · Pat 2K · Princ 500</text>
   </g>
 
-  <!-- Consensus Engine -->
+  <!-- Consensus + Collective -->
   <g transform="translate(650,409)">
     <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#f59e0b" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#amberBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#f59e0b">CONSENSUS ENGINE</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Multi-agent voting + trust scores</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Byzantine tolerance · Conflict resolution</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#f59e0b">CONSENSUS + COLLECTIVE</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Multi-agent voting · Cross-project</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Trust scores · Rule propagation</text>
   </g>
 
-  <!-- Collective Learning -->
+  <!-- Dashboard + Plugins -->
   <g transform="translate(935,409)">
     <rect width="260" height="48" rx="7" fill="#0d0a2e" stroke="#10b981" stroke-width="0.8" opacity="0.9"/>
     <rect width="4" height="48" rx="2" fill="url(#greenBar)"/>
-    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#10b981">COLLECTIVE LEARNING</text>
-    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Cross-project rule sharing</text>
-    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">Viral propagation · Accuracy tracking</text>
+    <text x="18" y="18" font-family="Segoe UI,sans-serif" font-size="10.5" font-weight="700" fill="#10b981">DASHBOARD + PLUGINS</text>
+    <text x="18" y="32" font-family="Segoe UI,sans-serif" font-size="8.5" fill="#94a3b8">Real-time WebSocket · Hookable</text>
+    <text x="18" y="43" font-family="Courier New,monospace" font-size="7" fill="#64748b">8 panels · NL queries · Export/Import</text>
   </g>
 
   <!-- ===== ROW 3: v4.0.0 HYPER-INTELLIGENCE ===== -->
@@ -294,13 +312,13 @@
   <g transform="translate(350,568)">
     <!-- Stat: 16 Modules -->
     <rect width="120" height="36" rx="6" fill="#0d0a2e" stroke="#22d3ee" stroke-width="0.6" opacity="0.8"/>
-    <text x="60" y="16" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="800" fill="#22d3ee">16</text>
+    <text x="60" y="16" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="800" fill="#22d3ee">22</text>
     <text x="60" y="30" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="7.5" fill="#94a3b8">BRAIN MODULES</text>
   </g>
   <g transform="translate(485,568)">
     <!-- Stat: 50+ Commands -->
     <rect width="120" height="36" rx="6" fill="#0d0a2e" stroke="#f59e0b" stroke-width="0.6" opacity="0.8"/>
-    <text x="60" y="16" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="800" fill="#f59e0b">50+</text>
+    <text x="60" y="16" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="14" font-weight="800" fill="#f59e0b">60+</text>
     <text x="60" y="30" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="7.5" fill="#94a3b8">CLI COMMANDS</text>
   </g>
   <g transform="translate(620,568)">
@@ -329,7 +347,7 @@
   </g>
 
   <!-- Bottom tagline -->
-  <text x="640" y="638" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#475569" letter-spacing="1">ZERO-CONFIG · SELF-EVOLVING · INFINITE-MEMORY · MULTI-AGENT · HALLUCINATION-DEFENSE</text>
+  <text x="640" y="638" text-anchor="middle" font-family="Segoe UI,sans-serif" font-size="11" fill="#475569" letter-spacing="1">ZERO-CONFIG · SELF-EVOLVING · INFINITE-MEMORY · LSP SERVER · FINE-TUNING · CODE DNA</text>
 
   <!-- npm install hint -->
   <rect x="390" y="652" width="500" height="28" rx="14" fill="#0d0a2e" stroke="#a855f7" stroke-width="0.8" opacity="0.8"/>

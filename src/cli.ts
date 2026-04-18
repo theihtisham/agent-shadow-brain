@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// src/cli.ts — CLI entry point for Shadow Brain v5.0.1
+// src/cli.ts — CLI entry point for Shadow Brain v5.1.1
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -12,7 +12,7 @@ import { BaseAdapter } from './adapters/base-adapter.js';
 import { BrainConfig, BrainInsight, AgentTool, BrainPersonality, LLMProvider } from './types.js';
 import { checkForUpdate, formatUpdateNotice } from './brain/auto-update.js';
 
-const VERSION = '5.0.1';
+const VERSION = '5.1.1';
 
 const config: any = new Conf({
   projectName: 'shadow-brain',
@@ -2845,5 +2845,266 @@ program.addCommand(askCmd);
 program.addCommand(exportCmd);
 program.addCommand(importCmd);
 program.addCommand(pluginCmd);
+
+// ── v5.1.1 Commands ─────────────────────────────────────────────────────
+
+const lspCmd = new Command('lsp')
+  .description('Start the built-in Language Server Protocol server')
+  .option('--port <port>', 'TCP port for LSP server', '7343')
+  .option('--stdio', 'Use stdio transport instead of TCP')
+  .action(async (opts) => {
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — LSP Server`));
+    try {
+      const { LSPServer } = await import('./brain/lsp-server.js');
+      const lsp = new LSPServer(process.cwd());
+      if (opts.stdio) {
+        console.log(chalk.cyan('  Starting LSP server (stdio mode)...'));
+        lsp.startStdio();
+      } else {
+        const port = parseInt(opts.port, 10);
+        console.log(chalk.cyan(`  Starting LSP server on port ${port}...`));
+        lsp.startTCP(port);
+      }
+      console.log(chalk.green('  LSP server running. Connect your editor.'));
+      console.log(chalk.dim('  Features: diagnostics, hover, completions, code actions'));
+    } catch (err: any) {
+      console.error(chalk.red('  Error:'), err.message);
+      process.exit(1);
+    }
+  });
+
+const finetuneCmd = new Command('fine-tune')
+  .description('Train the brain on your codebase patterns')
+  .addCommand(new Command('train')
+    .description('Train on the current project')
+    .option('--dir <directory>', 'Directory to train on')
+    .action(async (opts) => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Fine-Tuning Engine`));
+      try {
+        const { FineTuningEngine } = await import('./brain/fine-tuning-engine.js');
+        const ft = new FineTuningEngine(opts.dir || process.cwd());
+        console.log(chalk.cyan('  Training on codebase patterns...'));
+        await ft.trainOnDirectory(opts.dir);
+        await ft.save();
+        const stats = ft.stats();
+        console.log(chalk.green('  Training complete!'));
+        console.log(chalk.dim('  Patterns: ') + chalk.cyan(String(stats.totalPatterns)));
+        console.log(chalk.dim('  Training points: ') + chalk.cyan(String(stats.totalTrainingPoints)));
+        console.log(chalk.dim('  Models: ') + chalk.cyan(String(stats.models)));
+        console.log(chalk.dim('  Accuracy: ') + chalk.cyan(`${(stats.accuracy * 100).toFixed(1)}%`));
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }))
+  .addCommand(new Command('stats')
+    .description('Show fine-tuning statistics')
+    .action(async () => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Fine-Tune Stats`));
+      try {
+        const { FineTuningEngine } = await import('./brain/fine-tuning-engine.js');
+        const ft = new FineTuningEngine(process.cwd());
+        await ft.load();
+        const stats = ft.stats();
+        console.log(chalk.dim('  Patterns: ') + chalk.cyan(String(stats.totalPatterns)));
+        console.log(chalk.dim('  Training points: ') + chalk.cyan(String(stats.totalTrainingPoints)));
+        console.log(chalk.dim('  Models: ') + chalk.cyan(String(stats.models)));
+        console.log(chalk.dim('  Accuracy: ') + chalk.cyan(`${(stats.accuracy * 100).toFixed(1)}%`));
+        if (stats.lastTrainingRun) {
+          console.log(chalk.dim('  Last trained: ') + chalk.cyan(new Date(stats.lastTrainingRun).toLocaleString()));
+        }
+        if (stats.topPatterns.length > 0) {
+          console.log(chalk.dim('\n  Top patterns:'));
+          for (const p of stats.topPatterns.slice(0, 5)) {
+            console.log(`    ${chalk.yellow(p.type)} (${p.count}x)`);
+          }
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }))
+  .addCommand(new Command('suggest')
+    .description('Get code suggestions based on trained model')
+    .argument('[context]', 'Context for suggestions', '')
+    .action(async (context: string) => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Code Suggestions`));
+      try {
+        const { FineTuningEngine } = await import('./brain/fine-tuning-engine.js');
+        const ft = new FineTuningEngine(process.cwd());
+        await ft.load();
+        const suggestions = ft.suggest(context || 'general');
+        if (suggestions.length === 0) {
+          console.log(chalk.dim('  No suggestions yet. Run: shadow-brain fine-tune train'));
+          return;
+        }
+        for (const s of suggestions) {
+          console.log(`  ${chalk.cyan(s.category)} ${chalk.white(s.text)} (${chalk.dim(`${(s.confidence * 100).toFixed(0)}%`)})`);
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }));
+
+const cacheCmd = new Command('cache')
+  .description('Smart cache management')
+  .addCommand(new Command('stats')
+    .description('Show cache statistics')
+    .action(async () => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Smart Cache`));
+      try {
+        const { SmartCache } = await import('./brain/smart-cache.js');
+        const cache = new SmartCache();
+        const stats = cache.stats();
+        console.log(chalk.dim('  Hot: ') + chalk.red(String(stats.hotEntries)));
+        console.log(chalk.dim('  Warm: ') + chalk.yellow(String(stats.warmEntries)));
+        console.log(chalk.dim('  Cold: ') + chalk.blue(String(stats.coldEntries)));
+        console.log(chalk.dim('  Hit rate: ') + chalk.green(`${(stats.hitRate * 100).toFixed(1)}%`));
+        console.log(chalk.dim('  Memory: ') + chalk.cyan(`${stats.memoryUsageMB} MB`));
+        console.log(chalk.dim('  Prefetch hits: ') + chalk.cyan(String(stats.prefetchHits)));
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }));
+
+const intentCmd = new Command('intent')
+  .description('Developer intent prediction')
+  .addCommand(new Command('stats')
+    .description('Show intent prediction statistics')
+    .action(async () => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Intent Engine`));
+      try {
+        const { IntentEngine } = await import('./brain/intent-engine.js');
+        const ie = new IntentEngine();
+        const stats = ie.stats();
+        console.log(chalk.dim('  Predictions: ') + chalk.cyan(String(stats.totalPredictions)));
+        console.log(chalk.dim('  Accuracy: ') + chalk.green(`${(stats.accuracy * 100).toFixed(1)}%`));
+        console.log(chalk.dim('  Avg confidence: ') + chalk.cyan(`${(stats.avgConfidence * 100).toFixed(1)}%`));
+        if (stats.topIntents.length > 0) {
+          console.log(chalk.dim('\n  Top intents:'));
+          for (const a of stats.topIntents.slice(0, 5)) {
+            console.log(`    ${chalk.yellow(a.action)}: ${a.count}`);
+          }
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }));
+
+const dnaCmd = new Command('dna')
+  .description('Code DNA fingerprinting and style analysis')
+  .addCommand(new Command('profile')
+    .description('Build a DNA profile of the project')
+    .option('--name <name>', 'Profile name', 'default')
+    .action(async (opts) => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Code DNA`));
+      try {
+        const { CodeDNA } = await import('./brain/code-dna.js');
+        const dna = new CodeDNA(process.cwd());
+        console.log(chalk.cyan('  Building DNA profile...'));
+        const profile = await dna.buildProfile(opts.name);
+        console.log(chalk.green('  Profile built!'));
+        console.log(chalk.dim('  Files analyzed: ') + chalk.cyan(String(profile.fileCount)));
+        console.log(chalk.dim('  Genes tracked: ') + chalk.cyan(String(profile.genes.size)));
+        console.log(chalk.dim('\n  Gene highlights:'));
+        for (const g of Array.from(profile.genes.values()).slice(0, 8)) {
+          const bar = '█'.repeat(Math.round(g.value * 10)) + '░'.repeat(10 - Math.round(g.value * 10));
+          console.log(`    ${chalk.dim(g.category.padEnd(16))} ${chalk.yellow(g.trait.padEnd(24))} ${chalk.cyan(bar)} ${(g.value * 100).toFixed(0)}%`);
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }))
+  .addCommand(new Command('consistency')
+    .description('Check code style consistency')
+    .action(async () => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Style Consistency`));
+      try {
+        const { CodeDNA } = await import('./brain/code-dna.js');
+        const dna = new CodeDNA(process.cwd());
+        console.log(chalk.cyan('  Analyzing consistency...'));
+        const report = await dna.checkConsistency();
+        const scoreColor = report.overall > 0.8 ? chalk.green : report.overall > 0.6 ? chalk.yellow : chalk.red;
+        console.log(chalk.dim('  Overall score: ') + scoreColor(`${(report.overall * 100).toFixed(1)}%`));
+        if (report.recommendations.length > 0) {
+          console.log(chalk.dim('\n  Recommendations:'));
+          for (const r of report.recommendations.slice(0, 5)) {
+            console.log(`    ${chalk.yellow('→')} ${r}`);
+          }
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }));
+
+const temporalCmd = new Command('temporal')
+  .description('Temporal code evolution analysis')
+  .addCommand(new Command('velocity')
+    .description('Show development velocity')
+    .action(async () => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Velocity`));
+      try {
+        const { TemporalIntelligence } = await import('./brain/temporal-intelligence.js');
+        const ti = new TemporalIntelligence(process.cwd());
+        const velocity = ti.getVelocity();
+        const trendIcon = velocity.trend === 'accelerating' ? '🚀' : velocity.trend === 'stable' ? '→' : velocity.trend === 'decelerating' ? '↓' : '⏸';
+        console.log(chalk.dim('  Daily events: ') + chalk.cyan(String(velocity.daily)));
+        console.log(chalk.dim('  Weekly events: ') + chalk.cyan(String(velocity.weekly)));
+        console.log(chalk.dim('  Monthly events: ') + chalk.cyan(String(velocity.monthly)));
+        console.log(chalk.dim('  Trend: ') + chalk.yellow(`${trendIcon} ${velocity.trend} (${(velocity.trendConfidence * 100).toFixed(0)}%)`));
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }))
+  .addCommand(new Command('hotfiles')
+    .description('Show most active files')
+    .option('-n <count>', 'Number of files', '10')
+    .action(async (opts) => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Hot Files`));
+      try {
+        const { TemporalIntelligence } = await import('./brain/temporal-intelligence.js');
+        const ti = new TemporalIntelligence(process.cwd());
+        const hot = ti.getHotFiles(parseInt(opts.n || '10', 10));
+        if (hot.length === 0) {
+          console.log(chalk.dim('  No file history yet. Run analysis first.'));
+          return;
+        }
+        for (const f of hot) {
+          const bar = '█'.repeat(Math.round(f.hotness * 10)) + '░'.repeat(10 - Math.round(f.hotness * 10));
+          console.log(`  ${chalk.red(bar)} ${chalk.dim(`${(f.hotness * 100).toFixed(0)}%`.padStart(4))} ${chalk.white(f.file)}`);
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }))
+  .addCommand(new Command('predict-bugs')
+    .description('Predict bug-prone files')
+    .option('-n <count>', 'Number of predictions', '10')
+    .action(async (opts) => {
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Bug Predictions`));
+      try {
+        const { TemporalIntelligence } = await import('./brain/temporal-intelligence.js');
+        const ti = new TemporalIntelligence(process.cwd());
+        const bugs = ti.predictBugs(parseInt(opts.n || '10', 10));
+        if (bugs.length === 0) {
+          console.log(chalk.dim('  No predictions available. Need more history.'));
+          return;
+        }
+        for (const b of bugs) {
+          const risk = b.probability > 0.7 ? chalk.red : b.probability > 0.4 ? chalk.yellow : chalk.green;
+          console.log(`  ${risk(`${(b.probability * 100).toFixed(0)}%`.padStart(4))} ${chalk.white(b.file)}`);
+          for (const f of b.factors) {
+            console.log(`       ${chalk.dim('→')} ${chalk.dim(f)}`);
+          }
+        }
+      } catch (err: any) {
+        console.error(chalk.red('  Error:'), err.message);
+      }
+    }));
+
+program.addCommand(lspCmd);
+program.addCommand(finetuneCmd);
+program.addCommand(cacheCmd);
+program.addCommand(intentCmd);
+program.addCommand(dnaCmd);
+program.addCommand(temporalCmd);
 
 program.parse();

@@ -1167,3 +1167,223 @@ export interface BrainModuleStatus {
   lastActivity?: Date;
   details?: Record<string, unknown>;
 }
+
+// ── v6.0.0 — Hyper-Cognitive Intelligence Types ────────────────────────────
+
+// Fine-Tuning Engine types
+export interface FineTuneModel {
+  version: string;
+  trainedAt: number;
+  totalPatterns: number;
+  totalTrainingPoints: number;
+  styleRules: StyleRule[];
+  accuracy: number;
+}
+
+export interface StyleRule {
+  name: string;
+  pattern: string;
+  confidence: number;
+  occurrences: number;
+  category: string;
+  enforced: boolean;
+}
+
+export interface CodeSuggestion {
+  type: string;
+  suggestion: string;
+  confidence: number;
+  basedOn: string;
+  example?: string;
+}
+
+export interface FineTuneStats {
+  totalPatterns: number;
+  totalTrainingPoints: number;
+  styleRules: number;
+  modelAccuracy: number;
+  categoryCounts: Record<string, number>;
+  lastTrained: number | null;
+  topPatterns: Array<{ pattern: string; category: string; frequency: number }>;
+}
+
+// Smart Cache types
+export interface SmartCacheStats {
+  hotEntries: number;
+  warmEntries: number;
+  coldEntries: number;
+  totalEntries: number;
+  hits: number;
+  misses: number;
+  hitRate: number;
+  evictions: number;
+  promotions: number;
+  demotions: number;
+  memoryUsageMB: number;
+  prefetchHits: number;
+  avgAccessTime: number;
+}
+
+// Intent Engine types
+export type IntentAction =
+  | 'adding-feature' | 'fixing-bug' | 'refactoring' | 'adding-tests'
+  | 'updating-deps' | 'improving-perf' | 'adding-docs' | 'cleanup'
+  | 'security-fix' | 'api-change' | 'ui-change' | 'config-change'
+  | 'ci-cd' | 'database-migration' | 'unknown';
+
+export interface DeveloperIntent {
+  action: IntentAction;
+  confidence: number;
+  evidence: string[];
+  prediction: string;
+  suggestions: string[];
+  relatedFiles: string[];
+  estimatedScope: 'small' | 'medium' | 'large';
+  timestamp: number;
+}
+
+export interface IntentStats {
+  totalPredictions: number;
+  confirmedCorrect: number;
+  confirmedWrong: number;
+  accuracy: number;
+  topActions: Array<{ action: IntentAction; count: number }>;
+  sessionCount: number;
+  avgConfidence: number;
+}
+
+// Code DNA types
+export type GeneCategory =
+  | 'formatting' | 'naming' | 'structure' | 'complexity'
+  | 'documentation' | 'error-handling' | 'testing' | 'imports'
+  | 'typing' | 'async-patterns' | 'functional' | 'oop';
+
+export interface CodeGene {
+  name: string;
+  category: GeneCategory;
+  value: number;
+  confidence: number;
+  sampleSize: number;
+}
+
+export interface DNAProfile {
+  id: string;
+  name: string;
+  genes: CodeGene[];
+  fileCount: number;
+  createdAt: number;
+  updatedAt: number;
+}
+
+export interface DNAComparison {
+  similarity: number;
+  profileA: string;
+  profileB: string;
+  matchingGenes: string[];
+  divergentGenes: Array<{ gene: string; valueA: number; valueB: number; delta: number }>;
+}
+
+export interface StyleConsistencyReport {
+  overallScore: number;
+  fileScores: Array<{ file: string; score: number; deviations: string[] }>;
+  topDeviations: Array<{ gene: string; avgDeviation: number; worstFile: string }>;
+  recommendations: string[];
+}
+
+export interface CodeDNAStats {
+  profileCount: number;
+  totalGenesTracked: number;
+  avgGeneConfidence: number;
+  categoryCoverage: Record<GeneCategory, number>;
+  filesAnalyzed: number;
+  lastProfileUpdate: number | null;
+}
+
+// Temporal Intelligence types
+export interface TemporalEvent {
+  id: string;
+  timestamp: number;
+  type: 'commit' | 'file-change' | 'bug-fix' | 'feature' | 'refactor' | 'incident' | 'deploy' | 'review';
+  file?: string;
+  description: string;
+  impact: number;
+  metadata?: Record<string, unknown>;
+}
+
+export interface VelocityMetrics {
+  daily: number;
+  weekly: number;
+  monthly: number;
+  trend: 'accelerating' | 'stable' | 'decelerating' | 'stalled';
+  trendConfidence: number;
+  peakHours: number[];
+  peakDays: number[];
+  avgCycleTime: number;
+}
+
+export interface TemporalAnomaly {
+  timestamp: number;
+  type: 'burst' | 'drought' | 'pattern-break' | 'unusual-hour' | 'regression';
+  severity: 'info' | 'warning' | 'critical';
+  description: string;
+  evidence: string[];
+  recommendation: string;
+}
+
+export interface FileHeatmap {
+  file: string;
+  changeFrequency: number;
+  lastChanged: number;
+  avgTimeBetweenChanges: number;
+  hotness: number;
+  churnRisk: number;
+  stabilityScore: number;
+}
+
+export interface BugPrediction {
+  file: string;
+  probability: number;
+  factors: string[];
+  lastBugFix: number | null;
+  changesSinceLastFix: number;
+  complexity: number;
+}
+
+export interface TemporalStats {
+  totalEvents: number;
+  timeSpan: { start: number; end: number; durationDays: number };
+  velocity: VelocityMetrics;
+  anomalyCount: number;
+  hotFiles: number;
+  bugPredictions: number;
+  avgEventsPerDay: number;
+}
+
+// LSP Server types
+export interface LSPDiagnosticRule {
+  code: string;
+  severity: 'error' | 'warning' | 'info' | 'hint';
+  pattern: RegExp;
+  message: string;
+  category: string;
+}
+
+export interface LSPStats {
+  documentsOpen: number;
+  diagnosticsEmitted: number;
+  hoversServed: number;
+  completionsServed: number;
+  codeActionsServed: number;
+  uptime: number;
+  lastActivity: number;
+}
+
+// v6.0.0 Orchestrator Status Extension
+export interface V6ModuleStatus {
+  fineTuning: FineTuneStats | null;
+  smartCache: SmartCacheStats | null;
+  intentEngine: IntentStats | null;
+  codeDNA: CodeDNAStats | null;
+  temporal: TemporalStats | null;
+  lsp: LSPStats | null;
+}

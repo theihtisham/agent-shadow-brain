@@ -59,6 +59,13 @@ import { HierarchicalMemory } from './hierarchical-memory.js';
 import { ContextRecall } from './context-recall.js';
 import { ConsensusEngine } from './consensus-engine.js';
 import { CollectiveLearning } from './collective-learning.js';
+// v5.1.1 Hyper-Cognitive Intelligence Modules
+import { FineTuningEngine } from './fine-tuning-engine.js';
+import { SmartCache } from './smart-cache.js';
+import { IntentEngine } from './intent-engine.js';
+import { CodeDNA } from './code-dna.js';
+import { TemporalIntelligence } from './temporal-intelligence.js';
+import { LSPServer } from './lsp-server.js';
 import {
   BrainConfig, BrainInsight, BrainSession, AgentTool, FileChange, AgentAdapter,
   CodeMetrics, VulnResult, CustomRule, ProjectConfig, PRDescription, CommitMessage,
@@ -71,6 +78,8 @@ import {
   InfiniteMemoryStats, SSSPResult, CrossAgentBus, EvolutionSnapshot,
   BugRiskScore, TechDebtForecast, AnomalyEvent, PageRankResult, AntColonyState,
   HallucinationFlag, AdversarialLog,
+  // v5.1.1 types
+  V6ModuleStatus,
 } from '../types.js';
 
 export class Orchestrator extends EventEmitter {
@@ -132,6 +141,14 @@ export class Orchestrator extends EventEmitter {
   private contextRecall: ContextRecall;
   private consensusEngine: ConsensusEngine;
   private collectiveLearning: CollectiveLearning;
+
+  // v5.1.1 Hyper-Cognitive Intelligence Modules
+  private fineTuningEngine: FineTuningEngine;
+  private smartCache: SmartCache;
+  private intentEngine: IntentEngine;
+  private codeDNA: CodeDNA;
+  private temporalIntelligence: TemporalIntelligence;
+  private lspServer: LSPServer | null = null;
 
   private running = false;
   private analyzing = false;
@@ -211,6 +228,13 @@ export class Orchestrator extends EventEmitter {
     this.contextRecall = new ContextRecall(this.hierarchicalMemory);
     this.consensusEngine = new ConsensusEngine();
     this.collectiveLearning = new CollectiveLearning(config.projectDir);
+
+    // v5.1.1 Hyper-Cognitive Intelligence Modules
+    this.fineTuningEngine = new FineTuningEngine(config.projectDir);
+    this.smartCache = new SmartCache();
+    this.intentEngine = new IntentEngine();
+    this.codeDNA = new CodeDNA(config.projectDir);
+    this.temporalIntelligence = new TemporalIntelligence(config.projectDir);
 
     // Load project config and setup notifier if configured
     const projectConfig = this.projectConfigLoader.load();
@@ -971,7 +995,7 @@ export class Orchestrator extends EventEmitter {
   getStatus() {
     return {
       running: this.running,
-      version: '5.0.0',
+      version: '5.1.1',
       agents: this.adapters.map(a => `${a.displayName} (${a.name})`),
       insightsGenerated: this.currentSession?.insights.length || 0,
       filesReviewed: this.currentSession?.filesReviewed || 0,
@@ -1016,6 +1040,17 @@ export class Orchestrator extends EventEmitter {
       contextRecallStats: this.contextRecall?.getStats?.() ?? null,
       consensusStats: this.consensusEngine?.getStats?.() ?? null,
       collectiveLearningStats: this.collectiveLearning?.getStats?.() ?? null,
+      // v5.1.1 Hyper-Cognitive Intelligence
+      fineTuningStats: this.fineTuningEngine?.stats?.() ?? null,
+      smartCacheStats: this.smartCache?.stats?.() ?? null,
+      intentEngineStats: this.intentEngine?.stats?.() ?? null,
+      codeDNAStats: this.codeDNA?.stats?.() ?? null,
+      temporalStats: this.temporalIntelligence?.stats?.() ?? null,
+      lspEnabled: this.lspServer !== null,
+      v511Modules: [
+        'fine-tuning', 'smart-cache', 'intent-engine',
+        'code-dna', 'temporal-intelligence', 'lsp-server',
+      ],
     };
   }
 

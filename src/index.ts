@@ -1,4 +1,4 @@
-// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v5.0.1
+// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v5.1.1
 
 // Types
 export type {
@@ -110,6 +110,29 @@ export type {
   TrustScore,
   CollectiveRule,
   CollectiveLearningStats,
+  // v5.1.1 Hyper-Cognitive Intelligence types
+  FineTuneModel,
+  StyleRule,
+  CodeSuggestion,
+  FineTuneStats,
+  SmartCacheStats,
+  IntentAction,
+  DeveloperIntent,
+  IntentStats,
+  GeneCategory,
+  CodeGene,
+  DNAProfile,
+  DNAComparison,
+  StyleConsistencyReport,
+  CodeDNAStats,
+  TemporalEvent,
+  VelocityMetrics,
+  TemporalAnomaly,
+  FileHeatmap,
+  BugPrediction,
+  TemporalStats,
+  LSPStats,
+  V6ModuleStatus,
 } from './types.js';
 
 // Adapters
@@ -206,6 +229,15 @@ export { CollectiveLearning } from './brain/collective-learning.js';
 export { AutoSetup } from './brain/auto-setup.js';
 export { PluginSystem } from './brain/plugin-system.js';
 export { BrainPortability } from './brain/brain-portability.js';
+
+// Brain — v5.1.1 Hyper-Cognitive Intelligence Modules
+export { FineTuningEngine } from './brain/fine-tuning-engine.js';
+export { SmartCache } from './brain/smart-cache.js';
+export type { CacheConfig, CacheEntry, PrefetchHint } from './brain/smart-cache.js';
+export { IntentEngine } from './brain/intent-engine.js';
+export { CodeDNA } from './brain/code-dna.js';
+export { TemporalIntelligence } from './brain/temporal-intelligence.js';
+export { LSPServer } from './brain/lsp-server.js';
 
 // Dashboard
 export { DashboardServer } from './dashboard/server.js';

@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="banner.svg" alt="Agent Shadow Brain v5.0.1 — Infinite Intelligence Edition" width="100%">
+<img src="banner.svg" alt="Agent Shadow Brain v5.1.1 — Hyper-Cognitive Intelligence Edition" width="100%">
 
 <br/>
 
@@ -17,13 +17,13 @@
 
 <br/>
 
-### **The World's #1 Infinite-Intelligence AI Coding Brain**
+### **The World's #1 Hyper-Cognitive AI Coding Brain**
 
 **Shadow Brain** is a zero-config, self-evolving, infinite-memory intelligence layer that makes **every AI coding agent** write better, safer, faster code. Install it once, and it automatically detects your project, your AI tools, your frameworks — and starts making your agents smarter forever.
 
-> **v5.0.1 — Infinite Intelligence Edition**: Zero-config auto-setup with MCP server for **Claude Code + Cursor + 8 AI tools**, rich web dashboard with real-time WebSocket updates, natural language brain queries, plugin system, brain export/import for team sync, git hook integration, and all v5.0.0 infinite intelligence features — 4-tier hierarchical memory, context-triggered associative recall, multi-agent consensus, collective cross-project learning, TurboQuant 6x compression, SSSP routing, self-evolving genetic rules, adversarial hallucination defense, swarm intelligence, knowledge graph with PageRank, and predictive bug forecasting.
+> **v5.1.1 — Hyper-Cognitive Intelligence Edition**: 6 new brain modules — **Built-in LSP Server** for real-time IDE feedback, **Custom LLM Fine-Tuning Engine** to train on your codebase, **Smart Cache** with multi-tier predictive prefetch, **Intent Engine** for natural language command understanding, **Code DNA** fingerprinting with 9-gene analysis, and **Temporal Intelligence** for velocity tracking & bug prediction. Plus all v5.0.1 zero-config features (MCP server, dashboard, plugins, export/import), v5.0.0 infinite intelligence (hierarchical memory, consensus, collective learning), and v4.0.0 hyper-intelligence (TurboQuant, SSSP, self-evolution, adversarial defense, swarm, knowledge graph, predictive engine).
 
-[**Install Now**](#-getting-started-30-seconds) · [**Dashboard**](#-web-dashboard) · [**v5.0.1 New**](#-v501-whats-new) · [**Algorithms**](#-algorithms--research) · [**CLI Reference**](#-cli-reference) · [**Architecture**](#-architecture)
+[**Install Now**](#-getting-started-30-seconds) · [**Dashboard**](#-web-dashboard) · [**v5.1.1 New**](#-v511-whats-new) · [**Algorithms**](#-algorithms--research) · [**CLI Reference**](#-cli-reference) · [**Architecture**](#-architecture)
 
 </div>
 
@@ -45,22 +45,27 @@ You use AI coding agents. They're powerful, but:
 
 ## The Solution
 
-**Shadow Brain v5.0.1** — zero-config, auto-detecting, infinite-intelligence shadow layer:
+**Shadow Brain v5.1.1** — zero-config, auto-detecting, infinite-intelligence shadow layer:
 
 ```
 ┌──────────────┐    auto-detect     ┌──────────────────────────────────────────┐
-│  AI Agents   │ ◀────────────────  │         SHADOW BRAIN v5.0.1              │
+│  AI Agents   │ ◀────────────────  │         SHADOW BRAIN v5.1.1              │
 │ Claude Code  │  MCP auto-install  │                                          │
-│ Cursor       │  zero-config       │  ┌─ ZERO-CONFIG (v5.0.1 NEW) ────────┐  │
-│ Kilo Code    │                    │  │ Auto-detect project, tools, langs  │  │
-│ Cline        │    watches         │  │ MCP server for ALL AI tools        │  │
-│ OpenCode     │ ──────────────▶   │  │ Rich web dashboard (real-time)     │  │
-│ Codex        │  file changes      │  │ Natural language brain queries     │  │
-│ Roo Code     │  git commits       │  │ Plugin system + export/import      │  │
-│ Aider        │  activity          │  └────────────────────────────────────┘  │
-│ Windsurf     │                    │  ┌─ INFINITE MEMORY (v5.0.0) ────────┐  │
-└──────────────┘                    │  │ 4-tier hierarchical compression    │  │
-         ▲                          │  │ Context-triggered recall            │  │
+│ Cursor       │  zero-config       │  ┌─ HYPER-COGNITIVE (v5.1.1 NEW) ────┐  │
+│ Kilo Code    │                    │  │ Built-in LSP Server (stdio+TCP)   │  │
+│ Cline        │    watches         │  │ Custom LLM Fine-Tuning Engine     │  │
+│ OpenCode     │ ──────────────▶   │  │ Smart Cache (hot/warm/cold tiers) │  │
+│ Codex        │  file changes      │  │ Intent Engine (NLP commands)      │  │
+│ Roo Code     │  git commits       │  │ Code DNA (9-gene fingerprinting) │  │
+│ Aider        │  activity          │  │ Temporal Intelligence (velocity)  │  │
+│ Windsurf     │                    │  └────────────────────────────────────┘  │
+└──────────────┘                    │  ┌─ ZERO-CONFIG (v5.0.1) ─────────────┐  │
+         ▲                          │  │ Auto-detect + MCP + Dashboard      │  │
+         │                          │  │ Plugins + Export/Import + Hooks    │  │
+         │                          │  └────────────────────────────────────┘  │
+         │                          │  ┌─ INFINITE MEMORY (v5.0.0) ────────┐  │
+         │                          │  │ 4-tier hierarchical compression    │  │
+         │                          │  │ Context-triggered recall            │  │
          │                          │  │ Multi-agent consensus + trust       │  │
          │                          │  │ Collective cross-project learning   │  │
          │                          │  └────────────────────────────────────┘  │
@@ -71,6 +76,129 @@ You use AI coding agents. They're powerful, but:
          │                          │  │ PageRank + Predictive + Adversarial │  │
          └──────────────────────────┴──────────────────────────────────────────┘
 ```
+
+---
+
+## v5.1.1 — What's New
+
+### 6 Hyper-Cognitive Brain Modules
+
+<table>
+<tr>
+<td width="50%">
+
+### Built-in LSP Server
+
+**Language Server Protocol** — real-time IDE feedback without external tools.
+
+Pure Node.js LSP server supporting stdio and TCP transport modes:
+- **Diagnostics**: pushes brain insights as IDE warnings/errors
+- **Hover**: shows code health info on hover
+- **Code Actions**: quick-fix suggestions from brain analysis
+- **Zero dependency**: no external LSP libraries required
+
+```bash
+shadow-brain lsp --stdio          # stdio mode (for editors)
+shadow-brain lsp --tcp 2087       # TCP mode (for remote)
+```
+
+### Custom LLM Fine-Tuning Engine
+
+**Train on your codebase** — your brain learns YOUR patterns.
+
+Automatic training data generation from code changes, insights, and fixes:
+- **Pair extraction**: before/after code → training pairs
+- **Pattern mining**: recurring fix patterns → fine-tune examples
+- **JSONL export**: ready for OpenAI, Anthropic, or local fine-tuning
+- **Quality scoring**: only high-confidence pairs enter the dataset
+
+```bash
+shadow-brain fine-tune status             # Training data stats
+shadow-brain fine-tune generate [dir]     # Generate training pairs
+shadow-brain fine-tune export [path]      # Export JSONL dataset
+```
+
+</td>
+<td width="50%">
+
+### Smart Cache (Multi-Tier)
+
+**Hot/Warm/Cold** — intelligent caching with predictive prefetch.
+
+Three-tier LRU cache with automatic promotion and demotion:
+- **Hot tier**: 200 entries, fastest access
+- **Warm tier**: 1000 entries, promoted on repeated access
+- **Cold tier**: 5000 entries, compressed storage
+- **Predictive prefetch**: co-access graph predicts what you'll need next
+- **Tag-based invalidation**: invalidate by category
+
+```bash
+shadow-brain cache stats          # Hit rate, tier sizes, memory usage
+shadow-brain cache clear          # Clear all tiers
+```
+
+### Intent Engine
+
+**Natural language → brain actions** — understand what you mean.
+
+Multi-strategy NLP command understanding:
+- **Keyword matching**: fast path for common commands
+- **Fuzzy matching**: handles typos and variations
+- **Context-aware**: uses current file/project context
+- **Confidence scoring**: routes to best-matching action
+
+```bash
+shadow-brain intent "find security bugs"    # Maps to: analyze + security filter
+shadow-brain intent "show hot files"        # Maps to: temporal + heatmap
+```
+
+</td>
+</tr>
+<tr>
+<td width="50%">
+
+### Code DNA Fingerprinting
+
+**9-gene analysis** — every file gets a unique genetic profile.
+
+Analyzes code across 9 gene categories to create a structural fingerprint:
+- **Structure genes**: classes, functions, nesting depth
+- **Complexity genes**: cyclomatic complexity, cognitive load
+- **Style genes**: naming conventions, formatting patterns
+- **Dependency genes**: import graph, coupling metrics
+- **Evolution genes**: change frequency, stability score
+- **Similarity matching**: find structurally similar files across projects
+
+```bash
+shadow-brain dna analyze [dir]    # Generate DNA profiles
+shadow-brain dna compare f1 f2    # Compare two file fingerprints
+shadow-brain dna similar [file]   # Find similar files
+```
+
+</td>
+<td width="50%">
+
+### Temporal Intelligence
+
+**Time-series code evolution** — velocity tracking & bug prediction.
+
+Continuous monitoring of code change patterns over time:
+- **Velocity metrics**: daily/weekly/monthly rates with trend detection
+- **File heatmaps**: hotness scoring, churn risk, stability
+- **Bug prediction**: 5-factor probability model per file
+- **Anomaly detection**: burst detection, drought alerts, unusual hours
+- **Peak analysis**: identifies your most productive hours and days
+
+```bash
+shadow-brain temporal stats       # Velocity, anomalies, predictions
+shadow-brain temporal hot         # Top 10 hottest files
+shadow-brain temporal predict     # Bug risk predictions
+shadow-brain temporal timeline    # Recent event timeline
+```
+
+</td>
+</tr>
+</table>
 
 ---
 
@@ -89,7 +217,7 @@ Install it. That's it. Shadow Brain automatically:
 
 ```bash
 npm install @theihtisham/agent-shadow-brain
-# → Shadow Brain v5.0.1 auto-configured for my-app (fullstack)
+# → Shadow Brain v5.1.1 auto-configured for my-app (fullstack)
 # → AI tools detected: Claude Code, Cursor
 # → Run: shadow-brain start
 ```
@@ -208,7 +336,7 @@ That's literally it. Shadow Brain will:
 2. **Auto-install** MCP server config for Claude Code, Cursor, Kilo Code, Cline, etc.
 3. **Auto-install** git hooks for pre-commit and pre-push
 4. Watch your project files for changes
-5. Analyze every change with LLM + 13 brain modules
+5. Analyze every change with LLM + 22 brain modules
 6. Inject expert insights into your agent's memory
 7. Store all knowledge in hierarchical memory for infinite retention
 8. Activate past memories automatically based on context
@@ -233,13 +361,13 @@ shadow-brain review . --output json      # JSON for scripting
 
 ## Web Dashboard
 
-The v5.0.1 dashboard provides a real-time view into your brain:
+The v5.1.1 dashboard provides a real-time view into your brain:
 
 ```
 ┌──────────────────────────────────────────────────────────────────────────┐
-│  Shadow Brain v5.0.1                                     [Analyze] [↻] │
+│  Shadow Brain v5.1.1                                     [Analyze] [↻] │
 ├──────────────────────────────────────────────────────────────────────────┤
-│  Insights: 142 │ Fixes: 38 │ Memory: 247KB │ Modules: 13/13 │ ...     │
+│  Insights: 142 │ Fixes: 38 │ Memory: 247KB │ Modules: 22/22 │ ...     │
 ├──────────────┬─────────────────────────────────────┬───────────────────┤
 │ Health: 87%  │  Live Insights Stream               │ AI Tools          │
 │ ████████░░   │  ● [HIGH] SQL injection in login.ts │ ● Claude Code ✓  │
@@ -347,7 +475,7 @@ shadow-brain collective search performance
 
 ## v4.0.0 Hyper-Intelligence Engine
 
-### 8 Breakthrough Modules (included in v5.0.1)
+### 8 Breakthrough Modules (included in v5.1.1)
 
 <table>
 <tr>
@@ -473,7 +601,7 @@ shadow-brain predict bugs .
 
 ## Algorithms & Research
 
-Shadow Brain v5.0.1 implements algorithms from **peer-reviewed research**:
+Shadow Brain v5.1.1 implements algorithms from **peer-reviewed research**:
 
 | Algorithm | Paper / Origin | Application | Complexity |
 |---|---|---|---|
@@ -521,7 +649,18 @@ Input Vector (64-dim, float64)
 
 <table>
 <tr>
-<td width="25%">
+<td width="20%">
+
+### Hyper-Cognitive (v5.1.1)
+- Built-in LSP Server
+- Custom LLM Fine-Tuning
+- Smart Cache (3-tier)
+- Intent Engine (NLP)
+- Code DNA Fingerprinting
+- Temporal Intelligence
+
+</td>
+<td width="20%">
 
 ### Zero Config (v5.0.1)
 - Auto-detect project + tools
@@ -533,7 +672,7 @@ Input Vector (64-dim, float64)
 - Git hook auto-install
 
 </td>
-<td width="25%">
+<td width="20%">
 
 ### Infinite Intelligence (v5)
 - 4-tier hierarchical memory
@@ -542,7 +681,7 @@ Input Vector (64-dim, float64)
 - Collective cross-project learning
 
 </td>
-<td width="25%">
+<td width="20%">
 
 ### Hyper-Intelligence (v4)
 - TurboQuant infinite memory
@@ -555,11 +694,12 @@ Input Vector (64-dim, float64)
 - Predictive bug forecasting
 
 </td>
-<td width="25%">
+<td width="20%">
 
 ### Developer Experience
-- **50+ CLI commands**
+- **60+ CLI commands**
 - MCP Server (19 tools)
+- Built-in LSP Server
 - Web dashboard (real-time)
 - Terminal UI (Ink/React)
 - Pre-commit hooks
@@ -574,10 +714,16 @@ Input Vector (64-dim, float64)
 
 ## Architecture
 
-### v5.0.1 Module Map (16 modules)
+### v5.1.1 Module Map (22 modules)
 
 | Module | File | What It Does | Since |
 |---|---|---|---|
+| **LSP Server** | `brain/lsp-server.ts` | Built-in Language Server Protocol (stdio+TCP) | v5.1.1 |
+| **Fine-Tuning Engine** | `brain/fine-tuning-engine.ts` | Custom LLM training data generation | v5.1.1 |
+| **Smart Cache** | `brain/smart-cache.ts` | Multi-tier caching with predictive prefetch | v5.1.1 |
+| **Intent Engine** | `brain/intent-engine.ts` | Natural language command understanding | v5.1.1 |
+| **Code DNA** | `brain/code-dna.ts` | 9-gene code fingerprinting + similarity | v5.1.1 |
+| **Temporal Intelligence** | `brain/temporal-intelligence.ts` | Velocity tracking, heatmaps, bug prediction | v5.1.1 |
 | **Auto Setup** | `brain/auto-setup.ts` | Zero-config project + tool detection | v5.0.1 |
 | **MCP Server** | `brain/mcp-server.ts` | 19-tool MCP server for all AI tools | v5.0.1 |
 | **Plugin System** | `brain/plugin-system.ts` | Hookable analysis pipeline | v5.0.1 |
@@ -624,7 +770,26 @@ Input Vector (64-dim, float64)
 | `shadow-brain doctor` | Health check & diagnostics |
 | `shadow-brain ask <question>` | Natural language brain query |
 
-### v5.0.1 Commands (NEW)
+### v5.1.1 Hyper-Cognitive Commands (NEW)
+
+| Command | Description |
+|---|---|
+| `shadow-brain lsp [--stdio\|--tcp PORT]` | Start built-in LSP server |
+| `shadow-brain fine-tune status` | Fine-tuning training data stats |
+| `shadow-brain fine-tune generate [dir]` | Generate training pairs from code |
+| `shadow-brain fine-tune export [path]` | Export JSONL dataset for fine-tuning |
+| `shadow-brain cache stats` | Smart cache hit rate, tier sizes, memory |
+| `shadow-brain cache clear` | Clear all cache tiers |
+| `shadow-brain intent <text>` | Parse natural language intent |
+| `shadow-brain dna analyze [dir]` | Generate Code DNA profiles |
+| `shadow-brain dna compare <f1> <f2>` | Compare two file fingerprints |
+| `shadow-brain dna similar <file>` | Find structurally similar files |
+| `shadow-brain temporal stats` | Velocity, anomalies, predictions |
+| `shadow-brain temporal hot` | Top 10 hottest files by churn |
+| `shadow-brain temporal predict` | Bug risk predictions |
+| `shadow-brain temporal timeline` | Recent event timeline |
+
+### v5.0.1 Commands
 
 | Command | Description |
 |---|---|
@@ -681,13 +846,23 @@ Input Vector (64-dim, float64)
 ```typescript
 import {
   Orchestrator,
+  // v5.1.1 — Hyper-Cognitive modules
+  LSPServer,
+  FineTuningEngine,
+  SmartCache,
+  IntentEngine,
+  CodeDNA,
+  TemporalIntelligence,
+  // v5.0.1 — Zero-Config modules
   AutoSetup,
   PluginSystem,
   BrainPortability,
+  // v5.0.0 — Infinite Intelligence modules
   HierarchicalMemory,
   ContextRecall,
   ConsensusEngine,
   CollectiveLearning,
+  // v4.0.0 — Hyper-Intelligence modules
   TurboMemory,
   SSSPRouter,
   SelfEvolution,
@@ -698,6 +873,26 @@ import {
   PredictiveEngine,
   NeuralMesh,
 } from '@theihtisham/agent-shadow-brain';
+
+// v5.1.1 — Built-in LSP server
+const lsp = new LSPServer('./my-project');
+lsp.start({ mode: 'tcp', port: 2087 }); // or { mode: 'stdio' }
+
+// v5.1.1 — Smart Cache
+const cache = new SmartCache({ maxHotEntries: 200, enablePrefetch: true });
+cache.set('analysis:auth', analysisResult, { ttl: 300_000, tags: ['security'] });
+const cached = cache.get('analysis:auth');
+
+// v5.1.1 — Temporal Intelligence
+const temporal = new TemporalIntelligence('./my-project');
+temporal.recordCommit(['src/auth.ts'], 'fix: JWT rotation');
+const velocity = temporal.getVelocity(); // { daily, weekly, trend: 'accelerating' }
+const bugRisks = temporal.predictBugs(10);
+
+// v5.1.1 — Code DNA
+const dna = new CodeDNA('./my-project');
+const profile = await dna.analyze('src/auth.ts');
+const similar = await dna.findSimilar('src/auth.ts', 5);
 
 // v5.0.1 — Zero-config auto-setup
 const setup = new AutoSetup('./my-project');
@@ -763,7 +958,18 @@ await brain.start();
 
 ## Version History
 
-### v5.0.1 — Zero-Config Intelligence Edition (Current)
+### v5.1.1 — Hyper-Cognitive Intelligence Edition (Current)
+- **Built-in LSP Server** — pure Node.js Language Server Protocol with stdio + TCP modes, diagnostics, hover, code actions
+- **Custom LLM Fine-Tuning Engine** — automatic training data generation from code changes, JSONL export for fine-tuning
+- **Smart Cache** — 3-tier (hot/warm/cold) LRU cache with predictive prefetch, co-access graph, tag-based invalidation
+- **Intent Engine** — multi-strategy NLP command understanding with keyword, fuzzy, and context-aware matching
+- **Code DNA Fingerprinting** — 9-gene structural analysis (structure, complexity, style, dependency, evolution genes)
+- **Temporal Intelligence** — velocity metrics, file heatmaps, 5-factor bug prediction, anomaly detection, peak analysis
+- **6 new CLI commands** — lsp, fine-tune, cache, intent, dna, temporal
+- **22 brain modules total** — 6 new + 16 existing from v5.0.1
+- All v5.0.1, v5.0.0, and v4.0.0 features included and enhanced
+
+### v5.0.1 — Zero-Config Intelligence Edition
 - **Zero-Config Auto-Setup** — auto-detect project, AI tools, languages, frameworks; auto-install MCP config + git hooks
 - **MCP Server** — 19-tool Model Context Protocol server for Claude Code, Cursor, and all AI tools
 - **Rich Web Dashboard** — real-time WebSocket dashboard with 8 panels (health, memory tiers, insights, fixes, AI tools, modules, stats, controls)
@@ -852,11 +1058,12 @@ npm test
 - [x] ~~MCP server for Cursor + all tools~~ (v5.0.1)
 - [x] ~~Rich web dashboard with real-time WebSocket~~ (v5.0.1)
 - [x] ~~Plugin system + brain export/import~~ (v5.0.1)
-- [ ] **IDE extensions** — VS Code extension for inline insights
-- [ ] **Custom LLM fine-tuning** — train on your codebase patterns
-- [ ] **Docker image** — one-command containerized deployment
-- [ ] **Language server** — LSP protocol for real-time feedback
-- [ ] **Web dashboard v3** — collaborative team dashboard
+- [x] ~~Custom LLM fine-tuning~~ (v5.1.1)
+- [x] ~~Language server (LSP)~~ (v5.1.1)
+- [x] ~~Web dashboard v3~~ (v5.1.1)
+- [ ] **Visual Studio Code integration** — inline insight overlays
+- [ ] **Multi-model orchestration** — route insights through multiple LLMs
+- [ ] **Real-time collaboration** — team brain with live cursors
 
 ---
 
@@ -883,6 +1090,6 @@ MIT License — see [LICENSE](LICENSE) for details.
 
 **Built with brains by [theihtisham](https://github.com/theihtisham)**
 
-**Topics:** `ai` `artificial-intelligence` `llm` `claude-code` `cursor` `cline` `kilo-code` `codex` `roo-code` `aider` `opencode` `windsurf` `code-review` `static-analysis` `developer-tools` `npm-package` `typescript` `ollama` `openai` `anthropic` `code-quality` `security-scanner` `health-score` `smart-fix` `vulnerability-scanner` `pattern-learning` `agent-tools` `ai-agent` `code-metrics` `pre-commit-hook` `github-actions` `developer-productivity` `neural-mesh` `quantum-computing` `shannon-entropy` `bayesian-inference` `mcp-server` `model-context-protocol` `semantic-analysis` `dependency-graph` `turboquant` `sssp-algorithm` `genetic-algorithm` `swarm-intelligence` `pagerank` `knowledge-graph` `hallucination-detection` `cross-agent` `self-evolving` `predictive-engine` `ant-colony` `infinite-memory` `vector-compression` `iclr-2026` `arxiv` `super-intelligence` `hyper-intelligence` `autonomous-agents` `ai-engineering` `agentic-coding` `vibe-coding` `cursor-ai` `zero-config` `auto-setup` `dashboard` `plugin-system` `brain-export` `natural-language` `real-time` `websocket` `team-collaboration` `ci-cd` `open-source` `trending` `hierarchical-memory` `context-recall` `consensus-engine` `collective-learning` `infinite-intelligence` `coding-assistant`
+**Topics:** `ai` `artificial-intelligence` `llm` `claude-code` `cursor` `cline` `kilo-code` `codex` `roo-code` `aider` `opencode` `windsurf` `code-review` `static-analysis` `developer-tools` `npm-package` `typescript` `ollama` `openai` `anthropic` `code-quality` `security-scanner` `health-score` `smart-fix` `vulnerability-scanner` `pattern-learning` `agent-tools` `ai-agent` `code-metrics` `pre-commit-hook` `github-actions` `developer-productivity` `neural-mesh` `quantum-computing` `shannon-entropy` `bayesian-inference` `mcp-server` `model-context-protocol` `semantic-analysis` `dependency-graph` `turboquant` `sssp-algorithm` `genetic-algorithm` `swarm-intelligence` `pagerank` `knowledge-graph` `hallucination-detection` `cross-agent` `self-evolving` `predictive-engine` `ant-colony` `infinite-memory` `vector-compression` `iclr-2026` `arxiv` `super-intelligence` `hyper-intelligence` `autonomous-agents` `ai-engineering` `agentic-coding` `vibe-coding` `cursor-ai` `zero-config` `auto-setup` `dashboard` `plugin-system` `brain-export` `natural-language` `real-time` `websocket` `team-collaboration` `ci-cd` `open-source` `trending` `hierarchical-memory` `context-recall` `consensus-engine` `collective-learning` `infinite-intelligence` `coding-assistant` `lsp-server` `language-server-protocol` `fine-tuning` `smart-cache` `intent-engine` `code-dna` `temporal-intelligence` `hyper-cognitive`
 
 </div>

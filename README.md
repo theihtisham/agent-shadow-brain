@@ -974,58 +974,20 @@ await brain.start();
 
 ## Version History
 
-### v5.1.1 — Hyper-Cognitive Intelligence Edition (Current)
-- **Built-in LSP Server** — pure Node.js Language Server Protocol with stdio + TCP modes, diagnostics, hover, code actions
-- **Custom LLM Fine-Tuning Engine** — automatic training data generation from code changes, JSONL export for fine-tuning
-- **Smart Cache** — 3-tier (hot/warm/cold) LRU cache with predictive prefetch, co-access graph, tag-based invalidation
-- **Intent Engine** — multi-strategy NLP command understanding with keyword, fuzzy, and context-aware matching
-- **Code DNA Fingerprinting** — 9-gene structural analysis (structure, complexity, style, dependency, evolution genes)
-- **Temporal Intelligence** — velocity metrics, file heatmaps, 5-factor bug prediction, anomaly detection, peak analysis
-- **6 new CLI commands** — lsp, fine-tune, cache, intent, dna, temporal
-- **22 brain modules total** — 6 new + 16 existing from v5.0.1
-- All v5.0.1, v5.0.0, and v4.0.0 features included and enhanced
+> **Full changelogs, migration guides, and detailed release notes:** [`docs/versions/`](docs/versions/)
+>
+> **Compact changelog:** [`CHANGELOG.md`](CHANGELOG.md)
 
-### v5.0.1 — Zero-Config Intelligence Edition
-- **Zero-Config Auto-Setup** — auto-detect project, AI tools, languages, frameworks; auto-install MCP config + git hooks
-- **MCP Server** — 19-tool Model Context Protocol server for Claude Code, Cursor, and all AI tools
-- **Rich Web Dashboard** — real-time WebSocket dashboard with 8 panels (health, memory tiers, insights, fixes, AI tools, modules, stats, controls)
-- **Natural Language Queries** — `shadow-brain ask "..."` for plain-English brain interaction
-- **Plugin System** — hookable analysis pipeline with npm plugin discovery
-- **Brain Export/Import** — full brain state portability for team sync and backup
-- **5 new CLI commands** — off, ask, export, import, plugin
-- **Cursor MCP Compatibility** — root path POST + /v1/chat endpoint support
-- **Postinstall Auto-Setup** — runs automatically after npm install
-- **50+ npm keywords** for discoverability
-- All v5.0.0 and v4.0.0 features included and enhanced
-
-### v5.0.0 — Infinite Intelligence Edition
-- **Hierarchical Memory Compression** — 4-tier pyramid (raw -> summary -> pattern -> principle) with drill-down/up
-- **Context-Triggered Associative Recall** — automatic memory activation based on file paths, keywords, categories
-- **Multi-Agent Consensus Protocol** — trust-weighted voting, confidence intervals, conflict resolution
-- **Collective Cross-Project Learning** — verified rule sharing, viral propagation, accuracy tracking
-- **5 new CLI commands** — memory, recall, consensus, collective, v5
-
-### v4.0.0 — Hyper-Intelligence Edition
-- **TurboQuant Infinite Memory** — 6x compression, zero forgetting (Google Research, ICLR 2026)
-- **SSSP BMSSP Routing** — O(m log<sup>2/3</sup>n) deterministic routing (arXiv 2504.17033)
-- **Self-Evolving Genetic Rules** — tournament selection, Gaussian mutation, Bayesian meta-learning
-- **Cross-Agent Intelligence Protocol** — 7 agents share insights in real-time
-- **Adversarial Hallucination Defense** — cross-reference verification, evidence scoring
-- **Swarm Intelligence** — Ant Colony pheromone file prioritization
-- **Knowledge Graph + PageRank** — code impact radar with d=0.85 damping
-- **Predictive Engine** — bug risk scoring, debt forecasting, anomaly detection
-
-### v3.0.0 — Hyper-Intelligence Edition
-- Cognitive load analysis, security audit engine, influence map
-
-### v2.1.0 — Quantum Neural Mesh
-- Cross-session shared intelligence, Shannon entropy, cosine similarity, Bayesian confidence
-
-### v2.0.0 — Super-Intelligence Edition
-- Semantic analyzer, dependency graph, code similarity, MCP Server, team mode
-
-### v1.x — Foundation
-- 7 agent adapters, health scoring, smart fixes, vulnerability scanning, CI/CD
+| Version | Codename | Date | Highlights |
+|---|---|---|---|
+| **[v5.1.1](docs/versions/v5.1.1.md)** | Hyper-Cognitive | 2026-04-18 | LSP Server, Fine-Tuning Engine, Smart Cache, Intent Engine, Code DNA, Temporal Intelligence |
+| **[v5.0.1](docs/versions/v5.0.1.md)** | Zero-Config | 2026-04-15 | Auto-Setup, MCP Server (19 tools), Dashboard, NLP Queries, Plugin System |
+| **[v5.0.0](docs/versions/v5.0.0.md)** | Infinite Intelligence | 2026-04-12 | Hierarchical Memory, Associative Recall, Multi-Agent Consensus, Collective Learning |
+| **[v4.0.0](docs/versions/v4.0.0.md)** | Hyper-Intelligence | 2026-04-08 | TurboQuant, SSSP Routing, Self-Evolution, CAIP, Adversarial Defense, Swarm, Knowledge Graph |
+| **[v3.0.0](docs/versions/v3.0.0.md)** | Hyper-Intelligence | 2026-04-01 | Cognitive Load Analysis, Security Audit Engine, Influence Map |
+| **[v2.1.0](docs/versions/v2.1.0.md)** | Quantum Neural Mesh | 2026-03-25 | Shannon Entropy, Cosine Similarity, Bayesian Confidence |
+| **[v2.0.0](docs/versions/v2.0.0.md)** | Super-Intelligence | 2026-03-18 | Semantic Analyzer, Dependency Graph, Code Similarity, MCP Server |
+| **[v1.0.0](docs/versions/v1.0.0.md)** | Foundation | 2026-02-28 | 7 Agent Adapters, Health Scoring, Smart Fixes, Vulnerability Scanning |
 
 ---
 

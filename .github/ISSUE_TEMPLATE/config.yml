@@ -1,0 +1,11 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Documentation
+    url: https://github.com/theihtisham/agent-shadow-brain#readme
+    about: Check the README and documentation before opening an issue.
+  - name: Discussions
+    url: https://github.com/theihtisham/agent-shadow-brain/discussions
+    about: Ask questions, share ideas, and connect with the community.
+  - name: Security Vulnerability
+    url: https://github.com/theihtisham/agent-shadow-brain/security/advisories/new
+    about: Report security vulnerabilities privately. Do not open public issues for security bugs.

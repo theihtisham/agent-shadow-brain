@@ -78,7 +78,7 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.90.0",
     "chalk": "^4.1.2",
-    "chokidar": "^4.0.3",
+    "chokidar": "^5.0.0",
     "commander": "^12.1.0",
     "conf": "^13.0.0",
     "diff": "^5.2.0",

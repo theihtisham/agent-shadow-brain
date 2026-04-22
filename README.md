@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="banner.svg" alt="Agent Shadow Brain v5.1.1 — Hyper-Cognitive Intelligence Edition" width="100%">
+<img src="banner.svg" alt="Agent Shadow Brain v5.2.0 — Subconscious Singularity Edition" width="100%">
 
 <br/>
 
@@ -22,9 +22,13 @@
 [![MCP](https://img.shields.io/badge/MCP-19_tools-8b5cf6?labelColor=1a0a2e&style=for-the-badge&logo=anthropic)](#)
 [![Dashboard](https://img.shields.io/badge/dashboard-real_time-06b6d4?labelColor=1a0a2e&style=for-the-badge&logo=firefoxbrowser)](#)
 [![LSP](https://img.shields.io/badge/LSP-built_in-f97316?labelColor=1a0a2e&style=for-the-badge&logo=visual-studio-code)](#)
-[![Brain Modules](https://img.shields.io/badge/brain_modules-22-ec4899?labelColor=1a0a2e&style=for-the-badge&logo=brain)](#-architecture)
-[![CLI Commands](https://img.shields.io/badge/CLI-60%2B_commands-eab308?labelColor=1a0a2e&style=for-the-badge&logo=windowsterminal)](#-cli-reference)
-[![AI Agents](https://img.shields.io/badge/agents-9_supported-14b8a6?labelColor=1a0a2e&style=for-the-badge&logo=openai)](#)
+[![Brain Modules](https://img.shields.io/badge/brain_modules-26-ec4899?labelColor=1a0a2e&style=for-the-badge&logo=brain)](#-architecture)
+[![CLI Commands](https://img.shields.io/badge/CLI-70%2B_commands-eab308?labelColor=1a0a2e&style=for-the-badge&logo=windowsterminal)](#-cli-reference)
+[![AI Agents](https://img.shields.io/badge/agents-10_supported-14b8a6?labelColor=1a0a2e&style=for-the-badge&logo=openai)](#)
+[![Singleton Brain](https://img.shields.io/badge/singleton-global_brain-a855f7?labelColor=1a0a2e&style=for-the-badge&logo=databricks)](#-1-singleton-global-brain)
+[![Subconscious](https://img.shields.io/badge/subconscious-proactive-ec4899?labelColor=1a0a2e&style=for-the-badge&logo=brain)](#-2-subconscious-engine)
+[![L0 Cache](https://img.shields.io/badge/L0_cache-%3C1ms-22d3ee?labelColor=1a0a2e&style=for-the-badge&logo=lightning)](#-4-l0-sub-millisecond-cache)
+[![Auto-Attach](https://img.shields.io/badge/attach--all-one_command-f59e0b?labelColor=1a0a2e&style=for-the-badge&logo=rocket)](#-3-universal-bootstrap-attach-all)
 [![Self Evolving](https://img.shields.io/badge/self--evolving-genetic_AI-d946ef?labelColor=1a0a2e&style=for-the-badge&logo=dna)](#)
 [![Infinite Memory](https://img.shields.io/badge/memory-infinite-facc15?labelColor=1a0a2e&style=for-the-badge&logo=databricks)](#)
 [![PRs Welcome](https://img.shields.io/badge/PRs-welcome-22c55e?labelColor=1a0a2e&style=for-the-badge&logo=git)](https://github.com/theihtisham/agent-shadow-brain/pulls)
@@ -33,15 +37,97 @@
 
 <br/>
 
-### **The World's #1 Hyper-Cognitive AI Coding Brain**
+### **One Brain. Every Agent. Every Project. Every Session. Forever.**
 
-**Shadow Brain** is a zero-config, self-evolving, infinite-memory intelligence layer that makes **every AI coding agent** write better, safer, faster code. Install it once, and it automatically detects your project, your AI tools, your frameworks — and starts making your agents smarter forever.
+**Agent Shadow Brain** is the singleton intelligence layer that makes **every AI coding agent** smarter — Claude Code, Cursor, Cline, Codex, GitHub Copilot, Windsurf, Kilo Code, Roo Code, OpenCode, Aider — all sharing the same brain. What one agent learns, every agent knows. What you discover in project A is available in project B. Forever.
 
-> **v5.1.1 — Hyper-Cognitive Intelligence Edition**: 6 new brain modules — **Built-in LSP Server** for real-time IDE feedback, **Custom LLM Fine-Tuning Engine** to train on your codebase, **Smart Cache** with multi-tier predictive prefetch, **Intent Engine** for natural language command understanding, **Code DNA** fingerprinting with 9-gene analysis, and **Temporal Intelligence** for velocity tracking & bug prediction. Plus all v5.0.1 zero-config features (MCP server, dashboard, plugins, export/import), v5.0.0 infinite intelligence (hierarchical memory, consensus, collective learning), and v4.0.0 hyper-intelligence (TurboQuant, SSSP, self-evolution, adversarial defense, swarm, knowledge graph, predictive engine).
+> **v5.2.0 — Subconscious Singularity Edition**: One command — `npx @theihtisham/agent-shadow-brain attach-all` — auto-detects every AI agent installed on your machine and wires them to a singleton global brain. Every new session, every agent, every project: Shadow Brain proactively injects the most relevant context **before the agent asks**. Your agents stop forgetting. They stop hallucinating. They start collaborating across tools.
 
-[**Install Now**](#-getting-started-30-seconds) · [**Dashboard**](#-web-dashboard) · [**v5.1.1 New**](#-v511-whats-new) · [**Algorithms**](#-algorithms--research) · [**CLI Reference**](#-cli-reference) · [**Architecture**](#-architecture)
+```bash
+# 30-second install. Every agent on your machine becomes smarter.
+npx @theihtisham/agent-shadow-brain attach-all
+```
+
+[**30-Second Install**](#-getting-started-30-seconds) · [**The Singularity**](#-v520--what-makes-it-singular) · [**Live Dashboard**](#-web-dashboard) · [**Algorithms**](#-algorithms--research) · [**70+ CLI Commands**](#-cli-reference) · [**Architecture**](#-architecture) · [**Star on GitHub ⭐**](https://github.com/theihtisham/agent-shadow-brain)
 
 </div>
+
+---
+
+## ⚡ Why Shadow Brain Exists
+
+| Without Shadow Brain | With Shadow Brain |
+|---|---|
+| Every new session, your agent starts from zero | Agent gets a 2K-token briefing of relevant context **before it asks** |
+| Cursor learns something — Claude doesn't know | One singleton brain — what one agent learns, all agents know |
+| Discoveries in project A don't help project B | Cross-project memory federation by default |
+| Each AI tool needs its own setup | One command attaches every agent |
+| Agents hallucinate APIs that don't exist | Adversarial defense + multi-agent consensus voting |
+| Your codebase patterns are reinvented daily | Code DNA fingerprinting enforces your style across all agents |
+| 30 minutes of config before anything works | Zero config, auto-detect, instant value |
+
+## 🚀 v5.2.0 — What Makes It Singular
+
+### 🧠 1. Singleton Global Brain
+
+One database (`~/.shadow-brain/global.db`) is the **source of truth** for every project and every agent on your machine. Project-scoped views give each project its own namespace, but the data lives in one place. SQLite WAL mode + write queue handle concurrent multi-agent writes safely. Auto-vacuum at 500MB, auto-prune at 1GB.
+
+```bash
+shadow-brain global stats     # See cross-project, cross-agent stats
+shadow-brain global recall    # Search across every project + every agent
+```
+
+### 💭 2. Subconscious Engine
+
+Every time any agent starts a new session, the Subconscious **proactively injects** a tight briefing of:
+- Recent decisions made in this project (last 24h)
+- Active tasks (TODOs, in-progress items)
+- Similar past work from other projects
+- Cross-agent insights (what Claude learned that Cursor should know)
+- Warnings and known pitfalls
+
+Hard-capped at 2K tokens. Relevance-ranked. The agent doesn't have to ask — the brain surfaces it implicitly. Like human intuition.
+
+```bash
+shadow-brain subconscious inject              # See what your agent gets
+shadow-brain subconscious configure --budget 3000   # Tune the budget
+```
+
+### 🪝 3. Universal Bootstrap (`attach-all`)
+
+One command. Detects every AI agent installed on your machine. Installs the right hook for each one's native mechanism:
+
+| Agent | Hook Mechanism |
+|---|---|
+| **Claude Code** | `~/.claude/settings.json` → `hooks.SessionStart` |
+| **Cursor** | `.cursor/rules/shadow-brain.md` + `.cursor/mcp.json` |
+| **Cline** | `~/.vscode/.../cline_mcp_settings.json` |
+| **Windsurf** | `.windsurfrules` + `~/.windsurf/mcp.json` |
+| **Codex** | `~/.codex/config.json` |
+| **Kilo Code** | `~/.kilocode/settings.json` |
+| **OpenCode** | `~/.opencode/settings.json` |
+| **Roo Code** | `~/.roocode/mcp.json` |
+| **Aider** | `~/.aider.conf.yml` `read:` directive |
+| **GitHub Copilot** | `.github/copilot-instructions.md` |
+
+```bash
+shadow-brain attach-all                # Wire every detected agent
+shadow-brain attach-all --dry-run      # See what would be wired
+```
+
+### ⚡ 4. L0 Sub-Millisecond Cache
+
+In-memory hot tier sits in front of the singleton brain. Hot recalls return in **<1ms**. Byte-budgeted (default 64MB), LRU-evicted, per-namespace. Tracks every access in nanoseconds.
+
+```bash
+shadow-brain global cache    # Hit rate, top keys, ns-latency
+```
+
+### 🎯 5. First-Class Adapters for Every Major Agent
+
+Cursor, Windsurf, and Copilot were stub aliases in v5.1.1. In v5.2.0 they each have **dedicated adapters** matching their actual file layouts, conversation parsers, and injection mechanisms.
+
+---
 
 ---
 

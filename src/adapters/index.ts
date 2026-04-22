@@ -8,6 +8,9 @@ import { OpenCodeAdapter } from './opencode.js';
 import { CodexAdapter } from './codex.js';
 import { RooCodeAdapter } from './roo-code.js';
 import { AiderAdapter } from './aider.js';
+import { CursorAdapter } from './cursor.js';
+import { WindsurfAdapter } from './windsurf.js';
+import { CopilotAdapter } from './copilot.js';
 
 export const ALL_ADAPTERS: Record<AgentTool, () => AgentAdapter> = {
   'claude-code': () => new ClaudeCodeAdapter(),
@@ -17,8 +20,9 @@ export const ALL_ADAPTERS: Record<AgentTool, () => AgentAdapter> = {
   'codex': () => new CodexAdapter(),
   'roo-code': () => new RooCodeAdapter(),
   'aider': () => new AiderAdapter(),
-  'cursor': () => new ClineAdapter(),      // Similar VS Code pattern
-  'windsurf': () => new ClineAdapter(),    // Similar VS Code pattern
+  'cursor': () => new CursorAdapter(),
+  'windsurf': () => new WindsurfAdapter(),
+  'copilot': () => new CopilotAdapter(),
 };
 
 export function createAdapter(tool: AgentTool): AgentAdapter {
@@ -43,4 +47,15 @@ export async function detectRunningAgents(projectDir: string): Promise<AgentAdap
   return detected;
 }
 
-export { ClaudeCodeAdapter, KiloCodeAdapter, ClineAdapter, OpenCodeAdapter, CodexAdapter, RooCodeAdapter, AiderAdapter };
+export {
+  ClaudeCodeAdapter,
+  KiloCodeAdapter,
+  ClineAdapter,
+  OpenCodeAdapter,
+  CodexAdapter,
+  RooCodeAdapter,
+  AiderAdapter,
+  CursorAdapter,
+  WindsurfAdapter,
+  CopilotAdapter,
+};

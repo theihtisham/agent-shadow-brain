@@ -8,7 +8,56 @@ This project follows [Semantic Versioning](https://semver.org/) and [Keep a Chan
 
 ---
 
-## [5.1.1] — 2026-04-18 — Hyper-Cognitive Intelligence Edition (Current)
+## [5.2.0] — 2026-04-22 — Subconscious Singularity Edition (Current)
+
+> **One brain. Every agent. Every project. Every session. Forever.**
+
+### The Singularity
+
+Before v5.2.0, every project had its own brain and every AI agent (Claude, Cursor, Cline...) had to be told what each project knew. Now there is **one brain** — a singleton global database at `~/.shadow-brain/global.db` that every agent reads from and writes to.
+
+What Cursor learns in project A is instantly known to Claude Code in project B.
+
+### Added
+
+- **Singleton Global Brain** (`src/brain/global-brain.ts`) — one `~/.shadow-brain/global.db` is the source of truth for every project + agent on the machine. SQLite WAL mode + write queue handles concurrent multi-agent writes. Auto-vacuum at 500MB, auto-prune at 1GB. Project-scoped views via `GlobalBrain.projectIdFor(rootDir)`.
+- **Subconscious Engine** (`src/brain/subconscious.ts`) — proactive context injection on every session start. The agent doesn't have to ask — the brain surfaces recent decisions, active tasks, similar past work, project state, cross-agent insights, and warnings. Hard-capped at 2K tokens, relevance-ranked, agent-configurable.
+- **Universal Bootstrap** (`src/brain/session-hooks.ts`) — `asb attach-all` detects every installed AI agent on your machine and installs SessionStart hooks per agent's native mechanism (Claude Code settings.json, Cursor `.cursor/rules`, Cline VS Code extension, Windsurf `.windsurfrules`, Codex config.json, Aider `.aider.conf.yml`, Copilot `.github/copilot-instructions.md`, etc.). Every agent calls Shadow Brain on first prompt of every session.
+- **L0 In-Memory Hot Tier** (`src/brain/l0-cache.ts`) — sub-millisecond recall via byte-budgeted Map LRU. Sits in front of the global SQLite brain. Per-namespace caches with `getCache(name)`. Default 64MB budget, configurable.
+- **Cursor Adapter** (`src/adapters/cursor.ts`) — first-class adapter, no more falling back to ClineAdapter. Reads conversations from `~/.cursor/conversations`, injects into `.cursor/rules/shadow-brain-insights.md`, escalates critical insights to `.cursorrules`.
+- **Windsurf Adapter** (`src/adapters/windsurf.ts`) — first-class adapter. Reads from `~/.windsurf/conversations`, writes to `.windsurfrules` with `# === Shadow Brain Insights ===` marker for safe re-injection.
+- **GitHub Copilot Adapter** (`src/adapters/copilot.ts`) — workspace-level integration via `.github/copilot-instructions.md` (Copilot's official context file). Replaces a marker block on each update so injection is idempotent.
+- **4 New CLI Commands**:
+  - `asb attach-all` — universal bootstrap for every detected agent
+  - `asb subconscious inject|status|configure` — manage proactive context injection
+  - `asb global stats|recall|cache|sync` — inspect the singleton global brain
+- **4 New MCP Tools** — `subconscious_inject`, `global_recall`, `global_stats`, `attach_status`. Now any MCP client can talk to the global brain directly.
+
+### Changed
+
+- **AgentTool union** now includes `'copilot'` — full type-safe support for 10 agents (was 9)
+- **adapters/index.ts** — Cursor and Windsurf no longer alias ClineAdapter; each gets its own implementation
+- **Description + 80 npm keywords** rewritten for v5.2.0 positioning and maximum discoverability
+- **Total brain modules: 26** (4 new + 22 from v5.1.1)
+
+### Performance
+
+- Hot recalls now <1ms via L0 cache (was 10-30ms via SQLite)
+- Cross-project queries replace per-project DB lookup overhead with a single indexed query
+
+### Fixed
+
+- Cursor and Windsurf adapters previously reused ClineAdapter — they now have correct path detection and conversation parsing for their actual file layouts
+
+### Migration Notes
+
+v5.2.0 is **fully backward-compatible** with v5.1.1. The global brain is created on first init and coexists with project-local brains. No breaking changes to existing CLI commands or MCP tools.
+
+To opt into the new singleton model: run `asb attach-all` once and every future session of every agent will auto-bootstrap.
+
+---
+
+## [5.1.1] — 2026-04-18 — Hyper-Cognitive Intelligence Edition
 
 ### Added
 - **Built-in LSP Server** — pure Node.js Language Server Protocol implementation with stdio + TCP transport modes, real-time diagnostics, hover info, and code actions
@@ -148,6 +197,7 @@ This project follows [Semantic Versioning](https://semver.org/) and [Keep a Chan
 
 ---
 
+[5.2.0]: https://github.com/theihtisham/agent-shadow-brain/releases/tag/v5.2.0
 [5.1.1]: https://github.com/theihtisham/agent-shadow-brain/releases/tag/v5.1.1
 [5.0.1]: https://github.com/theihtisham/agent-shadow-brain/releases/tag/v5.0.1
 [5.0.0]: https://github.com/theihtisham/agent-shadow-brain/releases/tag/v5.0.0

@@ -9,7 +9,8 @@ export type AgentTool =
   | 'roo-code'
   | 'aider'
   | 'cursor'
-  | 'windsurf';
+  | 'windsurf'
+  | 'copilot';
 
 export interface AgentAdapter {
   name: AgentTool;
@@ -1386,4 +1387,142 @@ export interface V6ModuleStatus {
   codeDNA: CodeDNAStats | null;
   temporal: TemporalStats | null;
   lsp: LSPStats | null;
+}
+
+// ── v5.2.0 — Subconscious Singularity Edition ─────────────────────────────────
+
+// Global Brain — singleton DB shared across all projects + agents
+export interface GlobalBrainConfig {
+  /** Path to the singleton global brain database. Default: ~/.shadow-brain/global.db */
+  dbPath: string;
+  /** Enable WAL mode for concurrent multi-agent writes */
+  walMode: boolean;
+  /** Max in-memory queue size for pending writes */
+  writeQueueSize: number;
+  /** Auto-vacuum threshold in MB */
+  autoVacuumMB: number;
+  /** Auto-prune threshold in MB (compress to lower tier when exceeded) */
+  autoPruneMB: number;
+  /** Sync interval to flush pending writes (ms) */
+  syncIntervalMs: number;
+}
+
+export interface GlobalBrainStats {
+  totalProjects: number;
+  totalAgents: number;
+  totalEntries: number;
+  totalSizeMB: number;
+  pendingWrites: number;
+  hits: number;
+  misses: number;
+  hitRate: number;
+  lastSync: Date;
+  lastVacuum: Date | null;
+  lastPrune: Date | null;
+  uptime: number;
+}
+
+export interface GlobalEntry {
+  id: string;
+  projectId: string;
+  projectName: string;
+  agentTool: AgentTool;
+  category: string;
+  content: string;
+  vector?: number[];
+  importance: number;
+  accessCount: number;
+  createdAt: Date;
+  lastAccessed: Date;
+  metadata: Record<string, unknown>;
+}
+
+// Subconscious Engine — proactive context injection on session start
+export interface SubconsciousConfig {
+  /** Enable proactive context injection */
+  enabled: boolean;
+  /** Maximum tokens to inject per session (default 2000) */
+  tokenBudget: number;
+  /** Lookback window in hours for recent context */
+  lookbackHours: number;
+  /** Minimum relevance score to include (0-1) */
+  relevanceThreshold: number;
+  /** Categories to always include if available */
+  alwaysInclude: string[];
+  /** Inject for these agents (empty = all) */
+  enabledAgents: AgentTool[];
+}
+
+export interface SubconsciousBriefing {
+  agentTool: AgentTool;
+  projectDir: string;
+  sessionId: string;
+  generatedAt: Date;
+  tokenCount: number;
+  sections: {
+    recentDecisions: string[];
+    activeTasks: string[];
+    similarPastWork: string[];
+    projectState: string;
+    crossAgentInsights: string[];
+    warnings: string[];
+  };
+  fullText: string;
+}
+
+export interface SubconsciousStats {
+  totalBriefings: number;
+  avgTokenCount: number;
+  avgGenerationMs: number;
+  acceptedRate: number;
+  byAgent: Record<string, number>;
+  lastBriefing: Date | null;
+}
+
+// Session Hook System — universal SessionStart hook installer
+export type HookEvent = 'session-start' | 'session-end' | 'pre-prompt' | 'post-response' | 'file-edit';
+
+export interface SessionHook {
+  agent: AgentTool;
+  event: HookEvent;
+  /** Hook implementation type for this agent */
+  hookType: 'settings-json' | 'config-file' | 'env-var' | 'wrapper-script' | 'workspace-rule' | 'extension-config';
+  /** File path where the hook is installed */
+  installPath: string;
+  /** Command/script the hook executes */
+  command: string;
+  /** Whether the hook is currently active */
+  active: boolean;
+  installedAt: Date;
+}
+
+export interface AttachReport {
+  detected: AgentTool[];
+  attached: AgentTool[];
+  failed: Array<{ agent: AgentTool; reason: string }>;
+  hooks: SessionHook[];
+  totalAgents: number;
+  durationMs: number;
+}
+
+// L0 In-Memory Cache — hot tier for sub-millisecond recall
+export interface L0CacheEntry<T = unknown> {
+  key: string;
+  value: T;
+  hits: number;
+  insertedAt: number;
+  lastAccessed: number;
+  bytes: number;
+}
+
+export interface L0CacheStats {
+  entries: number;
+  bytesUsed: number;
+  bytesLimit: number;
+  hits: number;
+  misses: number;
+  hitRate: number;
+  evictions: number;
+  avgAccessNs: number;
+  topKeys: Array<{ key: string; hits: number }>;
 }

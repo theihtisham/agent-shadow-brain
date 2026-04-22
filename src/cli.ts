@@ -3107,4 +3107,174 @@ program.addCommand(intentCmd);
 program.addCommand(dnaCmd);
 program.addCommand(temporalCmd);
 
+// ─── v5.2.0 — SUBCONSCIOUS SINGULARITY ──────────────────────────────────────
+
+const attachCmd = new Command('attach-all')
+  .description('Auto-detect every installed AI agent and install Shadow Brain hooks (v5.2.0)')
+  .argument('[project-dir]', 'Project directory', process.cwd())
+  .option('--dry-run', 'Show what would be attached without installing')
+  .action(async (projectDir: string, opts: any) => {
+    console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Universal Bootstrap`));
+    const { getHookInstaller } = await import('./brain/session-hooks.js');
+    const installer = getHookInstaller();
+
+    if (opts.dryRun) {
+      const detected = await installer.detectInstalled(projectDir);
+      console.log(chalk.cyan(`  Detected agents: ${detected.length}`));
+      for (const agent of detected) {
+        console.log(`    ${chalk.green('✓')} ${agent}`);
+      }
+      console.log(chalk.dim('\n  Run without --dry-run to install hooks.'));
+      return;
+    }
+
+    const report = await installer.attachAll(projectDir);
+    console.log(chalk.cyan(`  Detected: ${report.detected.length} agents (${report.durationMs}ms)`));
+    for (const agent of report.attached) {
+      console.log(`    ${chalk.green('✓')} ${agent} attached`);
+    }
+    for (const fail of report.failed) {
+      console.log(`    ${chalk.red('✗')} ${fail.agent}: ${fail.reason}`);
+    }
+    console.log(chalk.dim(`\n  ${report.hooks.length} hook(s) installed across ${report.attached.length} agent(s).`));
+    console.log(chalk.dim('  Every agent will now call Shadow Brain on session start.'));
+  });
+
+const subconsciousCmd = new Command('subconscious')
+  .description('Manage the Subconscious Engine — proactive context injection')
+  .addCommand(new Command('inject')
+    .description('Generate + emit a session-start briefing for the current agent')
+    .option('--agent <agent>', 'Agent tool name (auto-detected if omitted)')
+    .option('--task <hint>', 'Current task hint for similarity search')
+    .option('--json', 'Output JSON instead of formatted text')
+    .action(async (opts) => {
+      const { getSubconscious } = await import('./brain/subconscious.js');
+      const { GlobalBrain } = await import('./brain/global-brain.js');
+      const projectDir = process.cwd();
+      const projectId = GlobalBrain.projectIdFor(projectDir);
+
+      let agentTool = opts.agent as AgentTool | undefined;
+      if (!agentTool) {
+        const detected = await detectRunningAgents(projectDir);
+        agentTool = (detected[0]?.name as AgentTool) || 'claude-code';
+      }
+
+      const sub = getSubconscious();
+      const briefing = await sub.generateBriefing({
+        agentTool,
+        projectDir,
+        projectId,
+        currentTask: opts.task,
+      });
+
+      if (opts.json) {
+        console.log(JSON.stringify(briefing, null, 2));
+      } else {
+        console.log(briefing.fullText || chalk.dim('(no relevant context yet — brain is empty)'));
+      }
+    }))
+  .addCommand(new Command('status')
+    .description('Show subconscious engine stats')
+    .action(async () => {
+      const { getSubconscious } = await import('./brain/subconscious.js');
+      const stats = getSubconscious().getStats();
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Subconscious Stats`));
+      console.log(`    Total briefings: ${chalk.cyan(stats.totalBriefings)}`);
+      console.log(`    Avg tokens: ${chalk.cyan(stats.avgTokenCount.toFixed(0))}`);
+      console.log(`    Avg generation: ${chalk.cyan(stats.avgGenerationMs.toFixed(1) + 'ms')}`);
+      console.log(`    By agent:`);
+      for (const [agent, count] of Object.entries(stats.byAgent)) {
+        console.log(`      ${chalk.dim('•')} ${agent}: ${count}`);
+      }
+    }))
+  .addCommand(new Command('configure')
+    .description('Update subconscious config')
+    .option('--budget <tokens>', 'Token budget (default 2000)')
+    .option('--lookback <hours>', 'Lookback hours (default 24)')
+    .option('--threshold <score>', 'Relevance threshold 0-1')
+    .option('--enable', 'Enable subconscious')
+    .option('--disable', 'Disable subconscious')
+    .action(async (opts) => {
+      const { getSubconscious } = await import('./brain/subconscious.js');
+      const sub = getSubconscious();
+      const patch: any = {};
+      if (opts.budget) patch.tokenBudget = parseInt(opts.budget, 10);
+      if (opts.lookback) patch.lookbackHours = parseFloat(opts.lookback);
+      if (opts.threshold) patch.relevanceThreshold = parseFloat(opts.threshold);
+      if (opts.enable) patch.enabled = true;
+      if (opts.disable) patch.enabled = false;
+      sub.configure(patch);
+      console.log(chalk.green('  ✓ Subconscious config updated.'));
+      console.log(JSON.stringify(sub.getConfig(), null, 2));
+    }));
+
+const globalBrainCmd = new Command('global')
+  .description('Manage the Singleton Global Brain — one brain, all projects, all agents')
+  .addCommand(new Command('stats')
+    .description('Show global brain stats')
+    .action(async () => {
+      const { getGlobalBrain } = await import('./brain/global-brain.js');
+      const brain = getGlobalBrain();
+      await brain.init();
+      const s = brain.getStats();
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Global Brain`));
+      console.log(`    Projects: ${chalk.cyan(s.totalProjects)}`);
+      console.log(`    Agents:   ${chalk.cyan(s.totalAgents)}`);
+      console.log(`    Entries:  ${chalk.cyan(s.totalEntries)}`);
+      console.log(`    Size:     ${chalk.cyan(s.totalSizeMB.toFixed(2) + ' MB')}`);
+      console.log(`    Hit rate: ${chalk.cyan((s.hitRate * 100).toFixed(1) + '%')} (${s.hits}/${s.hits + s.misses})`);
+      console.log(`    Pending:  ${chalk.cyan(s.pendingWrites)}`);
+      console.log(`    Uptime:   ${chalk.cyan(Math.round(s.uptime / 1000) + 's')}`);
+      console.log(`    Last sync: ${chalk.dim(s.lastSync.toISOString())}`);
+    }))
+  .addCommand(new Command('recall')
+    .description('Recall entries from the global brain — works across projects + agents')
+    .option('-q, --query <text>', 'Keyword search')
+    .option('--agent <agent>', 'Filter by agent tool')
+    .option('--category <cat>', 'Filter by category')
+    .option('--limit <n>', 'Max results', '20')
+    .option('--json', 'Output JSON')
+    .action(async (opts) => {
+      const { getGlobalBrain } = await import('./brain/global-brain.js');
+      const brain = getGlobalBrain();
+      await brain.init();
+      const results = brain.recall({
+        keywords: opts.query ? opts.query.split(/\s+/) : undefined,
+        agentTool: opts.agent as AgentTool | undefined,
+        category: opts.category,
+        limit: parseInt(opts.limit, 10),
+      });
+      if (opts.json) {
+        console.log(JSON.stringify(results, null, 2));
+        return;
+      }
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — Global Recall (${results.length})`));
+      for (const r of results) {
+        console.log(`    ${chalk.cyan('[' + r.agentTool + ']')} ${chalk.dim(r.category)} ${chalk.white(r.content.slice(0, 100))}`);
+      }
+    }))
+  .addCommand(new Command('cache')
+    .description('Show L0 in-memory cache stats')
+    .action(async () => {
+      const { getAllCacheStats } = await import('./brain/l0-cache.js');
+      const all = getAllCacheStats();
+      console.log(chalk.magenta.bold(`\n  SHADOW BRAIN v${VERSION} — L0 Cache`));
+      for (const [name, s] of Object.entries(all)) {
+        console.log(`    ${chalk.cyan(name)}: ${s.entries} entries, ${(s.bytesUsed / 1024).toFixed(1)} KB / ${(s.bytesLimit / 1024 / 1024).toFixed(0)} MB, ${(s.hitRate * 100).toFixed(1)}% hits, ${s.avgAccessNs.toFixed(0)}ns avg`);
+      }
+    }))
+  .addCommand(new Command('sync')
+    .description('Force flush of pending writes to disk')
+    .action(async () => {
+      const { getGlobalBrain } = await import('./brain/global-brain.js');
+      const brain = getGlobalBrain();
+      await brain.init();
+      await brain.sync();
+      console.log(chalk.green('  ✓ Synced to disk.'));
+    }));
+
+program.addCommand(attachCmd);
+program.addCommand(subconsciousCmd);
+program.addCommand(globalBrainCmd);
+
 program.parse();

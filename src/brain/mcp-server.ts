@@ -45,7 +45,59 @@ export class MCPServer {
       status: this.handleStatus.bind(this),
       modules: this.handleModules.bind(this),
       auto_config: this.handleAutoConfig.bind(this),
+      // v5.2.0 — Subconscious Singularity
+      subconscious_inject: this.handleSubconsciousInject.bind(this),
+      global_recall: this.handleGlobalRecall.bind(this),
+      global_stats: this.handleGlobalStats.bind(this),
+      attach_status: this.handleAttachStatus.bind(this),
     };
+  }
+
+  // v5.2.0 handlers
+  private async handleSubconsciousInject(params: Record<string, unknown>): Promise<unknown> {
+    const { getSubconscious } = await import('./subconscious.js');
+    const { GlobalBrain } = await import('./global-brain.js');
+    const projectDir = (params.projectDir as string) || process.cwd();
+    const agentTool = (params.agentTool as any) || 'claude-code';
+    const briefing = await getSubconscious().generateBriefing({
+      agentTool,
+      projectDir,
+      projectId: GlobalBrain.projectIdFor(projectDir),
+      currentTask: params.currentTask as string | undefined,
+    });
+    return briefing;
+  }
+
+  private async handleGlobalRecall(params: Record<string, unknown>): Promise<unknown> {
+    const { getGlobalBrain } = await import('./global-brain.js');
+    const brain = getGlobalBrain();
+    await brain.init();
+    return brain.recall({
+      projectId: params.projectId as string | undefined,
+      agentTool: params.agentTool as any,
+      category: params.category as string | undefined,
+      keywords: params.keywords as string[] | undefined,
+      limit: (params.limit as number) ?? 20,
+      minImportance: params.minImportance as number | undefined,
+    });
+  }
+
+  private async handleGlobalStats(_params: Record<string, unknown>): Promise<unknown> {
+    const { getGlobalBrain } = await import('./global-brain.js');
+    const { getAllCacheStats } = await import('./l0-cache.js');
+    const brain = getGlobalBrain();
+    await brain.init();
+    return {
+      brain: brain.getStats(),
+      caches: getAllCacheStats(),
+    };
+  }
+
+  private async handleAttachStatus(params: Record<string, unknown>): Promise<unknown> {
+    const { getHookInstaller } = await import('./session-hooks.js');
+    const projectDir = (params.projectDir as string) || process.cwd();
+    const detected = await getHookInstaller().detectInstalled(projectDir);
+    return { detected, projectDir };
   }
 
   async start(): Promise<void> {
@@ -743,6 +795,49 @@ export class MCPServer {
         name: 'auto_config',
         description: 'Auto-detect project configuration — languages, frameworks, AI tools',
         inputSchema: { type: 'object', properties: {} },
+      },
+      // v5.2.0 — Subconscious Singularity
+      {
+        name: 'subconscious_inject',
+        description: 'Generate a session-start briefing — proactive context injection for the agent (v5.2.0)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            projectDir: { type: 'string', description: 'Project directory (defaults to cwd)' },
+            agentTool: { type: 'string', description: 'Agent tool name (claude-code, cursor, cline, etc.)' },
+            currentTask: { type: 'string', description: 'Optional task hint for similarity search' },
+          },
+        },
+      },
+      {
+        name: 'global_recall',
+        description: 'Recall from the singleton global brain — works across all projects + all agents (v5.2.0)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            projectId: { type: 'string' },
+            agentTool: { type: 'string' },
+            category: { type: 'string' },
+            keywords: { type: 'array', items: { type: 'string' } },
+            limit: { type: 'number' },
+            minImportance: { type: 'number' },
+          },
+        },
+      },
+      {
+        name: 'global_stats',
+        description: 'Get global brain + L0 cache stats (v5.2.0)',
+        inputSchema: { type: 'object', properties: {} },
+      },
+      {
+        name: 'attach_status',
+        description: 'Detect which AI agents are installed on this machine (v5.2.0)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            projectDir: { type: 'string' },
+          },
+        },
       },
     ];
   }

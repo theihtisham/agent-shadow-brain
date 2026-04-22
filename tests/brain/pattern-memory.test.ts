@@ -159,7 +159,7 @@ describe('PatternMemory', () => {
   });
 
   describe('getPatternInsights()', () => {
-    it('returns correlation insights when related files change', () => {
+    it('returns correlation insights when related files change', async () => {
       // Record a correlation pattern 3+ times
       const correlatedFiles: FileChange[] = [
         { path: 'src/model.ts', type: 'modify' },
@@ -174,7 +174,7 @@ describe('PatternMemory', () => {
         { path: 'src/model.ts', type: 'modify' },
       ];
 
-      const insights = memory.getPatternInsights(newChanges);
+      const insights = await memory.getPatternInsights(newChanges);
       const correlationInsight = insights.find(i =>
         i.title === 'Related files may need updating'
       );
@@ -182,7 +182,7 @@ describe('PatternMemory', () => {
       expect(correlationInsight!.files).toContain('src/model.test.ts');
     });
 
-    it('returns error pattern insights when same files are changed', () => {
+    it('returns error pattern insights when same files are changed', async () => {
       // Record an error pattern 2+ times
       const insight: BrainInsight = {
         type: 'warning',
@@ -198,18 +198,18 @@ describe('PatternMemory', () => {
       const changes: FileChange[] = [
         { path: 'src/routes.ts', type: 'modify' },
       ];
-      const insights = memory.getPatternInsights(changes);
+      const insights = await memory.getPatternInsights(changes);
       const errorInsight = insights.find(i =>
         i.title.includes('Recurring issue')
       );
       expect(errorInsight).toBeDefined();
     });
 
-    it('returns empty when no patterns match', () => {
+    it('returns empty when no patterns match', async () => {
       const changes: FileChange[] = [
         { path: 'src/new-file.ts', type: 'add' },
       ];
-      const insights = memory.getPatternInsights(changes);
+      const insights = await memory.getPatternInsights(changes);
       expect(insights).toHaveLength(0);
     });
   });

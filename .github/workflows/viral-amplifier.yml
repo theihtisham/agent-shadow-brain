@@ -1,17 +1,20 @@
 name: Viral Amplifier Bot
 
-# ETHICAL GUARANTEES (see .github/ETHICS.md):
+# ETHICAL GUARANTEES (see .github/ETHICS.md and .github/GUIDELINES.md):
 #   1. Runs ONLY on public repos — first job is a hard gate.
-#   2. NEVER auto-submits PRs to other repos. All outbound submissions are manual.
-#   3. Anti-spam: max 1 awesome-list PR/week, no PRs before 100 stars.
-#   4. No auto-DMs, no scraped contact info, no off-platform actions.
+#   2. NEVER auto-submits PRs to other repos. Bot only PREPARES the PR
+#      (forks, branches, commits, pushes); user clicks "Open PR" themselves.
+#   3. NO social media integration — no LinkedIn, no Twitter, no Discord.
+#   4. Anti-spam: max 1 awesome-list PR/week, no PRs before 100 stars.
 #   5. Welcome comments fire ONCE per user. No follow-up nagging.
-#   6. Respects every awesome-list's CONTRIBUTING.md (manual review before submitting).
+#   6. Respects every awesome-list's CONTRIBUTING.md (manual review before opening).
+#   7. NO secrets shared with bot beyond GITHUB_TOKEN (auto-provided).
 
 on:
   schedule:
     - cron: '0 14 * * *'   # Daily 14:00 UTC = stats refresh
     - cron: '0 14 * * 0'   # Sunday 14:00 UTC = weekly viral report
+    - cron: '0 */6 * * *'  # Every 6h = trending check
   workflow_dispatch:
     inputs:
       job:
@@ -24,12 +27,13 @@ on:
           - daily-stats
           - weekly-report
           - milestone-check
+          - trending-check
+          - cross-repo-intel
           - awesome-pr-targets
+          - awesome-pr-prepare
           - quality-scorecard
           - inclusion-checker
           - fork-cleanup
-          - linkedin-auto-post
-          - linkedin-groups-helper
   issues:
     types: [opened]
   pull_request_target:
@@ -82,6 +86,21 @@ jobs:
           git diff --cached --quiet || git commit -m "chore(stats): daily metrics refresh"
           git push || true
 
+  trending-check:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event_name == 'schedule' && github.event.schedule == '0 */6 * * *' || github.event.inputs.job == 'trending-check' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Detect star/download momentum spikes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/trending-detector.mjs
+
   milestone-check:
     needs: guard
     if: needs.guard.outputs.is_public == 'true' && (github.event_name == 'schedule' || github.event.inputs.job == 'milestone-check' || github.event.inputs.job == 'all')
@@ -91,7 +110,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Check for star milestones (generates LinkedIn post template)
+      - name: Check for star milestones
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -119,6 +138,21 @@ jobs:
             gh issue create --title "Weekly Viral Report — $(date -u +%Y-%m-%d)" --body-file docs/weekly-viral-report.md --label "viral-amplifier" || true
           fi
 
+  cross-repo-intel:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event.inputs.job == 'cross-repo-intel' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Cross-repo intelligence (compares + correlates your repos)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_USER: theihtisham
+        run: node .github/scripts/cross-repo-intelligence.mjs
+
   awesome-list-targets:
     needs: guard
     if: needs.guard.outputs.is_public == 'true' && (github.event.inputs.job == 'awesome-pr-targets' || github.event.inputs.job == 'all')
@@ -133,6 +167,21 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
         run: node .github/scripts/awesome-list-targets.mjs
+
+  awesome-pr-prepare:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && github.event.inputs.job == 'awesome-pr-prepare'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Prepare PR (fork+branch+commit+push) — opens 1-click PR URL
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/auto-pr-prepare.mjs
 
   quality-scorecard:
     needs: guard
@@ -173,76 +222,30 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-      - name: Analyze owned forks (NO auto-delete — manual approval required)
+      - name: Analyze owned forks (NO auto-delete — manual approval)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_USER: theihtisham
         run: node .github/scripts/fork-cleanup.mjs
-
-  linkedin-auto-post:
-    needs: guard
-    if: needs.guard.outputs.is_public == 'true' && github.event.inputs.job == 'linkedin-auto-post'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Auto-post to LinkedIn personal feed (rate-limited, dedup-checked)
-        env:
-          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
-          LINKEDIN_USER_URN: ${{ secrets.LINKEDIN_USER_URN }}
-          LINKEDIN_POST_CONTENT_FILE: 'docs/launch/LINKEDIN_NEXT_POST.md'
-        run: node .github/scripts/linkedin-auto-post.mjs
-      - name: Commit post history
-        run: |
-          git config user.name "theihtisham"
-          git config user.email "theihtisham@users.noreply.github.com"
-          git add docs/launch/LINKEDIN_POST_HISTORY.md .github/.linkedin-post-state.json 2>/dev/null || true
-          git diff --cached --quiet || git commit -m "chore(linkedin): record auto-post"
-          git push || true
-
-  linkedin-groups-helper:
-    needs: guard
-    if: needs.guard.outputs.is_public == 'true' && (github.event.inputs.job == 'linkedin-groups-helper' || github.event.inputs.job == 'linkedin-auto-post')
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - name: Generate LinkedIn groups share checklist
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: node .github/scripts/linkedin-groups-helper.mjs
 
   welcome-new-issue:
     needs: guard
     if: needs.guard.outputs.is_public == 'true' && github.event_name == 'issues' && github.event.action == 'opened'
     runs-on: ubuntu-latest
     steps:
-      - name: Auto-label new issue
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Smart triage + welcome (one-time per user)
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          TITLE="${{ github.event.issue.title }}"
-          BODY="${{ github.event.issue.body }}"
-          LABELS=""
-          echo "$TITLE $BODY" | grep -qiE "bug|broken|fail|error|crash" && LABELS="$LABELS,bug"
-          echo "$TITLE $BODY" | grep -qiE "feature|add|support|enhancement|request" && LABELS="$LABELS,enhancement"
-          echo "$TITLE $BODY" | grep -qiE "doc|readme|guide|tutorial" && LABELS="$LABELS,documentation"
-          echo "$TITLE $BODY" | grep -qiE "performance|slow|speed|optimize" && LABELS="$LABELS,performance"
-          echo "$TITLE $BODY" | grep -qiE "security|vuln|cve|injection" && LABELS="$LABELS,security"
-          [ -n "$LABELS" ] && gh issue edit ${{ github.event.issue.number }} --add-label "${LABELS#,}" || true
-      - name: Welcome first-time issue (ONCE per user)
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          AUTHOR="${{ github.event.issue.user.login }}"
-          PRIOR=$(gh issue list --author "$AUTHOR" --state all --json number --jq 'length')
-          if [ "$PRIOR" -eq "1" ]; then
-            gh issue comment ${{ github.event.issue.number }} --body "👋 Welcome, @$AUTHOR! Thanks for opening your first issue. This project is solo-maintained — typical response time is 24-48 hours. If urgent, mention @theihtisham."
-          fi
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+        run: node .github/scripts/smart-issue-responder.mjs
 
   welcome-new-pr:
     needs: guard

@@ -25,6 +25,11 @@ on:
           - weekly-report
           - milestone-check
           - awesome-pr-targets
+          - quality-scorecard
+          - inclusion-checker
+          - fork-cleanup
+          - linkedin-auto-post
+          - linkedin-groups-helper
   issues:
     types: [opened]
   pull_request_target:
@@ -173,6 +178,43 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GH_USER: theihtisham
         run: node .github/scripts/fork-cleanup.mjs
+
+  linkedin-auto-post:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && github.event.inputs.job == 'linkedin-auto-post'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Auto-post to LinkedIn personal feed (rate-limited, dedup-checked)
+        env:
+          LINKEDIN_ACCESS_TOKEN: ${{ secrets.LINKEDIN_ACCESS_TOKEN }}
+          LINKEDIN_USER_URN: ${{ secrets.LINKEDIN_USER_URN }}
+          LINKEDIN_POST_CONTENT_FILE: 'docs/launch/LINKEDIN_NEXT_POST.md'
+        run: node .github/scripts/linkedin-auto-post.mjs
+      - name: Commit post history
+        run: |
+          git config user.name "theihtisham"
+          git config user.email "theihtisham@users.noreply.github.com"
+          git add docs/launch/LINKEDIN_POST_HISTORY.md .github/.linkedin-post-state.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore(linkedin): record auto-post"
+          git push || true
+
+  linkedin-groups-helper:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event.inputs.job == 'linkedin-groups-helper' || github.event.inputs.job == 'linkedin-auto-post')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate LinkedIn groups share checklist
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: node .github/scripts/linkedin-groups-helper.mjs
 
   welcome-new-issue:
     needs: guard

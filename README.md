@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="banner.svg" alt="Agent Shadow Brain v5.2.0 — Subconscious Singularity Edition" width="100%">
+<img src="Banner (2).png" alt="Agent Shadow Brain v5.2.0 — Subconscious Singularity Edition" width="100%">
 
 <br/>
 

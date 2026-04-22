@@ -1,0 +1,19 @@
+[
+  {
+    "date": "2026-04-22",
+    "timestamp": 1776870756451,
+    "stars": 12,
+    "forks": 1,
+    "watchers": 2,
+    "open_issues": 11,
+    "total_issues": 0,
+    "releases": 2,
+    "size_kb": 966,
+    "npm": {
+      "last_day": 17,
+      "last_week": 851,
+      "last_month": 1476,
+      "total": 1476
+    }
+  }
+]

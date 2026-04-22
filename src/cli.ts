@@ -2678,8 +2678,7 @@ const offCmd = new Command('off')
   .action(async () => {
     console.log(chalk.magenta.bold('\n  SHADOW BRAIN v' + VERSION + ' — Shutting down'));
     try {
-      const { default: execaDefault } = await import('execa');
-      const exec = execaDefault;
+      const { execa: exec } = await import('execa');
       try {
         if (process.platform === 'win32') {
           await exec('taskkill', ['/F', '/IM', 'node.exe', '/FI', 'WINDOWTITLE eq shadow-brain*'], { reject: false });

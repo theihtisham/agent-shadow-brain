@@ -1,0 +1,52 @@
+name: 💡 Feature Request
+description: Suggest a new feature or capability
+labels: ["enhancement", "needs-triage"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for suggesting an improvement. The smaller and more specific the request, the more likely it ships.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: What problem does this solve?
+      description: Describe the user pain or workflow gap. Don't lead with the solution.
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: Proposed solution
+      description: How would you like Shadow Brain to handle this?
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Other ways this could be solved (or workarounds you tried)
+
+  - type: dropdown
+    id: scope
+    attributes:
+      label: Scope
+      description: Roughly how big is this?
+      options:
+        - Small — single function or CLI flag
+        - Medium — new module or significant feature
+        - Large — architectural / multi-module
+        - Unsure
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: confirmations
+    attributes:
+      label: Confirmations
+      options:
+        - label: I searched existing issues and didn't find a duplicate
+          required: true
+        - label: I'm willing to help test or contribute (optional)

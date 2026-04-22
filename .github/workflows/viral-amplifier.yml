@@ -1,0 +1,218 @@
+name: Viral Amplifier Bot
+
+# ETHICAL GUARANTEES (see .github/ETHICS.md):
+#   1. Runs ONLY on public repos — first job is a hard gate.
+#   2. NEVER auto-submits PRs to other repos. All outbound submissions are manual.
+#   3. Anti-spam: max 1 awesome-list PR/week, no PRs before 100 stars.
+#   4. No auto-DMs, no scraped contact info, no off-platform actions.
+#   5. Welcome comments fire ONCE per user. No follow-up nagging.
+#   6. Respects every awesome-list's CONTRIBUTING.md (manual review before submitting).
+
+on:
+  schedule:
+    - cron: '0 14 * * *'   # Daily 14:00 UTC = stats refresh
+    - cron: '0 14 * * 0'   # Sunday 14:00 UTC = weekly viral report
+  workflow_dispatch:
+    inputs:
+      job:
+        description: 'Which job to run'
+        required: false
+        default: 'all'
+        type: choice
+        options:
+          - all
+          - daily-stats
+          - weekly-report
+          - milestone-check
+          - awesome-pr-targets
+  issues:
+    types: [opened]
+  pull_request_target:
+    types: [opened]
+
+permissions:
+  contents: write
+  issues: write
+  pull-requests: write
+
+jobs:
+  # ─── HARD GATE: only run on public repos ──────────────────────────────────
+  guard:
+    runs-on: ubuntu-latest
+    outputs:
+      is_public: ${{ steps.check.outputs.is_public }}
+    steps:
+      - id: check
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          PRIVATE=$(gh api repos/${{ github.repository }} --jq '.private')
+          if [ "$PRIVATE" = "true" ]; then
+            echo "is_public=false" >> $GITHUB_OUTPUT
+            echo "::warning::Repo is PRIVATE — Viral Amplifier Bot will not run."
+            exit 0
+          fi
+          echo "is_public=true" >> $GITHUB_OUTPUT
+          echo "Repo is public — proceeding."
+
+  daily-stats:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event_name == 'schedule' && github.event.schedule == '0 14 * * *' || github.event.inputs.job == 'daily-stats' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Track daily stats
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/stats-monitor.mjs
+      - name: Commit stats
+        run: |
+          git config user.name "theihtisham"
+          git config user.email "theihtisham@users.noreply.github.com"
+          git add docs/STATS.md docs/stats-history.json 2>/dev/null || true
+          git diff --cached --quiet || git commit -m "chore(stats): daily metrics refresh"
+          git push || true
+
+  milestone-check:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event_name == 'schedule' || github.event.inputs.job == 'milestone-check' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check for star milestones (generates LinkedIn post template)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/milestone-notifier.mjs
+
+  weekly-viral-report:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event_name == 'schedule' && github.event.schedule == '0 14 * * 0' || github.event.inputs.job == 'weekly-report' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate weekly viral report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/weekly-viral-report.mjs
+      - name: Open issue with the report
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          if [ -f docs/weekly-viral-report.md ]; then
+            gh issue create --title "Weekly Viral Report — $(date -u +%Y-%m-%d)" --body-file docs/weekly-viral-report.md --label "viral-amplifier" || true
+          fi
+
+  awesome-list-targets:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event.inputs.job == 'awesome-pr-targets' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate awesome-list PR target list (NO auto-submit)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/awesome-list-targets.mjs
+
+  quality-scorecard:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event.inputs.job == 'quality-scorecard' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Generate quality scorecard
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/quality-scorecard.mjs
+
+  inclusion-checker:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && (github.event.inputs.job == 'inclusion-checker' || github.event.inputs.job == 'all')
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Check awesome-list inclusions
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: node .github/scripts/inclusion-checker.mjs
+
+  fork-cleanup:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && github.event.inputs.job == 'fork-cleanup'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Analyze owned forks (NO auto-delete — manual approval required)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_USER: theihtisham
+        run: node .github/scripts/fork-cleanup.mjs
+
+  welcome-new-issue:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && github.event_name == 'issues' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Auto-label new issue
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TITLE="${{ github.event.issue.title }}"
+          BODY="${{ github.event.issue.body }}"
+          LABELS=""
+          echo "$TITLE $BODY" | grep -qiE "bug|broken|fail|error|crash" && LABELS="$LABELS,bug"
+          echo "$TITLE $BODY" | grep -qiE "feature|add|support|enhancement|request" && LABELS="$LABELS,enhancement"
+          echo "$TITLE $BODY" | grep -qiE "doc|readme|guide|tutorial" && LABELS="$LABELS,documentation"
+          echo "$TITLE $BODY" | grep -qiE "performance|slow|speed|optimize" && LABELS="$LABELS,performance"
+          echo "$TITLE $BODY" | grep -qiE "security|vuln|cve|injection" && LABELS="$LABELS,security"
+          [ -n "$LABELS" ] && gh issue edit ${{ github.event.issue.number }} --add-label "${LABELS#,}" || true
+      - name: Welcome first-time issue (ONCE per user)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          AUTHOR="${{ github.event.issue.user.login }}"
+          PRIOR=$(gh issue list --author "$AUTHOR" --state all --json number --jq 'length')
+          if [ "$PRIOR" -eq "1" ]; then
+            gh issue comment ${{ github.event.issue.number }} --body "👋 Welcome, @$AUTHOR! Thanks for opening your first issue. This project is solo-maintained — typical response time is 24-48 hours. If urgent, mention @theihtisham."
+          fi
+
+  welcome-new-pr:
+    needs: guard
+    if: needs.guard.outputs.is_public == 'true' && github.event_name == 'pull_request_target' && github.event.action == 'opened'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Welcome first-time PR (ONCE per user)
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          AUTHOR="${{ github.event.pull_request.user.login }}"
+          PRIOR=$(gh pr list --author "$AUTHOR" --state all --json number --jq 'length')
+          if [ "$PRIOR" -eq "1" ]; then
+            gh pr comment ${{ github.event.pull_request.number }} --body "🎉 Thanks @$AUTHOR for your first PR! I'll review within 24-48 hours. Please ensure tests pass (\`npm test\`) and the code matches existing style. By contributing you agree the code is licensed MIT."
+          fi

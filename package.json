@@ -126,7 +126,7 @@
     "react": "^18.3.1",
     "simple-git": "^3.36.0",
     "ws": "^8.18.0",
-    "zod": "^3.23.8"
+    "zod": "^4.3.6"
   },
   "devDependencies": {
     "@types/diff": "^5.2.3",

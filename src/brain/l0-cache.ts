@@ -1,7 +1,7 @@
 // src/brain/l0-cache.ts — L0 In-Memory Hot Tier (v5.2.0)
 //
 // Sub-millisecond recall for the hottest brain entries. Sits in front of the
-// global SQLite brain. Map-based, LRU-evicted, byte-budget-bounded.
+// global JSON brain. Map-based, LRU-evicted, byte-budget-bounded.
 //
 // Design:
 //   - Pure JavaScript Map (insertion-ordered → easy LRU)

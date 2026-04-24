@@ -8,22 +8,94 @@ This project follows [Semantic Versioning](https://semver.org/) and [Keep a Chan
 
 ---
 
-## [5.2.0] — 2026-04-22 — Subconscious Singularity Edition (Current)
+## [6.0.0] — 2026-04-24 — Hive Mind Edition (Current)
+
+> **Hive Mind for AI agents — the first sub-agent-aware brain. 22 genuinely new features. 100% local-first, free, open source.**
+
+### The Hive Mind
+
+Before v6.0, every AI agent and sub-agent started from zero. Claude's `Task` tool, Cursor's Composer, CrewAI/LangGraph/AutoGen sub-agents — none shared memory with the parent. Shadow Brain v6 is the first tool that bridges the brain across frameworks AND into sub-agents.
+
+### Added — 22 genuinely novel modules
+
+1. **Sub-Agent Brain Bridge (SABB)** (`src/brain/subagent-bridge.ts`) — detects sub-agent spawns, computes focused context slivers, quarantines sub-agent memories until graduated (confidence ≥ 0.7).
+2. **Causal Memory Chains** (`src/brain/causal-chains.ts`) — tracks cause→effect relationships, renders as Graphviz DAG, answers "why did X happen?"
+3. **Agent Collision Detective** (`src/brain/collision-detective.ts`) — real-time overlapping edit intent detection with advisory locks.
+4. **Dream Engine** (`src/brain/dream-engine.ts`) — background idle reflection via local LLM (Ollama): revisit, counterfactual, consolidation, contradiction, pattern-discovery.
+5. **Agent Reputation Ledger** (`src/brain/reputation-ledger.ts`) — Ed25519-signed decision receipts with portable accuracy scores and shields.io badges.
+6. **Swarm Debate Protocol** (`src/brain/swarm-debate.ts`) — pro/con/arbiter multi-agent debate for critical decisions.
+7. **Pre-Mortem Assistant** (`src/brain/pre-mortem.ts`) — surfaces past failures from project memory before significant tasks.
+8. **Branch Brains** (`src/brain/branch-brain.ts`) — git-branch-aware memory context switching.
+9. **Attention Heatmap** (`src/brain/attention-heatmap.ts`) — weighted attribution of which memories influenced each decision.
+10. **Token Economy Engine** (`src/brain/token-economy.ts`) — cross-agent cost tracking, monthly projections, savings suggestions.
+11. **Forgetting Curve + Sleep Consolidation** (`src/brain/forgetting-curve.ts`) — Ebbinghaus-inspired natural decay + tier promotion.
+12. **Formal Verification Bridge** (`src/brain/formal-verification-bridge.ts`) — natural-language rules → ESLint / Semgrep / LSP diagnostics.
+13. **Confidence Calibration Monitor** (`src/brain/calibration-monitor.ts`) — Brier-score based agent trust weighting.
+14. **Cost-Aware Sub-Agent Spawner** (`src/brain/cost-aware-spawner.ts`) — routes sub-agent spawns to cheapest model that satisfies task.
+15. **Air-Gap Mode** (`src/brain/air-gap.ts`) — block outbound network; localhost-only.
+16. **E2E Encryption** (`src/brain/brain-encryption.ts`) — ChaCha20-Poly1305 at rest with scrypt key derivation.
+17. **Hallucination Quarantine** (`src/brain/hallucination-quarantine.ts`) — isolate suspect memories; auto-delete after 7 days.
+18. **Voice Mode** (`src/brain/voice-mode.ts`) — transcript processing with brain integration.
+19. **Brain Garden** (`src/brain/brain-garden.ts`) — living constellation visualization data source.
+20. **PR Auto-Review** (`src/brain/pr-auto-review.ts`) — GitHub PR comment generator citing project memories.
+21. **Team Brain Sync** (`src/brain/team-brain-sync.ts`) — P2P peer state layer for WebRTC team brain.
+22. **Brain Exchange** (`src/brain/brain-exchange.ts`) — export + import curated shareable brain slices with redaction.
+
+### Added — supporting infrastructure
+
+- **Local-First LLM Adapter** (`src/brain/local-llm.ts`) — unified Ollama-first adapter used by Dream Engine, Swarm Debate, Pre-Mortem. Graceful fallback when unreachable.
+- **Hive Accelerator** (`src/brain/hive-accelerator.ts`) — wires SSSP (arXiv 2504.17033) for causal traversal + TurboQuant (ICLR 2026) for similarity scoring.
+- **Complete Web Control Dashboard** (`src/dashboard/v6-dashboard-html.ts` + server routes) — 23-tab SPA at `http://localhost:7341/hive`. Controls every feature: enable/disable, configure, monitor. Agent connect/disconnect. Unified activity log. API+MCP configuration panels. Brain Garden D3 canvas.
+- **48 new CLI commands** grouped under `hive`, `subagent`, `causal`, `collision`, `dream`, `reputation`, `debate`, `premortem`, `branch-brain`, `attention`, `tokens`, `forget`, `formal`, `calibrate`, `airgap`, `encrypt`, `quarantine`, `voice`, `garden`, `pr-review`, `team-sync`, `exchange`.
+- **36 new MCP tool handlers** for every v6 module — any MCP-compatible AI tool can now call them.
+- **v6 integration tests** (`tests/brain/hivemind-v6.test.ts`) — 24 smoke tests covering every module.
+
+### Changed
+
+- Version: `5.2.0` → `6.0.0`
+- Total brain modules: **26 → 48** (22 new v6 modules + Hive Accelerator + Local LLM)
+- CLI commands: **70+ → 90+**
+- MCP tools: **~27 → 60+** (existing + 36 v6 handlers)
+- README hero: v6.0 Hive Mind positioning with 22 novel features prominently listed
+- Web dashboard: `/` (legacy) + `/hive` or `/v6` (complete Hive Mind control)
+- `package.json` description + 25 new v6 keywords for maximum discoverability
+
+### Removed
+
+- Repo hygiene cleanup — removed stray files (`C:Userstheihtmp_b64_3.txt`, `eng.traineddata`, `write_pattern.py`, `.playwright-mcp/`, `seo-gists/`, empty `.codex`). Updated `.gitignore` to prevent recurrence.
+
+### Security
+
+- ChaCha20-Poly1305 AEAD encryption for brain-at-rest
+- Ed25519 cryptographic signatures on agent reputation receipts
+- Air-gap mode with RFC1918 + metadata-endpoint blocking
+- Hallucination quarantine prevents unverified claims from polluting global brain
+
+### Philosophy
+
+**Local-first default.** All AI features (Dream Engine, Swarm Debate, Pre-Mortem, Voice) route to Ollama by default. Zero API keys needed. Zero network required. Zero cost to run. Shadow Brain works offline, in air-gapped environments, and in compliance-constrained enterprises. Remote providers (Anthropic, OpenAI, GLM) remain an optional upgrade — never a requirement.
+
+---
+
+## [5.2.0] — 2026-04-22 — Subconscious Singularity Edition
 
 > **One brain. Every agent. Every project. Every session. Forever.**
 
 ### The Singularity
 
-Before v5.2.0, every project had its own brain and every AI agent (Claude, Cursor, Cline...) had to be told what each project knew. Now there is **one brain** — a singleton global database at `~/.shadow-brain/global.db` that every agent reads from and writes to.
+Before v5.2.0, every project had its own brain and every AI agent (Claude, Cursor, Cline...) had to be told what each project knew. Now there is **one brain** — a singleton global JSON store at `~/.shadow-brain/global.json` that every agent reads from and writes to.
 
 What Cursor learns in project A is instantly known to Claude Code in project B.
 
 ### Added
 
-- **Singleton Global Brain** (`src/brain/global-brain.ts`) — one `~/.shadow-brain/global.db` is the source of truth for every project + agent on the machine. SQLite WAL mode + write queue handles concurrent multi-agent writes. Auto-vacuum at 500MB, auto-prune at 1GB. Project-scoped views via `GlobalBrain.projectIdFor(rootDir)`.
+- **Singleton Global Brain** (`src/brain/global-brain.ts`) — one `~/.shadow-brain/global.json` is the source of truth for every project + agent on the machine. Atomic write-and-rename plus an in-process write queue handles concurrent multi-agent writes without native dependencies. Auto-prune at 1GB. Project-scoped views via `GlobalBrain.projectIdFor(rootDir)`.
 - **Subconscious Engine** (`src/brain/subconscious.ts`) — proactive context injection on every session start. The agent doesn't have to ask — the brain surfaces recent decisions, active tasks, similar past work, project state, cross-agent insights, and warnings. Hard-capped at 2K tokens, relevance-ranked, agent-configurable.
 - **Universal Bootstrap** (`src/brain/session-hooks.ts`) — `asb attach-all` detects every installed AI agent on your machine and installs SessionStart hooks per agent's native mechanism (Claude Code settings.json, Cursor `.cursor/rules`, Cline VS Code extension, Windsurf `.windsurfrules`, Codex config.json, Aider `.aider.conf.yml`, Copilot `.github/copilot-instructions.md`, etc.). Every agent calls Shadow Brain on first prompt of every session.
-- **L0 In-Memory Hot Tier** (`src/brain/l0-cache.ts`) — sub-millisecond recall via byte-budgeted Map LRU. Sits in front of the global SQLite brain. Per-namespace caches with `getCache(name)`. Default 64MB budget, configurable.
+- **L0 In-Memory Hot Tier** (`src/brain/l0-cache.ts`) — sub-millisecond recall via byte-budgeted Map LRU. Sits in front of the global JSON brain. Per-namespace caches with `getCache(name)`. Default 64MB budget, configurable.
+- **Agent Safety Firewall** (`src/brain/agent-firewall.ts`) — blocks risky agent actions such as secret file access, destructive commands, curl-to-shell installs, and prompt-injection payloads before tools execute.
+- **Agent Handoff Packets** (`src/brain/agent-handoff.ts`) — `asb handoff cursor codex` generates a cross-agent continuation packet with task state, changed files, recent memories, and safety warnings.
+- **Proof Timeline + Share Report** — `asb timeline` and `asb proof report` expose the viral proof stream: what agents learned, when, and what the firewall blocked.
 - **Cursor Adapter** (`src/adapters/cursor.ts`) — first-class adapter, no more falling back to ClineAdapter. Reads conversations from `~/.cursor/conversations`, injects into `.cursor/rules/shadow-brain-insights.md`, escalates critical insights to `.cursorrules`.
 - **Windsurf Adapter** (`src/adapters/windsurf.ts`) — first-class adapter. Reads from `~/.windsurf/conversations`, writes to `.windsurfrules` with `# === Shadow Brain Insights ===` marker for safe re-injection.
 - **GitHub Copilot Adapter** (`src/adapters/copilot.ts`) — workspace-level integration via `.github/copilot-instructions.md` (Copilot's official context file). Replaces a marker block on each update so injection is idempotent.
@@ -31,6 +103,7 @@ What Cursor learns in project A is instantly known to Claude Code in project B.
   - `asb attach-all` — universal bootstrap for every detected agent
   - `asb subconscious inject|status|configure` — manage proactive context injection
   - `asb global stats|recall|cache|sync` — inspect the singleton global brain
+  - `asb handoff`, `asb timeline`, `asb firewall`, `asb detach-all`, `asb audit-hooks`, `asb proof report` — trust, safety, and launch-proof commands
 - **4 New MCP Tools** — `subconscious_inject`, `global_recall`, `global_stats`, `attach_status`. Now any MCP client can talk to the global brain directly.
 
 ### Changed
@@ -82,7 +155,7 @@ To opt into the new singleton model: run `asb attach-all` once and every future 
 ## [5.0.1] — 2026-04-15 — Zero-Config Intelligence Edition
 
 ### Added
-- **Zero-Config Auto-Setup** — auto-detect project type, AI tools, languages, frameworks; auto-install MCP config + git hooks
+- **Zero-Config Auto-Setup** — auto-detect project type, AI tools, languages, frameworks; setup is explicit and reversible in v5.2.0
 - **MCP Server** — 19-tool Model Context Protocol server for Claude Code, Cursor, and all AI tools
 - **Rich Web Dashboard** — real-time WebSocket dashboard with 8 panels (health, memory tiers, insights, fixes, AI tools, modules, stats, controls)
 - **Natural Language Queries** — `shadow-brain ask "..."` for plain-English brain interaction

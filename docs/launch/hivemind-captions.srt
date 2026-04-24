@@ -1,0 +1,23 @@
+1
+00:00:00,000 --> 00:00:10,000
+Every AI coding agent starts from zero. Every session. Every sub-agent.
+
+2
+00:00:10,000 --> 00:00:20,000
+Shadow Brain v6.0 is the first open-source Hive Mind for AI agents.
+
+3
+00:00:20,000 --> 00:00:30,000
+Sub-Agent Brain Bridge syncs context to every framework's sub-agents.
+
+4
+00:00:30,000 --> 00:00:40,000
+Causal Memory Chains make every AI decision visible and auditable.
+
+5
+00:00:40,000 --> 00:00:50,000
+Collisions are caught before they happen. The brain reflects while you sleep.
+
+6
+00:00:50,000 --> 00:01:00,000
+Free. Open. Local-first. npx at-theihtisham/agent-shadow-brain attach-all.

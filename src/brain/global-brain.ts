@@ -21,6 +21,7 @@ import {
   GlobalBrainConfig,
   GlobalBrainStats,
   GlobalEntry,
+  BrainTimelineEvent,
 } from '../types.js';
 
 const DEFAULT_DIR = path.join(os.homedir(), '.shadow-brain');
@@ -257,6 +258,35 @@ export class GlobalBrain {
       if (e) out.push(e);
     }
     return out;
+  }
+
+  /** Chronological proof stream for dashboards, handoffs, and launch demos. */
+  timeline(opts: {
+    projectId?: string;
+    agentTool?: AgentTool;
+    category?: string;
+    limit?: number;
+  } = {}): BrainTimelineEvent[] {
+    if (!this.initialized) return [];
+    const limit = opts.limit ?? 50;
+    return Array.from(this.entries.values())
+      .filter(e => !opts.projectId || e.projectId === opts.projectId)
+      .filter(e => !opts.agentTool || e.agentTool === opts.agentTool)
+      .filter(e => !opts.category || e.category === opts.category)
+      .sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+      .slice(0, limit)
+      .map(e => ({
+        id: e.id,
+        projectId: e.projectId,
+        projectName: e.projectName,
+        agentTool: e.agentTool,
+        category: e.category,
+        content: e.content,
+        importance: e.importance,
+        createdAt: e.createdAt,
+        lastAccessed: e.lastAccessed,
+        metadata: e.metadata,
+      }));
   }
 
   getStats(): GlobalBrainStats {

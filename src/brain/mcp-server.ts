@@ -1,6 +1,6 @@
 // src/brain/mcp-server.ts — JSON-RPC 2.0 MCP server over HTTP
 // Exposes analysis tools via Model Context Protocol
-// v5.0.1 — Infinite Intelligence Edition (Cursor + Claude Code + Kilo Code compatible)
+// v6.0.0 — Hive Mind Edition (Cursor + Claude Code + Codex + Copilot + sub-agent frameworks)
 
 import * as http from 'http';
 import { MCPRequest, MCPResponse, MCPTool, MCPServerOptions, SymbolInfo } from '../types.js';
@@ -23,6 +23,8 @@ export class MCPServer {
     this.options = {
       port: options?.port ?? 7342,
       host: options?.host ?? 'localhost',
+      authToken: options?.authToken ?? process.env.SHADOW_BRAIN_MCP_TOKEN ?? '',
+      corsOrigin: options?.corsOrigin ?? `http://${options?.host ?? 'localhost'}:${options?.port ?? 7342}`,
     };
 
     this.toolHandlers = {
@@ -50,6 +52,304 @@ export class MCPServer {
       global_recall: this.handleGlobalRecall.bind(this),
       global_stats: this.handleGlobalStats.bind(this),
       attach_status: this.handleAttachStatus.bind(this),
+      global_timeline: this.handleGlobalTimeline.bind(this),
+      firewall_check: this.handleFirewallCheck.bind(this),
+      agent_handoff: this.handleAgentHandoff.bind(this),
+      // v6.0.0 — Hive Mind tools
+      subagent_sliver: this.handleSubagentSliver.bind(this),
+      subagent_quarantine_list: this.handleSubagentQuarantineList.bind(this),
+      subagent_graduate: this.handleSubagentGraduate.bind(this),
+      subagent_reject: this.handleSubagentReject.bind(this),
+      causal_link: this.handleCausalLink.bind(this),
+      causal_trace: this.handleCausalTrace.bind(this),
+      causal_influence: this.handleCausalInfluence.bind(this),
+      collision_declare: this.handleCollisionDeclare.bind(this),
+      collision_list: this.handleCollisionList.bind(this),
+      dream_run: this.handleDreamRun.bind(this),
+      dream_list: this.handleDreamList.bind(this),
+      reputation_sign: this.handleReputationSign.bind(this),
+      reputation_score: this.handleReputationScore.bind(this),
+      reputation_badge: this.handleReputationBadge.bind(this),
+      debate_run: this.handleDebateRun.bind(this),
+      premortem_run: this.handlePremortemRun.bind(this),
+      branch_state: this.handleBranchState.bind(this),
+      attention_heatmap: this.handleAttentionHeatmap.bind(this),
+      tokens_record: this.handleTokensRecord.bind(this),
+      tokens_report: this.handleTokensReport.bind(this),
+      forget_consolidate: this.handleForgetConsolidate.bind(this),
+      formal_generate: this.handleFormalGenerate.bind(this),
+      calibration_record: this.handleCalibrationRecord.bind(this),
+      calibration_scores: this.handleCalibrationScores.bind(this),
+      airgap_status: this.handleAirGapStatus.bind(this),
+      airgap_enable: this.handleAirGapEnable.bind(this),
+      airgap_disable: this.handleAirGapDisable.bind(this),
+      quarantine_list: this.handleQuarantineList.bind(this),
+      quarantine_promote: this.handleQuarantinePromote.bind(this),
+      voice_process: this.handleVoiceProcess.bind(this),
+      garden_snapshot: this.handleGardenSnapshot.bind(this),
+      pr_review_generate: this.handlePRReviewGenerate.bind(this),
+      exchange_export: this.handleExchangeExport.bind(this),
+      exchange_import: this.handleExchangeImport.bind(this),
+      exchange_list: this.handleExchangeList.bind(this),
+      hive_status: this.handleHiveStatus.bind(this),
+    };
+  }
+
+  // ── v6.0 Hive Mind handlers ────────────────────────────────────────────────
+
+  private async handleSubagentSliver(params: Record<string, unknown>): Promise<unknown> {
+    const { getSubAgentBridge } = await import('./subagent-bridge.js');
+    const b = getSubAgentBridge();
+    const req = await b.registerSpawn({
+      parentAgent: (params.parentAgent as any) ?? 'claude-code',
+      subAgentId: (params.subAgentId as string) ?? `sub-${Date.now()}`,
+      framework: (params.framework as any) ?? 'claude-code-task',
+      taskDescription: (params.taskDescription as string) ?? '',
+      projectDir: (params.projectDir as string) ?? process.cwd(),
+      tokenBudget: params.tokenBudget as number | undefined,
+    });
+    return b.computeSliver(req);
+  }
+  private async handleSubagentQuarantineList(_params: Record<string, unknown>): Promise<unknown> {
+    const { getSubAgentBridge } = await import('./subagent-bridge.js');
+    const b = getSubAgentBridge(); await b.init();
+    return b.listQuarantine();
+  }
+  private async handleSubagentGraduate(params: Record<string, unknown>): Promise<unknown> {
+    const { getSubAgentBridge } = await import('./subagent-bridge.js');
+    return { ok: await getSubAgentBridge().graduate(params.memoryId as string) };
+  }
+  private async handleSubagentReject(params: Record<string, unknown>): Promise<unknown> {
+    const { getSubAgentBridge } = await import('./subagent-bridge.js');
+    return { ok: await getSubAgentBridge().reject(params.memoryId as string, params.reason as string | undefined) };
+  }
+  private async handleCausalLink(params: Record<string, unknown>): Promise<unknown> {
+    const { getCausalChains } = await import('./causal-chains.js');
+    return getCausalChains().link(params.effectId as string, params.causeId as string, params.rationale as string | undefined, (params.strength as number) ?? 1.0);
+  }
+  private async handleCausalTrace(params: Record<string, unknown>): Promise<unknown> {
+    const { getCausalChains } = await import('./causal-chains.js');
+    return getCausalChains().trace(params.memoryId as string, { maxDepth: (params.maxDepth as number) ?? 8 });
+  }
+  private async handleCausalInfluence(params: Record<string, unknown>): Promise<unknown> {
+    const { getCausalChains } = await import('./causal-chains.js');
+    return getCausalChains().influence(params.memoryId as string, { maxDepth: (params.maxDepth as number) ?? 6 });
+  }
+  private async handleCollisionDeclare(params: Record<string, unknown>): Promise<unknown> {
+    const { getCollisionDetective } = await import('./collision-detective.js');
+    return getCollisionDetective().declareIntent(
+      params.agentTool as any,
+      params.sessionId as string,
+      params.filePath as string,
+      params.startLine as number,
+      params.endLine as number,
+      params.intent as string,
+      params.ttlMs as number | undefined,
+    );
+  }
+  private async handleCollisionList(_params: Record<string, unknown>): Promise<unknown> {
+    const { getCollisionDetective } = await import('./collision-detective.js');
+    const d = getCollisionDetective(); await d.init();
+    return { intents: d.activeIntents(), alerts: d.activeAlerts(), stats: d.getStats() };
+  }
+  private async handleDreamRun(_params: Record<string, unknown>): Promise<unknown> {
+    const { getDreamEngine } = await import('./dream-engine.js');
+    return getDreamEngine().dreamOnce();
+  }
+  private async handleDreamList(params: Record<string, unknown>): Promise<unknown> {
+    const { getDreamEngine } = await import('./dream-engine.js');
+    const d = getDreamEngine(); await d.init();
+    return d.listDreams({ unacknowledgedOnly: params.unacknowledgedOnly as boolean | undefined, limit: params.limit as number | undefined });
+  }
+  private async handleReputationSign(params: Record<string, unknown>): Promise<unknown> {
+    const { getReputationLedger } = await import('./reputation-ledger.js');
+    return getReputationLedger().sign({
+      agentTool: params.agentTool as any,
+      agentVersion: params.agentVersion as string,
+      projectId: params.projectId as string,
+      decision: params.decision as string,
+      category: params.category as string,
+      confidence: (params.confidence as number) ?? 0.8,
+    });
+  }
+  private async handleReputationScore(params: Record<string, unknown>): Promise<unknown> {
+    const { getReputationLedger } = await import('./reputation-ledger.js');
+    const l = getReputationLedger(); await l.init();
+    return l.getScore(params.agentTool as any, params.agentVersion as string | undefined);
+  }
+  private async handleReputationBadge(params: Record<string, unknown>): Promise<unknown> {
+    const { getReputationLedger } = await import('./reputation-ledger.js');
+    const l = getReputationLedger(); await l.init();
+    return { badge: l.badge(params.agentTool as any, params.agentVersion as string | undefined) };
+  }
+  private async handleDebateRun(params: Record<string, unknown>): Promise<unknown> {
+    const { getSwarmDebate } = await import('./swarm-debate.js');
+    return getSwarmDebate().debate(params.question as string, (params.context as string) ?? '', { turns: (params.turns as number) ?? 2 });
+  }
+  private async handlePremortemRun(params: Record<string, unknown>): Promise<unknown> {
+    const { getPreMortem } = await import('./pre-mortem.js');
+    return getPreMortem().run(params.taskDescription as string, (params.projectDir as string) ?? process.cwd());
+  }
+  private async handleBranchState(params: Record<string, unknown>): Promise<unknown> {
+    const { getBranchBrain } = await import('./branch-brain.js');
+    return getBranchBrain().getState((params.projectDir as string) ?? process.cwd());
+  }
+  private async handleAttentionHeatmap(params: Record<string, unknown>): Promise<unknown> {
+    const { getAttentionHeatmap } = await import('./attention-heatmap.js');
+    return getAttentionHeatmap().compute({
+      decisionText: params.decisionText as string,
+      candidateMemoryIds: (params.candidateMemoryIds as string[]) ?? [],
+      agentTool: (params.agentTool as any) ?? 'claude-code',
+    });
+  }
+  private async handleTokensRecord(params: Record<string, unknown>): Promise<unknown> {
+    const { getTokenEconomy } = await import('./token-economy.js');
+    return getTokenEconomy().record({
+      agentTool: params.agentTool as any,
+      model: params.model as string,
+      inputTokens: params.inputTokens as number,
+      outputTokens: params.outputTokens as number,
+      taskCategory: params.taskCategory as string | undefined,
+    });
+  }
+  private async handleTokensReport(_params: Record<string, unknown>): Promise<unknown> {
+    const { getTokenEconomy } = await import('./token-economy.js');
+    return getTokenEconomy().report();
+  }
+  private async handleForgetConsolidate(_params: Record<string, unknown>): Promise<unknown> {
+    const { getForgettingCurve } = await import('./forgetting-curve.js');
+    return getForgettingCurve().runConsolidation();
+  }
+  private async handleFormalGenerate(params: Record<string, unknown>): Promise<unknown> {
+    const { getFormalBridge } = await import('./formal-verification-bridge.js');
+    return getFormalBridge().generateFromText(params.text as string, params.sourceId as string | undefined);
+  }
+  private async handleCalibrationRecord(params: Record<string, unknown>): Promise<unknown> {
+    const { getCalibrationMonitor } = await import('./calibration-monitor.js');
+    return getCalibrationMonitor().record({
+      agentTool: params.agentTool as any,
+      category: params.category as string,
+      claim: params.claim as string,
+      claimedConfidence: params.claimedConfidence as number,
+      actualOutcome: params.actualOutcome as any,
+      outcomeAt: new Date(),
+    });
+  }
+  private async handleCalibrationScores(_params: Record<string, unknown>): Promise<unknown> {
+    const { getCalibrationMonitor } = await import('./calibration-monitor.js');
+    const m = getCalibrationMonitor(); await m.init();
+    return m.listScores();
+  }
+  private async handleAirGapStatus(_params: Record<string, unknown>): Promise<unknown> {
+    const { getAirGapMode } = await import('./air-gap.js');
+    const a = getAirGapMode(); await a.init();
+    return a.status();
+  }
+  private async handleAirGapEnable(params: Record<string, unknown>): Promise<unknown> {
+    const { getAirGapMode } = await import('./air-gap.js');
+    await getAirGapMode().enable((params.policy as any) ?? 'strict');
+    return { ok: true };
+  }
+  private async handleAirGapDisable(_params: Record<string, unknown>): Promise<unknown> {
+    const { getAirGapMode } = await import('./air-gap.js');
+    await getAirGapMode().disable();
+    return { ok: true };
+  }
+  private async handleQuarantineList(params: Record<string, unknown>): Promise<unknown> {
+    const { getHallucinationQuarantine } = await import('./hallucination-quarantine.js');
+    const q = getHallucinationQuarantine(); await q.init();
+    return q.list({ pendingOnly: params.pendingOnly as boolean | undefined });
+  }
+  private async handleQuarantinePromote(params: Record<string, unknown>): Promise<unknown> {
+    const { getHallucinationQuarantine } = await import('./hallucination-quarantine.js');
+    return { ok: await getHallucinationQuarantine().promote(params.id as string, params.projectId as string, (params.agentTool as string) ?? 'claude-code') };
+  }
+  private async handleVoiceProcess(params: Record<string, unknown>): Promise<unknown> {
+    const { getVoiceMode } = await import('./voice-mode.js');
+    return getVoiceMode().process({ transcript: params.transcript as string, confidence: params.confidence as number | undefined, projectDir: params.projectDir as string | undefined });
+  }
+  private async handleGardenSnapshot(params: Record<string, unknown>): Promise<unknown> {
+    const { getBrainGarden } = await import('./brain-garden.js');
+    return getBrainGarden().snapshot((params.limit as number) ?? 100);
+  }
+  private async handlePRReviewGenerate(params: Record<string, unknown>): Promise<unknown> {
+    const { getPRAutoReview } = await import('./pr-auto-review.js');
+    return getPRAutoReview().generate({
+      repo: params.repo as string,
+      prNumber: params.prNumber as number,
+      projectDir: (params.projectDir as string) ?? process.cwd(),
+      diffSummary: params.diffSummary as string,
+      changedFiles: (params.changedFiles as string[]) ?? [],
+    });
+  }
+  private async handleExchangeExport(params: Record<string, unknown>): Promise<unknown> {
+    const { getBrainExchange } = await import('./brain-exchange.js');
+    return getBrainExchange().export({
+      name: params.name as string,
+      description: (params.description as string) ?? '',
+      author: (params.author as string) ?? 'anonymous',
+      categories: params.categories as string[] | undefined,
+      tags: params.tags as string[] | undefined,
+      limit: params.limit as number | undefined,
+      minImportance: params.minImportance as number | undefined,
+    });
+  }
+  private async handleExchangeImport(params: Record<string, unknown>): Promise<unknown> {
+    const { getBrainExchange } = await import('./brain-exchange.js');
+    return getBrainExchange().import(params.filePath as string, { projectDir: (params.projectDir as string) ?? process.cwd(), agentTool: params.agentTool as string | undefined });
+  }
+  private async handleExchangeList(_params: Record<string, unknown>): Promise<unknown> {
+    const { getBrainExchange } = await import('./brain-exchange.js');
+    return getBrainExchange().listLocal();
+  }
+  private async handleHiveStatus(_params: Record<string, unknown>): Promise<unknown> {
+    const [
+      { getSubAgentBridge },
+      { getCausalChains },
+      { getCollisionDetective },
+      { getDreamEngine },
+      { getReputationLedger },
+      { getTokenEconomy },
+      { getFormalBridge },
+      { getAirGapMode },
+      { getGlobalBrain },
+    ] = await Promise.all([
+      import('./subagent-bridge.js'),
+      import('./causal-chains.js'),
+      import('./collision-detective.js'),
+      import('./dream-engine.js'),
+      import('./reputation-ledger.js'),
+      import('./token-economy.js'),
+      import('./formal-verification-bridge.js'),
+      import('./air-gap.js'),
+      import('./global-brain.js'),
+    ]);
+    const sabb = getSubAgentBridge();
+    const causal = getCausalChains();
+    const collisions = getCollisionDetective();
+    const dream = getDreamEngine();
+    const rep = getReputationLedger();
+    const tokens = getTokenEconomy();
+    const formal = getFormalBridge();
+    const airgap = getAirGapMode();
+    const brain = getGlobalBrain();
+    await Promise.all([sabb.init(), causal.init(), collisions.init(), dream.init(), rep.init(), tokens.init(), formal.init(), airgap.init(), brain.init()]);
+    return {
+      version: '6.0.0',
+      modules: {
+        sabb: sabb.getStats(),
+        causal: causal.stats(),
+        collision: collisions.getStats(),
+        dream: dream.getStats(),
+        reputation: rep.stats(),
+        tokenEconomy: await tokens.report(),
+        formalBridge: formal.stats(),
+        airGap: airgap.status(),
+      },
+      localFirst: true,
+      totalAgentsConnected: brain.getStats().totalAgents,
+      totalMemoriesStored: brain.getStats().totalEntries,
+      generatedAt: new Date(),
     };
   }
 
@@ -100,6 +400,42 @@ export class MCPServer {
     return { detected, projectDir };
   }
 
+  private async handleGlobalTimeline(params: Record<string, unknown>): Promise<unknown> {
+    const { getGlobalBrain, GlobalBrain } = await import('./global-brain.js');
+    const projectDir = params.projectDir as string | undefined;
+    const brain = getGlobalBrain();
+    await brain.init();
+    return brain.timeline({
+      projectId: projectDir ? GlobalBrain.projectIdFor(projectDir) : params.projectId as string | undefined,
+      agentTool: params.agentTool as any,
+      category: params.category as string | undefined,
+      limit: (params.limit as number) ?? 30,
+    });
+  }
+
+  private async handleFirewallCheck(params: Record<string, unknown>): Promise<unknown> {
+    const { AgentFirewall } = await import('./agent-firewall.js');
+    return new AgentFirewall().check({
+      command: params.command as string | undefined,
+      filePath: params.filePath as string | undefined,
+      url: params.url as string | undefined,
+      content: params.content as string | undefined,
+      toolName: params.toolName as string | undefined,
+    });
+  }
+
+  private async handleAgentHandoff(params: Record<string, unknown>): Promise<unknown> {
+    const { AgentHandoff } = await import('./agent-handoff.js');
+    const projectDir = (params.projectDir as string) || process.cwd();
+    return new AgentHandoff().generate({
+      fromAgent: (params.fromAgent as any) || 'cursor',
+      toAgent: (params.toAgent as any) || 'codex',
+      projectDir,
+      task: params.task as string | undefined,
+      limit: (params.limit as number) ?? 12,
+    });
+  }
+
   async start(): Promise<void> {
     this.server = http.createServer(async (req, res) => {
       if (!req.url) {
@@ -109,15 +445,27 @@ export class MCPServer {
 
       const url = new URL(req.url, `http://${req.headers.host}`);
 
-      // CORS headers — permissive for Cursor, Claude Code, and other AI tools
-      res.setHeader('Access-Control-Allow-Origin', '*');
-      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, DELETE');
-      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept');
+      const origin = req.headers.origin;
+      const allowedOrigin = this.options.corsOrigin;
+      if (!origin || allowedOrigin === origin || allowedOrigin === '*') {
+        res.setHeader('Access-Control-Allow-Origin', origin || allowedOrigin);
+      }
+      res.setHeader('Vary', 'Origin');
+      res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
+      res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, Accept, X-Shadow-Brain-Token');
       res.setHeader('Access-Control-Max-Age', '86400');
 
       if (req.method === 'OPTIONS') {
         res.writeHead(204);
         res.end();
+        return;
+      }
+
+      if (!this.isAuthorized(req)) {
+        this.sendJSON(res, 401, {
+          error: 'Unauthorized',
+          message: 'Set SHADOW_BRAIN_MCP_TOKEN or pass --auth-token, then send Bearer or X-Shadow-Brain-Token.',
+        });
         return;
       }
 
@@ -129,7 +477,7 @@ export class MCPServer {
         // Lightweight health endpoint for tool connectivity checks
         this.sendJSON(res, 200, {
           status: 'ok',
-          version: '5.0.1',
+          version: '5.2.0',
           uptime: process.uptime(),
           tools: Object.keys(this.toolHandlers).length,
         });
@@ -244,8 +592,8 @@ export class MCPServer {
       },
       serverInfo: {
         name: 'agent-shadow-brain',
-        version: '5.0.1',
-        description: 'World\'s #1 AI coding intelligence layer — infinite memory, multi-agent consensus, self-evolving',
+        version: '5.2.0',
+        description: 'Cross-agent memory and safety layer for AI coding agents',
       },
     };
   }
@@ -571,7 +919,7 @@ export class MCPServer {
   private async handleStatus(params: Record<string, unknown>): Promise<unknown> {
     const status = this.orchestrator.getStatus?.() || {};
     return {
-      version: '5.0.1',
+      version: '5.2.0',
       ...status,
     };
   }
@@ -600,7 +948,7 @@ export class MCPServer {
       const instance = (this.orchestrator as Record<string, unknown>)[mod.key];
       modules.push({
         name: mod.name,
-        version: '5.0.1',
+        version: '5.2.0',
         status: instance ? 'active' : 'idle',
       });
     }
@@ -839,6 +1187,48 @@ export class MCPServer {
           },
         },
       },
+      {
+        name: 'global_timeline',
+        description: 'Show the proof timeline of what agents learned and when (v5.2.0)',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            projectDir: { type: 'string' },
+            projectId: { type: 'string' },
+            agentTool: { type: 'string' },
+            category: { type: 'string' },
+            limit: { type: 'number' },
+          },
+        },
+      },
+      {
+        name: 'firewall_check',
+        description: 'Agent Safety Firewall — check a command, file path, URL, or prompt before the agent acts',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            command: { type: 'string' },
+            filePath: { type: 'string' },
+            url: { type: 'string' },
+            content: { type: 'string' },
+            toolName: { type: 'string' },
+          },
+        },
+      },
+      {
+        name: 'agent_handoff',
+        description: 'Create a cross-agent continuation packet from one AI coding agent to another',
+        inputSchema: {
+          type: 'object',
+          properties: {
+            fromAgent: { type: 'string' },
+            toAgent: { type: 'string' },
+            projectDir: { type: 'string' },
+            task: { type: 'string' },
+            limit: { type: 'number' },
+          },
+        },
+      },
     ];
   }
 
@@ -878,10 +1268,10 @@ export class MCPServer {
       'Content-Type': 'text/event-stream',
       'Cache-Control': 'no-cache',
       Connection: 'keep-alive',
-      'Access-Control-Allow-Origin': '*',
+      'Access-Control-Allow-Origin': this.options.corsOrigin,
     });
 
-    res.write(`event: connected\ndata: {"clientId":"${clientId}","version":"5.0.1"}\n\n`);
+    res.write(`event: connected\ndata: {"clientId":"${clientId}","version":"5.2.0"}\n\n`);
 
     const client: SSEClient = { res, id: clientId };
     this.sseClients.set(clientId, client);
@@ -889,6 +1279,15 @@ export class MCPServer {
     req.on('close', () => {
       this.sseClients.delete(clientId);
     });
+  }
+
+  private isAuthorized(req: http.IncomingMessage): boolean {
+    if (!this.options.authToken) return true;
+    const auth = req.headers.authorization || '';
+    const tokenHeader = req.headers['x-shadow-brain-token'];
+    const bearer = auth.startsWith('Bearer ') ? auth.slice('Bearer '.length) : '';
+    const token = Array.isArray(tokenHeader) ? tokenHeader[0] : tokenHeader;
+    return bearer === this.options.authToken || token === this.options.authToken;
   }
 
   private broadcastSSE(event: string, data: unknown): void {

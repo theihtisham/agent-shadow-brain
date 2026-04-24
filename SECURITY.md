@@ -42,3 +42,14 @@ We ask that you:
 - Do not degrade service quality during investigation
 
 Thank you for helping keep this project secure.
+
+## Agent Safety Defaults
+
+Shadow Brain treats AI agent hooks and MCP servers as sensitive local automation.
+
+- `postinstall` does not modify project files unless `SHADOW_BRAIN_POSTINSTALL_SETUP=1` is explicitly set.
+- Use `shadow-brain attach-all --dry-run` before installing hooks.
+- Use `shadow-brain audit-hooks` to inspect installed hook files.
+- Use `shadow-brain detach-all` to remove Shadow Brain hooks without creating new ones.
+- Use `shadow-brain firewall check` or `shadow-brain firewall hook` to block secret access, destructive commands, curl-to-shell installs, and prompt-injection payloads.
+- For HTTP MCP mode, prefer `--auth-token` or `SHADOW_BRAIN_MCP_TOKEN`.

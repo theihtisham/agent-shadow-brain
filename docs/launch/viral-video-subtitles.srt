@@ -1,0 +1,27 @@
+1
+00:00:00,000 --> 00:00:04,000
+Every AI coding agent starts from zero.
+
+2
+00:00:04,000 --> 00:00:10,000
+Cursor learns your repo.
+
+3
+00:00:10,000 --> 00:00:17,000
+Shadow Brain stores it locally.
+
+4
+00:00:17,000 --> 00:00:25,000
+Codex remembers it instantly.
+
+5
+00:00:25,000 --> 00:00:33,000
+Claude gets stopped before it breaks production.
+
+6
+00:00:33,000 --> 00:00:40,000
+One shared memory. One safety firewall.
+
+7
+00:00:40,000 --> 00:00:45,000
+Every agent, finally working together.

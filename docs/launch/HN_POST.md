@@ -64,7 +64,7 @@ web dashboard.
 
 The hardest design problem was making the singleton brain handle concurrent writes
 from multiple agents without conflicts. I ended up with a write queue + atomic file
-replace pattern — simpler than SQLite WAL and works without native deps.
+replace pattern — simpler than native database setup and works without native deps.
 
 I'd especially love feedback on:
 

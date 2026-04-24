@@ -1,0 +1,761 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow Brain v6.0 — Motion Graphics Explainer</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+  :root {
+    --bg: #030712;
+    --bg2: #0a1020;
+    --bg3: #111a30;
+    --text: #f1f5f9;
+    --text2: #94a3b8;
+    --text-dim: #475569;
+    --cyan: #22d3ee;
+    --purple: #a855f7;
+    --pink: #ec4899;
+    --green: #10b981;
+    --orange: #f59e0b;
+    --red: #ef4444;
+    --brand: linear-gradient(135deg, #22d3ee 0%, #a855f7 50%, #ec4899 100%);
+    --font-sans: 'Inter', 'SF Pro Display', system-ui, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    overflow: hidden;
+    height: 100vh;
+    width: 100vw;
+  }
+  body {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .stage {
+    width: 1920px;
+    height: 1080px;
+    position: relative;
+    background: radial-gradient(ellipse at 20% 10%, rgba(168,85,247,0.16) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 90%, rgba(34,211,238,0.12) 0%, transparent 55%),
+                radial-gradient(ellipse at 50% 50%, rgba(236,72,153,0.05) 0%, transparent 65%),
+                var(--bg);
+    overflow: hidden;
+  }
+  .bg-grid {
+    position: absolute; inset: 0;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+  }
+  .scene {
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 80px;
+  }
+
+  /* ─── SCENE 1: Banner ─── */
+  #scene1 .hero-wrap {
+    display: flex; flex-direction: column; align-items: center; gap: 40px; width: 100%;
+  }
+  #scene1 .brand-svg {
+    width: 720px; height: 260px;
+  }
+  #scene1 .features-grid {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    gap: 14px;
+    width: 1600px;
+  }
+  #scene1 .feature-tile {
+    background: linear-gradient(135deg, rgba(34,211,238,0.08), rgba(168,85,247,0.08));
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 14px;
+    padding: 14px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    opacity: 0;
+  }
+  #scene1 .feature-tile .icon {
+    width: 36px; height: 36px;
+    background: var(--brand);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 18px; font-weight: 700;
+  }
+  #scene1 .feature-tile .name {
+    font-size: 13px; font-weight: 600;
+    color: var(--text);
+    text-align: center;
+    line-height: 1.2;
+  }
+  #scene1 .feature-tile .desc {
+    font-size: 10px; color: var(--text2); text-align: center;
+  }
+
+  /* ─── SCENE 2: Problem ─── */
+  #scene2 .title {
+    font-size: 64px; font-weight: 800; text-align: center; letter-spacing: -1.5px;
+    margin-bottom: 60px;
+  }
+  #scene2 .problem-agents {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 40px; width: 1400px;
+  }
+  #scene2 .agent-card {
+    background: linear-gradient(180deg, #1a2040, #0a0f20);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 20px;
+    padding: 30px;
+    text-align: center;
+  }
+  #scene2 .agent-card .emoji { font-size: 64px; }
+  #scene2 .agent-card .name { font-size: 20px; font-weight: 700; margin-top: 12px; }
+  #scene2 .agent-card .memory {
+    margin-top: 16px;
+    padding: 8px 12px;
+    background: rgba(239,68,68,0.15);
+    border: 1px solid rgba(239,68,68,0.4);
+    border-radius: 8px;
+    color: var(--red);
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+
+  /* ─── SCENE 3: Hive Mind ─── */
+  #scene3 .title {
+    font-size: 64px; font-weight: 800; letter-spacing: -1.5px;
+    background: var(--brand);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 30px;
+  }
+  #scene3 .subtitle {
+    font-size: 22px; color: var(--text2); margin-bottom: 60px; text-align: center; max-width: 900px;
+  }
+  #scene3 .hive-container {
+    position: relative; width: 700px; height: 700px;
+  }
+  #scene3 .brain-core {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    width: 240px; height: 240px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,85,247,0.8) 0%, rgba(34,211,238,0.3) 50%, transparent 75%);
+    display: flex; align-items: center; justify-content: center;
+    animation: breathe 3s ease-in-out infinite;
+  }
+  @keyframes breathe { 50% { transform: translate(-50%, -50%) scale(1.08); } }
+  #scene3 .brain-core .label {
+    font-family: var(--font-mono); font-size: 16px; color: white; text-align: center; font-weight: 700;
+  }
+  #scene3 .orbit {
+    position: absolute; inset: 0;
+    border: 1px dashed rgba(34,211,238,0.2);
+    border-radius: 50%;
+    animation: rotate 30s linear infinite;
+  }
+  @keyframes rotate { to { transform: rotate(360deg); } }
+  #scene3 .agent-node {
+    position: absolute;
+    width: 72px; height: 72px;
+    background: var(--bg2);
+    border: 2px solid var(--cyan);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+    font-weight: 700;
+  }
+
+  /* ─── SCENE 4-7: Feature scenes (generic) ─── */
+  .feature-scene .icon-big {
+    width: 120px; height: 120px;
+    background: var(--brand);
+    border-radius: 24px;
+    display: flex; align-items: center; justify-content: center;
+    color: white;
+    font-size: 56px;
+    font-weight: 700;
+    margin-bottom: 30px;
+    box-shadow: 0 20px 60px rgba(168,85,247,0.4);
+  }
+  .feature-scene .title {
+    font-size: 58px; font-weight: 800; letter-spacing: -1.2px;
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  .feature-scene .subtitle {
+    font-size: 22px; color: var(--text2);
+    max-width: 1000px;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 40px;
+  }
+  .feature-scene .demo-area {
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 40px;
+    min-width: 900px;
+    min-height: 240px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 16px;
+    color: var(--text2);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.4);
+  }
+
+  /* SABB specific */
+  .sabb-flow {
+    display: flex; align-items: center; gap: 30px; font-family: var(--font-sans);
+  }
+  .sabb-node {
+    padding: 24px 32px;
+    background: var(--bg3);
+    border: 2px solid var(--cyan);
+    border-radius: 14px;
+    text-align: center;
+  }
+  .sabb-node.parent { border-color: var(--cyan); }
+  .sabb-node.sliver { border-color: var(--purple); background: linear-gradient(135deg, rgba(168,85,247,0.1), rgba(34,211,238,0.1)); }
+  .sabb-node.sub { border-color: var(--pink); }
+  .sabb-arrow { font-size: 40px; color: var(--cyan); }
+
+  /* Causal specific */
+  .causal-tree { display: flex; flex-direction: column; gap: 16px; font-family: var(--font-mono); font-size: 15px; }
+  .causal-node {
+    background: var(--bg3); border: 1px solid var(--cyan); border-radius: 8px;
+    padding: 12px 20px; position: relative;
+    min-width: 520px;
+    color: var(--text);
+  }
+  .causal-node .tag { color: var(--purple); font-weight: 700; }
+  .causal-node:not(:last-child)::after {
+    content: "↓"; position: absolute;
+    bottom: -18px; left: 20px;
+    color: var(--cyan);
+    font-size: 18px;
+  }
+
+  /* Terminal */
+  .terminal {
+    background: #0d1117;
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 24px 32px;
+    min-width: 1200px;
+    min-height: 340px;
+    box-shadow: 0 30px 80px rgba(0,0,0,0.5);
+    font-family: var(--font-mono);
+    font-size: 20px;
+  }
+  .terminal .title-bar {
+    display: flex; gap: 8px; margin-bottom: 20px;
+  }
+  .terminal .title-bar .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+  }
+  .terminal .title-bar .dot.r { background: #ff5f57; }
+  .terminal .title-bar .dot.y { background: #febc2e; }
+  .terminal .title-bar .dot.g { background: #28c840; }
+  .terminal .title-bar .name {
+    margin-left: 12px; color: var(--text-dim); font-size: 14px;
+  }
+  .terminal .line { color: var(--text); margin-bottom: 10px; }
+  .terminal .line .prompt { color: var(--green); font-weight: 700; }
+  .terminal .line .cmd { color: var(--cyan); }
+  .terminal .line .output { color: var(--text2); font-size: 17px; }
+  .terminal .cursor {
+    display: inline-block;
+    width: 10px; height: 22px;
+    background: var(--cyan);
+    animation: blink 1s step-end infinite;
+    vertical-align: middle;
+  }
+  @keyframes blink { 50% { opacity: 0; } }
+
+  /* Dashboard proof screenshot */
+  .screenshot-proof {
+    max-width: 1600px;
+    max-height: 900px;
+    border-radius: 16px;
+    border: 1px solid rgba(255,255,255,0.15);
+    box-shadow: 0 30px 80px rgba(0,0,0,0.6);
+    object-fit: contain;
+  }
+
+  /* Stats row */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 30px;
+    width: 1500px;
+    margin-top: 40px;
+  }
+  .stat-card {
+    background: linear-gradient(135deg, rgba(34,211,238,0.08), rgba(168,85,247,0.08));
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 16px;
+    padding: 30px;
+    text-align: center;
+  }
+  .stat-card .num {
+    font-size: 72px; font-weight: 900; letter-spacing: -2px;
+    background: var(--brand);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .stat-card .label { color: var(--text2); font-size: 15px; margin-top: 6px; }
+
+  /* CTA */
+  .cta-scene .logo-big {
+    font-size: 90px; font-weight: 900; letter-spacing: -3px;
+    background: var(--brand);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+    margin-bottom: 20px;
+  }
+  .cta-scene .tagline {
+    font-size: 26px; color: var(--text2); margin-bottom: 50px;
+  }
+  .cta-scene .install-command {
+    background: #0d1117;
+    border: 2px solid var(--cyan);
+    border-radius: 16px;
+    padding: 24px 40px;
+    font-family: var(--font-mono);
+    font-size: 28px;
+    color: var(--cyan);
+    margin-bottom: 40px;
+    box-shadow: 0 10px 40px rgba(34,211,238,0.25);
+  }
+  .cta-scene .links {
+    display: flex; gap: 40px; margin-bottom: 40px; font-size: 22px; font-family: var(--font-mono);
+  }
+  .cta-scene .link-pill {
+    padding: 16px 28px;
+    background: var(--bg2);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 12px;
+    color: var(--text);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .cta-scene .link-pill .icon {
+    width: 28px; height: 28px;
+    background: var(--brand);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+  }
+  .cta-scene .free-tags {
+    display: flex; gap: 14px;
+  }
+  .cta-scene .free-tag {
+    padding: 10px 22px;
+    background: rgba(16,185,129,0.1);
+    border: 1px solid var(--green);
+    color: var(--green);
+    border-radius: 22px;
+    font-size: 15px; font-weight: 700;
+  }
+
+  /* Version badge */
+  .version-badge {
+    position: absolute; top: 40px; left: 40px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 14px;
+    border-radius: 8px;
+    font-family: var(--font-mono); font-size: 12px;
+    color: var(--text2);
+    z-index: 100;
+  }
+  .scene-label {
+    position: absolute; bottom: 40px; right: 40px;
+    font-family: var(--font-mono); font-size: 13px;
+    color: var(--text-dim);
+    z-index: 100;
+  }
+
+  /* Animations for particles */
+  .particles {
+    position: absolute; inset: 0;
+    pointer-events: none;
+  }
+  .particle {
+    position: absolute;
+    width: 3px; height: 3px;
+    border-radius: 50%;
+    background: var(--cyan);
+    animation: drift 8s linear infinite;
+    opacity: 0.6;
+  }
+  @keyframes drift {
+    from { transform: translateY(0); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    to { transform: translateY(-100vh); opacity: 0; }
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="bg-grid"></div>
+  <div class="particles" id="particles"></div>
+  <div class="version-badge">Shadow Brain · v6.0 Hive Mind</div>
+
+  <!-- ═══════ SCENE 1: Banner + all 22 features ═══════ -->
+  <div class="scene" id="scene1">
+    <div class="hero-wrap">
+      <svg class="brand-svg" viewBox="0 0 720 260" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="brandGrad" x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0%" stop-color="#22d3ee"/>
+            <stop offset="50%" stop-color="#a855f7"/>
+            <stop offset="100%" stop-color="#ec4899"/>
+          </linearGradient>
+          <filter id="glow">
+            <feGaussianBlur stdDeviation="4" result="blur"/>
+            <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+          </filter>
+        </defs>
+        <!-- Brain glyph left side -->
+        <g transform="translate(50 50) scale(1.5)" filter="url(#glow)">
+          <circle cx="50" cy="50" r="46" fill="none" stroke="url(#brandGrad)" stroke-width="1.5" stroke-dasharray="3 4" opacity="0.5"/>
+          <path d="M 48 22 C 30 22, 18 32, 18 48 C 18 60, 26 72, 38 78 C 42 82, 46 80, 48 76 L 48 22" fill="none" stroke="#22d3ee" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M 52 22 C 70 22, 82 32, 82 48 C 82 60, 74 72, 62 78 C 58 82, 54 80, 52 76 L 52 22" fill="none" stroke="#a855f7" stroke-width="1.8" stroke-linecap="round"/>
+          <path d="M 30 40 Q 38 38, 44 44" fill="none" stroke="#22d3ee" stroke-width="1.2"/>
+          <path d="M 28 55 Q 36 55, 44 58" fill="none" stroke="#22d3ee" stroke-width="1.2"/>
+          <path d="M 70 40 Q 62 38, 56 44" fill="none" stroke="#a855f7" stroke-width="1.2"/>
+          <path d="M 72 55 Q 64 55, 56 58" fill="none" stroke="#a855f7" stroke-width="1.2"/>
+          <circle cx="30" cy="42" r="2.5" fill="#22d3ee"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.4s" repeatCount="indefinite"/></circle>
+          <circle cx="70" cy="42" r="2.5" fill="#a855f7"><animate attributeName="opacity" values="1;0.3;1" dur="1.4s" repeatCount="indefinite"/></circle>
+          <circle cx="50" cy="65" r="2" fill="#ec4899"><animate attributeName="opacity" values="0.3;1;0.3" dur="1.8s" repeatCount="indefinite"/></circle>
+        </g>
+        <!-- Word mark -->
+        <text x="230" y="100" font-family="Inter, sans-serif" font-size="72" font-weight="900" fill="url(#brandGrad)" letter-spacing="-3">SHADOW</text>
+        <text x="230" y="170" font-family="Inter, sans-serif" font-size="72" font-weight="900" fill="#f1f5f9" letter-spacing="-3">BRAIN</text>
+        <text x="230" y="210" font-family="'JetBrains Mono', monospace" font-size="16" fill="#94a3b8" letter-spacing="2">v6.0 · HIVE MIND · 22 MODULES · FREE · OPEN SOURCE</text>
+      </svg>
+
+      <div class="features-grid">
+        <div class="feature-tile"><div class="icon">🔗</div><div class="name">Sub-Agent Bridge</div><div class="desc">SABB · context slivers</div></div>
+        <div class="feature-tile"><div class="icon">🧭</div><div class="name">Causal Chains</div><div class="desc">why any decision</div></div>
+        <div class="feature-tile"><div class="icon">⚠️</div><div class="name">Collision Detective</div><div class="desc">real-time locks</div></div>
+        <div class="feature-tile"><div class="icon">💤</div><div class="name">Dream Engine</div><div class="desc">idle reflection</div></div>
+        <div class="feature-tile"><div class="icon">🏆</div><div class="name">Reputation Ledger</div><div class="desc">Ed25519 signed</div></div>
+        <div class="feature-tile"><div class="icon">🗣️</div><div class="name">Swarm Debate</div><div class="desc">pro/con/arbiter</div></div>
+
+        <div class="feature-tile"><div class="icon">🚨</div><div class="name">Pre-Mortem</div><div class="desc">past failure scan</div></div>
+        <div class="feature-tile"><div class="icon">🌿</div><div class="name">Branch Brains</div><div class="desc">git-aware memory</div></div>
+        <div class="feature-tile"><div class="icon">🎯</div><div class="name">Attention Heatmap</div><div class="desc">weighted citations</div></div>
+        <div class="feature-tile"><div class="icon">💰</div><div class="name">Token Economy</div><div class="desc">$ saved live</div></div>
+        <div class="feature-tile"><div class="icon">🧬</div><div class="name">Forgetting Curve</div><div class="desc">Ebbinghaus decay</div></div>
+        <div class="feature-tile"><div class="icon">📐</div><div class="name">Formal Bridge</div><div class="desc">NL → ESLint</div></div>
+
+        <div class="feature-tile"><div class="icon">📏</div><div class="name">Calibration</div><div class="desc">Brier scores</div></div>
+        <div class="feature-tile"><div class="icon">🧪</div><div class="name">Cost-Aware Spawn</div><div class="desc">cheap routing</div></div>
+        <div class="feature-tile"><div class="icon">🔒</div><div class="name">Air-Gap Mode</div><div class="desc">offline ready</div></div>
+        <div class="feature-tile"><div class="icon">🔐</div><div class="name">E2E Encryption</div><div class="desc">ChaCha20</div></div>
+        <div class="feature-tile"><div class="icon">⊘</div><div class="name">Hallucination Q.</div><div class="desc">suspect isolation</div></div>
+        <div class="feature-tile"><div class="icon">🎙️</div><div class="name">Voice Mode</div><div class="desc">speak to brain</div></div>
+
+        <div class="feature-tile"><div class="icon">🌱</div><div class="name">Brain Garden</div><div class="desc">visualizer</div></div>
+        <div class="feature-tile"><div class="icon">📋</div><div class="name">PR Auto-Review</div><div class="desc">cited GitHub</div></div>
+        <div class="feature-tile"><div class="icon">🌐</div><div class="name">Team Sync</div><div class="desc">WebRTC P2P</div></div>
+        <div class="feature-tile"><div class="icon">🛒</div><div class="name">Brain Exchange</div><div class="desc">share slices</div></div>
+        <div class="feature-tile"><div class="icon">🤖</div><div class="name">Local-First LLM</div><div class="desc">Ollama default</div></div>
+        <div class="feature-tile"><div class="icon">⚡</div><div class="name">Hive Accelerator</div><div class="desc">SSSP+TurboQuant</div></div>
+      </div>
+    </div>
+    <div class="scene-label">— 01 / COMPLETE FEATURE MAP —</div>
+  </div>
+
+  <!-- ═══════ SCENE 2: Problem ═══════ -->
+  <div class="scene" id="scene2">
+    <div class="title">Every AI agent starts from <span style="color:var(--red)">zero</span>.</div>
+    <div class="problem-agents">
+      <div class="agent-card"><div class="emoji">🤖</div><div class="name">Claude Code</div><div class="memory">memory: empty</div></div>
+      <div class="agent-card"><div class="emoji">🎯</div><div class="name">Cursor</div><div class="memory">memory: empty</div></div>
+      <div class="agent-card"><div class="emoji">💻</div><div class="name">Codex</div><div class="memory">memory: empty</div></div>
+      <div class="agent-card"><div class="emoji">🪄</div><div class="name">Copilot</div><div class="memory">memory: empty</div></div>
+    </div>
+    <div class="scene-label">— 02 / THE PROBLEM —</div>
+  </div>
+
+  <!-- ═══════ SCENE 3: Hive Mind reveal ═══════ -->
+  <div class="scene" id="scene3">
+    <div class="title">One Hive Mind. Every Agent.</div>
+    <div class="subtitle">Shadow Brain v6 is the first open-source brain that every AI coding agent on your machine can share.</div>
+    <div class="hive-container" id="hive-container">
+      <div class="orbit"></div>
+      <div class="brain-core">
+        <div class="label">~/.shadow-brain<br/>global.json</div>
+      </div>
+    </div>
+    <div class="scene-label">— 03 / HIVE MIND —</div>
+  </div>
+
+  <!-- ═══════ SCENE 4: SABB ═══════ -->
+  <div class="scene feature-scene" id="scene4">
+    <div class="icon-big">🔗</div>
+    <div class="title">Sub-Agent Brain Bridge</div>
+    <div class="subtitle">SABB injects focused context into every sub-agent spawn — Claude Task, Cursor Composer, CrewAI, LangGraph. Sub-agents inherit knowledge, never start blind.</div>
+    <div class="demo-area">
+      <div class="sabb-flow">
+        <div class="sabb-node parent"><div style="font-size:40px;margin-bottom:8px">🤖</div><div style="font-weight:700">Parent</div></div>
+        <div class="sabb-arrow">→</div>
+        <div class="sabb-node sliver"><div style="font-size:24px;margin-bottom:6px">🧠</div><div style="font-weight:700">Context Sliver</div><div style="font-size:12px;color:var(--text2);margin-top:4px;font-family:var(--font-mono)">300 tokens · 3 memories</div></div>
+        <div class="sabb-arrow">→</div>
+        <div class="sabb-node sub"><div style="font-size:40px;margin-bottom:8px">⚡</div><div style="font-weight:700">Sub-Agent</div></div>
+      </div>
+    </div>
+    <div class="scene-label">— 04 / SABB —</div>
+  </div>
+
+  <!-- ═══════ SCENE 5: Causal Chains + Dream ═══════ -->
+  <div class="scene feature-scene" id="scene5">
+    <div class="icon-big">🧭</div>
+    <div class="title">Causal Chains + Dream Engine</div>
+    <div class="subtitle">Every decision has a visible, auditable cause chain. And when idle, Shadow Brain runs reflective cycles — strengthening patterns, running counterfactuals.</div>
+    <div class="demo-area">
+      <div class="causal-tree">
+        <div class="causal-node"><span class="tag">[today · claude]</span> use bcrypt cost 12 for password hashing</div>
+        <div class="causal-node"><span class="tag">[Mar 20 · cursor]</span> pattern: high cost factor required</div>
+        <div class="causal-node"><span class="tag">[Mar 20 · user]</span> prompt: use secure hashing</div>
+        <div class="causal-node"><span class="tag">[Feb 14 · cursor]</span> incident: weak hash found in audit</div>
+      </div>
+    </div>
+    <div class="scene-label">— 05 / CAUSAL + DREAM —</div>
+  </div>
+
+  <!-- ═══════ SCENE 6: Reputation + Tokens + Collision ═══════ -->
+  <div class="scene feature-scene" id="scene6">
+    <div class="icon-big">🏆</div>
+    <div class="title">Trust. Measured. Saved.</div>
+    <div class="subtitle">Ed25519-signed reputation receipts. Real-time token economy that projects monthly spend and suggests smarter routing. Collisions caught before they happen.</div>
+    <div class="demo-area" style="padding:30px;">
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:24px;width:100%">
+        <div style="padding:20px;background:var(--bg3);border-left:3px solid var(--green);border-radius:10px">
+          <div style="font-size:36px;font-weight:900;color:var(--green)">94%</div>
+          <div style="font-size:14px;color:var(--text2);margin-top:4px">claude-4.7 accuracy</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:8px;font-family:var(--font-mono)">Ed25519 signed · 247 decisions</div>
+        </div>
+        <div style="padding:20px;background:var(--bg3);border-left:3px solid var(--orange);border-radius:10px">
+          <div style="font-size:36px;font-weight:900;color:var(--orange)">$4.20</div>
+          <div style="font-size:14px;color:var(--text2);margin-top:4px">saved this month</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:8px;font-family:var(--font-mono)">routing Opus → Haiku for trivial</div>
+        </div>
+        <div style="padding:20px;background:var(--bg3);border-left:3px solid var(--red);border-radius:10px">
+          <div style="font-size:36px;font-weight:900;color:var(--red)">⚠</div>
+          <div style="font-size:14px;color:var(--text2);margin-top:4px">Collision detected</div>
+          <div style="font-size:11px;color:var(--text-dim);margin-top:8px;font-family:var(--font-mono)">cursor vs claude @ auth.ts:42-67</div>
+        </div>
+      </div>
+    </div>
+    <div class="scene-label">— 06 / TRUST & ECONOMY —</div>
+  </div>
+
+  <!-- ═══════ SCENE 7: Dashboard Proof (real screenshot) ═══════ -->
+  <div class="scene" id="scene7" style="padding:40px;">
+    <div class="title" style="font-size:44px;font-weight:800;margin-bottom:24px;text-align:center">Live Control Dashboard — real data, 28 tabs.</div>
+    <img src="screenshots/01-overview.png" alt="Shadow Brain Dashboard" class="screenshot-proof" id="proof-screen"/>
+    <div class="scene-label">— 07 / LIVE DASHBOARD —</div>
+  </div>
+
+  <!-- ═══════ SCENE 8: Installation Terminal ═══════ -->
+  <div class="scene" id="scene8">
+    <div style="font-size:52px;font-weight:800;letter-spacing:-1.2px;margin-bottom:40px;text-align:center">Install in 30 seconds.</div>
+    <div class="terminal" id="install-terminal">
+      <div class="title-bar">
+        <div class="dot r"></div><div class="dot y"></div><div class="dot g"></div>
+        <div class="name">~/projects/my-app — zsh — 120×32</div>
+      </div>
+      <div id="term-lines">
+        <!-- filled by GSAP -->
+      </div>
+    </div>
+    <div class="scene-label">— 08 / INSTALL —</div>
+  </div>
+
+  <!-- ═══════ SCENE 9: Dashboard opens ═══════ -->
+  <div class="scene" id="scene9" style="padding:40px;">
+    <div class="title" style="font-size:44px;font-weight:800;letter-spacing:-1.2px;margin-bottom:8px;text-align:center">localhost:7341 opens instantly.</div>
+    <div class="subtitle" style="font-size:16px;color:var(--text2);margin-bottom:24px;text-align:center;font-family:var(--font-mono)">Every memory. Every agent. Every sub-agent. Real data.</div>
+    <img src="screenshots/02-graph.png" alt="Live Graph" class="screenshot-proof" id="proof-screen-2"/>
+    <div class="scene-label">— 09 / DASHBOARD —</div>
+  </div>
+
+  <!-- ═══════ SCENE 10: GitHub + npm + stats ═══════ -->
+  <div class="scene" id="scene10">
+    <div style="font-size:48px;font-weight:800;margin-bottom:40px;text-align:center;letter-spacing:-1.2px">Shipped. Proven. Yours.</div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">48</div><div class="label">Brain Modules</div></div>
+      <div class="stat-card"><div class="num">148</div><div class="label">Tests Passing</div></div>
+      <div class="stat-card"><div class="num">90+</div><div class="label">CLI Commands</div></div>
+      <div class="stat-card"><div class="num">$0</div><div class="label">To Run (Local-First)</div></div>
+    </div>
+    <div style="margin-top:60px;display:flex;gap:30px;font-size:20px;font-family:var(--font-mono)">
+      <div style="padding:16px 28px;background:rgba(203,56,55,0.1);border:1px solid #cb3837;border-radius:10px;color:#cb3837;display:flex;align-items:center;gap:12px">
+        <span style="font-weight:900;font-size:26px">npm</span>
+        <span>@theihtisham/agent-shadow-brain</span>
+      </div>
+      <div style="padding:16px 28px;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.15);border-radius:10px;color:var(--text);display:flex;align-items:center;gap:12px">
+        <span style="font-size:22px">⭐</span>
+        <span>github.com/theihtisham/agent-shadow-brain</span>
+      </div>
+    </div>
+    <div class="scene-label">— 10 / PROOF —</div>
+  </div>
+
+  <!-- ═══════ SCENE 11: CTA ═══════ -->
+  <div class="scene cta-scene" id="scene11">
+    <div class="logo-big">Shadow Brain</div>
+    <div class="tagline">The Hive Mind for every AI coding agent on your machine.</div>
+    <div class="install-command">npx @theihtisham/agent-shadow-brain attach-all</div>
+    <div class="links">
+      <div class="link-pill"><div class="icon">⭐</div>github.com/theihtisham/agent-shadow-brain</div>
+      <div class="link-pill"><div class="icon">📦</div>npmjs.com/package/@theihtisham/agent-shadow-brain</div>
+    </div>
+    <div class="free-tags">
+      <div class="free-tag">MIT LICENSED</div>
+      <div class="free-tag">100% FREE</div>
+      <div class="free-tag">OPEN SOURCE</div>
+      <div class="free-tag">LOCAL-FIRST</div>
+    </div>
+    <div class="scene-label">— 11 / GET STARTED —</div>
+  </div>
+</div>
+
+<script>
+  // Spawn drifting particles for ambient motion
+  const partContainer = document.getElementById('particles');
+  for (let i = 0; i < 30; i++) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    p.style.left = Math.random() * 100 + '%';
+    p.style.top = '100%';
+    p.style.animationDelay = (Math.random() * 8) + 's';
+    p.style.background = ['#22d3ee', '#a855f7', '#ec4899'][Math.floor(Math.random() * 3)];
+    p.style.width = (2 + Math.random() * 3) + 'px';
+    p.style.height = p.style.width;
+    partContainer.appendChild(p);
+  }
+
+  // Scene timing in SECONDS — total ~120s
+  const SCENES = [
+    { id: 'scene1',  start: 0,   dur: 13 },   // Banner (13s — let the grid stagger in fully)
+    { id: 'scene2',  start: 13,  dur: 9 },    // Problem
+    { id: 'scene3',  start: 22,  dur: 11 },   // Hive Mind reveal
+    { id: 'scene4',  start: 33,  dur: 10 },   // SABB
+    { id: 'scene5',  start: 43,  dur: 10 },   // Causal + Dream
+    { id: 'scene6',  start: 53,  dur: 10 },   // Reputation + Tokens + Collision
+    { id: 'scene7',  start: 63,  dur: 9 },    // Dashboard proof
+    { id: 'scene8',  start: 72,  dur: 15 },   // Installation terminal
+    { id: 'scene9',  start: 87,  dur: 9 },    // Dashboard opens (2nd screenshot)
+    { id: 'scene10', start: 96,  dur: 10 },   // GitHub + npm + stats
+    { id: 'scene11', start: 106, dur: 16 },   // CTA + outro
+  ];
+  const TOTAL = SCENES[SCENES.length - 1].start + SCENES[SCENES.length - 1].dur;
+
+  const tl = gsap.timeline();
+
+  // Orbit agent nodes for scene 3 (runtime-positioned)
+  const hive = document.getElementById('hive-container');
+  const AGENT_EMOJI = ['🤖', '🎯', '💻', '🪄', '🧩', '🧠', '⚙️', '🔧', '✂️', '🐘'];
+  AGENT_EMOJI.forEach((e, i) => {
+    const angle = (i / AGENT_EMOJI.length) * Math.PI * 2 - Math.PI / 2;
+    const r = 310;
+    const cx = 350 - 36; // half of 700 minus half of 72
+    const cy = 350 - 36;
+    const node = document.createElement('div');
+    node.className = 'agent-node';
+    node.textContent = e;
+    node.style.left = (cx + Math.cos(angle) * r) + 'px';
+    node.style.top = (cy + Math.sin(angle) * r) + 'px';
+    node.dataset.i = i;
+    hive.appendChild(node);
+  });
+
+  for (const s of SCENES) {
+    const el = document.getElementById(s.id);
+    tl.to(el, { opacity: 1, duration: 0.6 }, s.start);
+    // scene-specific micro-animations
+    if (s.id === 'scene1') {
+      tl.from(el.querySelector('.brand-svg'), { scale: 0.85, opacity: 0, duration: 0.9 }, s.start + 0.2);
+      tl.to(el.querySelectorAll('.feature-tile'), { opacity: 1, stagger: 0.04, duration: 0.4 }, s.start + 1.2);
+    } else if (s.id === 'scene2') {
+      tl.from(el.querySelectorAll('.agent-card'), { y: 40, opacity: 0, stagger: 0.15, duration: 0.5 }, s.start + 0.3);
+      tl.fromTo(el.querySelectorAll('.agent-card'), { opacity: 1 }, { opacity: 0.4, duration: 0.8, stagger: 0.1 }, s.start + 4.5);
+    } else if (s.id === 'scene3') {
+      tl.from(el.querySelector('.brain-core'), { scale: 0.2, opacity: 0, duration: 0.8 }, s.start + 0.8);
+      tl.from(el.querySelectorAll('.agent-node'), { scale: 0, opacity: 0, stagger: 0.08, duration: 0.5 }, s.start + 1.6);
+    } else if (s.id === 'scene4') {
+      tl.from(el.querySelector('.sabb-node.parent'), { x: -120, opacity: 0, duration: 0.6 }, s.start + 0.8);
+      tl.from(el.querySelector('.sabb-node.sliver'), { scale: 0, opacity: 0, duration: 0.6 }, s.start + 1.4);
+      tl.from(el.querySelector('.sabb-node.sub'), { x: 120, opacity: 0, duration: 0.6 }, s.start + 2 );
+    } else if (s.id === 'scene5') {
+      tl.from(el.querySelectorAll('.causal-node'), { x: -40, opacity: 0, stagger: 0.4, duration: 0.5 }, s.start + 0.8);
+    } else if (s.id === 'scene6') {
+      tl.from(el.querySelectorAll('.demo-area > div > div'), { y: 20, opacity: 0, stagger: 0.2, duration: 0.5 }, s.start + 0.8);
+    } else if (s.id === 'scene7') {
+      tl.from(el.querySelector('.screenshot-proof'), { scale: 0.9, opacity: 0, duration: 0.9 }, s.start + 0.5);
+    } else if (s.id === 'scene8') {
+      // Typed terminal sequence
+      const lines = [
+        { prompt: '$', cmd: 'npm install -g @theihtisham/agent-shadow-brain', delay: 1.0 },
+        { output: '✓ Installed 262 packages in 4.2s', delay: 3.4 },
+        { prompt: '$', cmd: 'shadow-brain attach-all', delay: 4.7 },
+        { output: '✓ Wired Claude Code, Cursor, Cline, Codex, Copilot', delay: 6.5 },
+        { output: '✓ Global brain at ~/.shadow-brain/global.json', delay: 7.2 },
+        { prompt: '$', cmd: 'shadow-brain dash .', delay: 8.6 },
+        { output: '✓ Dashboard running at http://localhost:7341', delay: 10.5 },
+      ];
+      const termLines = el.querySelector('#term-lines');
+      lines.forEach(L => {
+        tl.call(() => {
+          const div = document.createElement('div');
+          div.className = 'line';
+          if (L.prompt) div.innerHTML = `<span class="prompt">${L.prompt}</span> <span class="cmd">${L.cmd}</span>`;
+          else div.innerHTML = `<span class="output">${L.output}</span>`;
+          termLines.appendChild(div);
+        }, null, s.start + L.delay);
+      });
+    } else if (s.id === 'scene9') {
+      tl.from(el.querySelector('.screenshot-proof'), { scale: 0.95, opacity: 0, duration: 0.7 }, s.start + 0.5);
+    } else if (s.id === 'scene10') {
+      tl.from(el.querySelectorAll('.stat-card'), { y: 30, opacity: 0, stagger: 0.1, duration: 0.5 }, s.start + 0.5);
+    } else if (s.id === 'scene11') {
+      tl.from(el.querySelector('.logo-big'), { y: 30, opacity: 0, duration: 0.7 }, s.start + 0.5);
+      tl.from(el.querySelector('.tagline'), { opacity: 0, y: 20, duration: 0.5 }, s.start + 1.0);
+      tl.from(el.querySelector('.install-command'), { scale: 0.9, opacity: 0, duration: 0.6 }, s.start + 1.6);
+      tl.from(el.querySelectorAll('.link-pill'), { y: 20, opacity: 0, stagger: 0.15, duration: 0.5 }, s.start + 2.3);
+      tl.from(el.querySelectorAll('.free-tag'), { scale: 0, opacity: 0, stagger: 0.12, duration: 0.4 }, s.start + 3.2);
+    }
+    // fade out for most scenes (but hold the CTA to the very end)
+    if (s !== SCENES[SCENES.length - 1]) {
+      tl.to(el, { opacity: 0, duration: 0.5 }, s.start + s.dur - 0.5);
+    }
+  }
+
+  tl.play();
+
+  // Expose total duration for the record script
+  window.__TOTAL_DURATION__ = TOTAL;
+</script>
+</body>
+</html>

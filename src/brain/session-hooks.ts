@@ -94,6 +94,49 @@ export class SessionHookInstaller {
     };
   }
 
+  /** Best-effort non-mutating audit of Shadow Brain hook artifacts. */
+  async audit(projectDir: string): Promise<SessionHook[]> {
+    const detected: SessionHook[] = [];
+    const agents = await this.detectInstalled(projectDir);
+    for (const agent of agents) {
+      detected.push(...this.findInstalledHooks(agent, projectDir));
+    }
+    return detected;
+  }
+
+  /** Detach Shadow Brain from every detected agent without creating new hooks. */
+  async detachAll(projectDir: string): Promise<AttachReport> {
+    const start = Date.now();
+    const detected = await this.detectInstalled(projectDir);
+    const detached: AgentTool[] = [];
+    const failed: Array<{ agent: AgentTool; reason: string }> = [];
+    const hooks: SessionHook[] = [];
+
+    for (const agent of detected) {
+      try {
+        const before = this.findInstalledHooks(agent, projectDir);
+        const ok = await this.detach(agent, projectDir);
+        if (ok) {
+          detached.push(agent);
+          hooks.push(...before);
+        } else {
+          failed.push({ agent, reason: 'no Shadow Brain hook found' });
+        }
+      } catch (err) {
+        failed.push({ agent, reason: err instanceof Error ? err.message : String(err) });
+      }
+    }
+
+    return {
+      detected,
+      attached: detached,
+      failed,
+      hooks,
+      totalAgents: detected.length,
+      durationMs: Date.now() - start,
+    };
+  }
+
   /** Install hooks for a single agent. Returns list of installed hooks. */
   async attach(agent: AgentTool, projectDir: string): Promise<SessionHook[]> {
     switch (agent) {
@@ -113,18 +156,22 @@ export class SessionHookInstaller {
 
   /** Detach Shadow Brain from a specific agent */
   async detach(agent: AgentTool, projectDir: string): Promise<boolean> {
-    // For now, document what would be removed; implementation per-agent.
-    // We keep this simple: detach is best-effort and never destructive of other config.
-    const hooks = await this.attach(agent, projectDir);
+    const hooks = this.findInstalledHooks(agent, projectDir);
+    if (!hooks.length) return false;
+
     for (const hook of hooks) {
       try {
-        if (fs.existsSync(hook.installPath) && hook.hookType === 'workspace-rule') {
-          // Only delete files we created
-          if (hook.installPath.includes('shadow-brain')) {
+        if (!fs.existsSync(hook.installPath)) continue;
+        if (hook.hookType === 'workspace-rule') {
+          if (path.basename(hook.installPath).includes('shadow-brain')) {
             fs.unlinkSync(hook.installPath);
+          } else {
+            this.removeShadowBrainBlock(hook.installPath);
           }
+        } else {
+          this.removeFromJsonConfig(hook.installPath);
         }
-      } catch { /* ignore */ }
+      } catch { /* best effort */ }
     }
     return true;
   }
@@ -139,24 +186,47 @@ export class SessionHookInstaller {
     try {
       let settings: any = {};
       if (fs.existsSync(settingsPath)) {
-        settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8'));
+        try { settings = JSON.parse(fs.readFileSync(settingsPath, 'utf-8')) ?? {}; }
+        catch { settings = {}; }
       }
 
+      // FIRST — repair any malformed entries from older Shadow Brain versions.
+      // Claude Code schema: hooks.SessionStart is an array of { matcher, hooks[] } blocks.
       settings.hooks ??= {};
-      settings.hooks.SessionStart ??= [];
+      if (!Array.isArray(settings.hooks.SessionStart)) settings.hooks.SessionStart = [];
+      settings.hooks.SessionStart = this.repairClaudeHookBlocks(settings.hooks.SessionStart);
 
-      const existing = (settings.hooks.SessionStart as any[]).find(h =>
-        typeof h === 'object' && h?.command?.includes('shadow-brain')
-      );
+      // Check if our hook already exists anywhere in a well-formed block.
+      let present = false;
+      for (const block of settings.hooks.SessionStart) {
+        if (!block || !Array.isArray(block.hooks)) continue;
+        if (block.hooks.some((h: any) => h && typeof h.command === 'string' && h.command.includes('shadow-brain'))) {
+          present = true;
+          break;
+        }
+      }
 
-      if (!existing) {
-        (settings.hooks.SessionStart as any[]).push({
-          name: 'shadow-brain-subconscious',
-          command: SHADOW_BRAIN_HOOK_CMD,
-          timeout: 5000,
-        });
+      if (!present) {
+        // Install into a matcher-less block so the hook runs for every session.
+        // Prefer merging into an existing empty-matcher block if one exists.
+        let target = settings.hooks.SessionStart.find((b: any) => b && (b.matcher === '' || b.matcher == null));
+        if (!target) {
+          target = { matcher: '', hooks: [] };
+          settings.hooks.SessionStart.push(target);
+        }
+        if (!Array.isArray(target.hooks)) target.hooks = [];
+        target.hooks.push({ type: 'command', command: SHADOW_BRAIN_HOOK_CMD, timeout: 5000 });
+
         fs.mkdirSync(path.dirname(settingsPath), { recursive: true });
-        fs.writeFileSync(settingsPath, JSON.stringify(settings, null, 2));
+        // Atomic write — prevents half-written settings breaking Claude Code
+        const tmp = settingsPath + '.tmp';
+        fs.writeFileSync(tmp, JSON.stringify(settings, null, 2));
+        fs.renameSync(tmp, settingsPath);
+      } else {
+        // Still ensure the (previously malformed) file is now valid.
+        const tmp = settingsPath + '.tmp';
+        fs.writeFileSync(tmp, JSON.stringify(settings, null, 2));
+        fs.renameSync(tmp, settingsPath);
       }
 
       hooks.push({
@@ -471,6 +541,170 @@ export class SessionHookInstaller {
     cfg[key][SHADOW_BRAIN_MCP_NAME] = SHADOW_BRAIN_MCP_CONFIG;
     fs.mkdirSync(path.dirname(jsonPath), { recursive: true });
     fs.writeFileSync(jsonPath, JSON.stringify(cfg, null, 2));
+  }
+
+  private findInstalledHooks(agent: AgentTool, projectDir: string): SessionHook[] {
+    const home = os.homedir();
+    const candidates: Array<{ path: string; hookType: SessionHook['hookType'] }> = [];
+    switch (agent) {
+      case 'claude-code':
+        candidates.push({ path: path.join(home, '.claude', 'settings.json'), hookType: 'settings-json' });
+        break;
+      case 'cursor':
+        candidates.push(
+          { path: path.join(projectDir, '.cursor', 'rules', 'shadow-brain.md'), hookType: 'workspace-rule' },
+          { path: path.join(projectDir, '.cursor', 'mcp.json'), hookType: 'extension-config' },
+        );
+        break;
+      case 'cline':
+        candidates.push(
+          { path: path.join(home, 'AppData', 'Roaming', 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev', 'settings', 'cline_mcp_settings.json'), hookType: 'extension-config' },
+          { path: path.join(home, 'Library', 'Application Support', 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev', 'settings', 'cline_mcp_settings.json'), hookType: 'extension-config' },
+          { path: path.join(home, '.config', 'Code', 'User', 'globalStorage', 'saoudrizwan.claude-dev', 'settings', 'cline_mcp_settings.json'), hookType: 'extension-config' },
+          { path: path.join(projectDir, '.clinerules'), hookType: 'workspace-rule' },
+        );
+        break;
+      case 'windsurf':
+        candidates.push(
+          { path: path.join(projectDir, '.windsurfrules'), hookType: 'workspace-rule' },
+          { path: path.join(home, '.windsurf', 'mcp.json'), hookType: 'extension-config' },
+        );
+        break;
+      case 'codex':
+        candidates.push({ path: path.join(home, '.codex', 'config.json'), hookType: 'config-file' });
+        break;
+      case 'kilo-code':
+        candidates.push({ path: path.join(home, '.kilocode', 'settings.json'), hookType: 'settings-json' });
+        break;
+      case 'opencode':
+        candidates.push({ path: path.join(home, '.opencode', 'settings.json'), hookType: 'settings-json' });
+        break;
+      case 'roo-code':
+        candidates.push(
+          { path: path.join(home, '.roocode', 'mcp.json'), hookType: 'extension-config' },
+          { path: path.join(home, '.rovodev', 'mcp.json'), hookType: 'extension-config' },
+        );
+        break;
+      case 'aider':
+        candidates.push(
+          { path: path.join(home, '.aider.conf.yml'), hookType: 'config-file' },
+          { path: path.join(home, '.aider.shadow-brain.md'), hookType: 'workspace-rule' },
+        );
+        break;
+      case 'copilot':
+        candidates.push({ path: path.join(projectDir, '.github', 'copilot-instructions.md'), hookType: 'workspace-rule' });
+        break;
+    }
+
+    return candidates
+      .filter(c => this.containsShadowBrain(c.path))
+      .map(c => ({
+        agent,
+        event: 'session-start',
+        hookType: c.hookType,
+        installPath: c.path,
+        command: c.hookType === 'workspace-rule' ? SHADOW_BRAIN_HOOK_CMD : SHADOW_BRAIN_MCP_CONFIG.command,
+        active: true,
+        installedAt: new Date(),
+      }));
+  }
+
+  private containsShadowBrain(filePath: string): boolean {
+    try {
+      return fs.existsSync(filePath) && fs.readFileSync(filePath, 'utf-8').includes('shadow-brain');
+    } catch {
+      return false;
+    }
+  }
+
+  private removeShadowBrainBlock(filePath: string): void {
+    const content = fs.readFileSync(filePath, 'utf-8');
+    const cleaned = content
+      .replace(/\n?# Shadow Brain auto-injected\nread:\n\s+- .+?\.aider\.shadow-brain\.md\n?/gs, '\n')
+      .replace(/\n?---\n\n## Shadow Brain Context[\s\S]*?(?=\n---|\n## |\s*$)/g, '\n')
+      .replace(/\n?# Shadow Brain Integration \([^)]+\)[\s\S]*?Run `shadow-brain status` for state\.\n?/g, '\n')
+      .replace(/\n?# === Shadow Brain Critical Alerts ===[\s\S]*?(?=\n# |\s*$)/g, '\n')
+      .trimEnd() + '\n';
+
+    if (cleaned.trim()) fs.writeFileSync(filePath, cleaned, 'utf-8');
+    else fs.unlinkSync(filePath);
+  }
+
+  private removeFromJsonConfig(jsonPath: string): void {
+    let cfg: any = {};
+    try {
+      cfg = JSON.parse(fs.readFileSync(jsonPath, 'utf-8'));
+    } catch {
+      return;
+    }
+
+    if (cfg.mcpServers) delete cfg.mcpServers[SHADOW_BRAIN_MCP_NAME];
+    if (cfg.mcp_servers) delete cfg.mcp_servers[SHADOW_BRAIN_MCP_NAME];
+    if (cfg.servers) delete cfg.servers[SHADOW_BRAIN_MCP_NAME];
+    if (cfg.sessionStartHook === SHADOW_BRAIN_HOOK_CMD) delete cfg.sessionStartHook;
+    if (cfg.session_start_command === SHADOW_BRAIN_HOOK_CMD) delete cfg.session_start_command;
+
+    // Remove ANY Shadow Brain entry from hooks.SessionStart — handle every shape.
+    if (cfg.hooks?.SessionStart && Array.isArray(cfg.hooks.SessionStart)) {
+      cfg.hooks.SessionStart = cfg.hooks.SessionStart
+        .map((block: any) => {
+          if (!block || typeof block !== 'object') return null;
+          // Well-formed { matcher, hooks[] } — strip our entries from the inner array
+          if (Array.isArray(block.hooks)) {
+            const filtered = block.hooks.filter((h: any) => !(h && typeof h.command === 'string' && h.command.includes('shadow-brain')));
+            if (!filtered.length) return null;
+            return { ...block, hooks: filtered };
+          }
+          // Legacy flat entry — drop if it references shadow-brain
+          if (typeof block.command === 'string' && block.command.includes('shadow-brain')) return null;
+          return block;
+        })
+        .filter((b: any) => b !== null);
+      // After stripping, run the repair once more so the file is always valid Claude schema
+      cfg.hooks.SessionStart = this.repairClaudeHookBlocks(cfg.hooks.SessionStart);
+    }
+
+    // Atomic write — prevents leaving a broken settings file
+    const tmp = jsonPath + '.tmp';
+    fs.writeFileSync(tmp, JSON.stringify(cfg, null, 2));
+    fs.renameSync(tmp, jsonPath);
+  }
+
+  /**
+   * Claude Code schema requires each SessionStart entry to have shape:
+   *   { matcher: string, hooks: [{ type: 'command', command: '...' }] }
+   * Older Shadow Brain versions mistakenly wrote flat { name, command, timeout }
+   * entries directly, which broke Claude Code's settings loader. This function:
+   *  - drops null/undefined/non-object entries
+   *  - rewraps flat "legacy" entries into a valid { matcher, hooks } block
+   *  - ensures every block.hooks is a valid array of { type:'command', command }
+   *  - strips any nested malformed entries
+   */
+  private repairClaudeHookBlocks(blocks: any): any[] {
+    if (!Array.isArray(blocks)) return [];
+    const out: any[] = [];
+    for (const block of blocks) {
+      if (block == null || typeof block !== 'object') continue;
+      if (Array.isArray(block.hooks)) {
+        const cleanHooks = block.hooks
+          .filter((h: any) => h && typeof h === 'object')
+          .map((h: any) => ({
+            type: typeof h.type === 'string' ? h.type : 'command',
+            command: typeof h.command === 'string' ? h.command : '',
+            ...(typeof h.timeout === 'number' ? { timeout: h.timeout } : {}),
+          }))
+          .filter((h: any) => h.command);
+        if (cleanHooks.length) {
+          out.push({ matcher: typeof block.matcher === 'string' ? block.matcher : '', hooks: cleanHooks });
+        }
+      } else if (typeof block.command === 'string') {
+        out.push({
+          matcher: '',
+          hooks: [{ type: 'command', command: block.command, ...(typeof block.timeout === 'number' ? { timeout: block.timeout } : {}) }],
+        });
+      }
+    }
+    return out;
   }
 
   private cursorRuleTemplate(): string {

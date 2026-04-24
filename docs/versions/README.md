@@ -7,7 +7,8 @@
 ## Release Timeline
 
 ```
-v5.1.1  2026-04-18  Hyper-Cognitive Intelligence Edition     ← Current
+v5.2.0  2026-04-24  Agent Trust & Handoff Edition             ← Current
+v5.1.1  2026-04-18  Hyper-Cognitive Intelligence Edition
 v5.0.1  2026-04-15  Zero-Config Intelligence Edition
 v5.0.0  2026-04-12  Infinite Intelligence Edition
 v4.0.0  2026-04-08  Hyper-Intelligence Edition
@@ -23,6 +24,7 @@ v1.0.0  2026-02-28  Foundation
 
 | Version | Codename | Key Features | Modules | CLI Commands |
 |---|---|---|---|---|
+| **[v5.2.0](v5.2.0.md)** | Agent Trust & Handoff | Agent Safety Firewall, Handoff Packets, Proof Timeline, MCP Auth, Explicit Setup | 26 | 70+ |
 | **[v5.1.1](v5.1.1.md)** | Hyper-Cognitive | LSP Server, Fine-Tuning, Smart Cache, Intent Engine, Code DNA, Temporal Intelligence | 22 | 60+ |
 | **[v5.0.1](v5.0.1.md)** | Zero-Config | Auto-Setup, MCP Server (19 tools), Dashboard, NLP Queries, Plugin System, Export/Import | 16 | 50+ |
 | **[v5.0.0](v5.0.0.md)** | Infinite Intelligence | Hierarchical Memory, Associative Recall, Multi-Agent Consensus, Collective Learning | 16 | 45+ |

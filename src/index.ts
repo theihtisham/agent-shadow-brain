@@ -1,4 +1,4 @@
-// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v5.1.1
+// src/index.ts — Library entry point for @theihtisham/agent-shadow-brain v6.0.0 "Hive Mind"
 
 // Types
 export type {
@@ -238,6 +238,88 @@ export { IntentEngine } from './brain/intent-engine.js';
 export { CodeDNA } from './brain/code-dna.js';
 export { TemporalIntelligence } from './brain/temporal-intelligence.js';
 export { LSPServer } from './brain/lsp-server.js';
+
+// Brain — Product Proof & Safety Layer
+export { AgentFirewall } from './brain/agent-firewall.js';
+export { AgentHandoff } from './brain/agent-handoff.js';
+
+// Brain — v6.0.0 Hive Mind Modules
+export { SubAgentBridge, getSubAgentBridge } from './brain/subagent-bridge.js';
+export { CausalChains, getCausalChains } from './brain/causal-chains.js';
+export { CollisionDetective, getCollisionDetective } from './brain/collision-detective.js';
+export { DreamEngine, getDreamEngine } from './brain/dream-engine.js';
+export { ReputationLedger, getReputationLedger } from './brain/reputation-ledger.js';
+export { SwarmDebate, getSwarmDebate } from './brain/swarm-debate.js';
+export { PreMortem, getPreMortem } from './brain/pre-mortem.js';
+export { BranchBrain, getBranchBrain } from './brain/branch-brain.js';
+export { AttentionHeatmap, getAttentionHeatmap } from './brain/attention-heatmap.js';
+export { TokenEconomy, getTokenEconomy } from './brain/token-economy.js';
+export { ForgettingCurve, getForgettingCurve } from './brain/forgetting-curve.js';
+export { FormalVerificationBridge, getFormalBridge } from './brain/formal-verification-bridge.js';
+export { CalibrationMonitor, getCalibrationMonitor } from './brain/calibration-monitor.js';
+export { CostAwareSpawner, getCostAwareSpawner } from './brain/cost-aware-spawner.js';
+export { AirGapMode, getAirGapMode } from './brain/air-gap.js';
+export { BrainEncryption } from './brain/brain-encryption.js';
+export { HallucinationQuarantine, getHallucinationQuarantine } from './brain/hallucination-quarantine.js';
+export { VoiceMode, getVoiceMode } from './brain/voice-mode.js';
+export { BrainGarden, getBrainGarden } from './brain/brain-garden.js';
+export { PRAutoReview, getPRAutoReview } from './brain/pr-auto-review.js';
+export { TeamBrainSync, getTeamBrainSync } from './brain/team-brain-sync.js';
+export { BrainExchange, getBrainExchange } from './brain/brain-exchange.js';
+export { LocalLLM, getLocalLLM } from './brain/local-llm.js';
+export { HiveAccelerator, getHiveAccelerator } from './brain/hive-accelerator.js';
+
+// v6 types
+export type {
+  SubAgentFramework,
+  SubAgentSpawnRequest,
+  ContextSliver,
+  QuarantinedMemory,
+  SABBStats,
+  CausalLink,
+  CausalChain,
+  CausalChainNode,
+  AgentEditIntent,
+  CollisionAlert,
+  CollisionStats,
+  DreamType,
+  DreamInsight,
+  DreamEngineConfig,
+  DreamEngineStats,
+  AgentDecisionReceipt,
+  ReputationScore,
+  ReputationLedgerStats,
+  DebateTurn,
+  DebateTranscript,
+  PreMortemFailure,
+  PreMortemReport,
+  BranchBrainState,
+  BranchMemoryTag,
+  AttentionWeight,
+  AttentionReport,
+  TokenSpendRecord,
+  TokenEconomyStats,
+  ForgettingState,
+  ConsolidationReport,
+  FormalRule,
+  FormalBridgeStats,
+  CalibrationRecord,
+  CalibrationScore,
+  SpawnCostEstimate,
+  AirGapStatus,
+  EncryptedBrainFile,
+  QuarantineEntry,
+  VoiceCommandResult,
+  GardenNode,
+  PRReviewComment,
+  TeamPeerInfo,
+  TeamSyncMessage,
+  BrainSlicePackage,
+  LocalLLMProvider,
+  LocalLLMConfig,
+  LocalLLMResponse,
+  HiveMindStatus,
+} from './types.js';
 
 // Dashboard
 export { DashboardServer } from './dashboard/server.js';

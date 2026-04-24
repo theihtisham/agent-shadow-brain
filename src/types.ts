@@ -378,6 +378,8 @@ export interface MCPTool {
 export interface MCPServerOptions {
   port?: number;
   host?: string;
+  authToken?: string;
+  corsOrigin?: string;
 }
 
 export interface PerfInsight {
@@ -1391,11 +1393,11 @@ export interface V6ModuleStatus {
 
 // ── v5.2.0 — Subconscious Singularity Edition ─────────────────────────────────
 
-// Global Brain — singleton DB shared across all projects + agents
+// Global Brain — singleton JSON store shared across all projects + agents
 export interface GlobalBrainConfig {
-  /** Path to the singleton global brain database. Default: ~/.shadow-brain/global.db */
+  /** Path to the singleton global brain store. Default: ~/.shadow-brain/global.json */
   dbPath: string;
-  /** Enable WAL mode for concurrent multi-agent writes */
+  /** Reserved for future SQLite backend compatibility. JSON backend ignores this. */
   walMode: boolean;
   /** Max in-memory queue size for pending writes */
   writeQueueSize: number;
@@ -1525,4 +1527,569 @@ export interface L0CacheStats {
   evictions: number;
   avgAccessNs: number;
   topKeys: Array<{ key: string; hits: number }>;
+}
+
+// ── Viral/Product Proof Layer ────────────────────────────────────────────────
+
+export interface BrainTimelineEvent {
+  id: string;
+  projectId: string;
+  projectName: string;
+  agentTool: AgentTool;
+  category: string;
+  content: string;
+  importance: number;
+  createdAt: Date;
+  lastAccessed: Date;
+  metadata: Record<string, unknown>;
+}
+
+export interface AgentHandoffPacket {
+  fromAgent: AgentTool;
+  toAgent: AgentTool;
+  projectDir: string;
+  projectName: string;
+  task: string;
+  createdAt: Date;
+  recentMemories: BrainTimelineEvent[];
+  changedFiles: string[];
+  gitSummary: string;
+  safetyWarnings: string[];
+  markdown: string;
+}
+
+export interface FirewallFinding {
+  type: 'secret-access' | 'destructive-command' | 'network-risk' | 'package-risk' | 'prompt-injection' | 'path-risk';
+  severity: 'critical' | 'high' | 'medium' | 'low';
+  blocked: boolean;
+  reason: string;
+  evidence: string;
+  recommendation: string;
+}
+
+export interface FirewallCheckInput {
+  command?: string;
+  filePath?: string;
+  url?: string;
+  content?: string;
+  toolName?: string;
+}
+
+export interface FirewallDecision {
+  allowed: boolean;
+  riskScore: number;
+  findings: FirewallFinding[];
+  summary: string;
+}
+
+// ── v6.0.0 — Hive Mind Edition ───────────────────────────────────────────────
+
+// Sub-Agent Brain Bridge (SABB)
+export type SubAgentFramework = 'claude-code-task' | 'cursor-composer' | 'cline-substep' | 'crewai' | 'langgraph' | 'autogen' | 'generic';
+
+export interface SubAgentSpawnRequest {
+  parentAgent: AgentTool;
+  subAgentId: string;
+  framework: SubAgentFramework;
+  taskDescription: string;
+  projectDir: string;
+  spawnTime: Date;
+  expectedDurationMs?: number;
+  tokenBudget?: number;
+}
+
+export interface ContextSliver {
+  subAgentId: string;
+  parentAgent: AgentTool;
+  taskDescription: string;
+  memories: Array<{
+    id: string;
+    content: string;
+    category: string;
+    relevance: number;
+  }>;
+  warnings: string[];
+  tokenCount: number;
+  markdown: string;
+  generatedAt: Date;
+}
+
+export interface QuarantinedMemory {
+  id: string;
+  subAgentId: string;
+  parentAgent: AgentTool;
+  content: string;
+  category: string;
+  confidence: number;
+  graduatedAt: Date | null;
+  verdict: 'pending' | 'graduated' | 'rejected';
+  evidence: string[];
+  createdAt: Date;
+}
+
+export interface SABBStats {
+  totalSpawns: number;
+  totalSlivers: number;
+  quarantined: number;
+  graduated: number;
+  rejected: number;
+  avgSliverTokens: number;
+  avgGraduationMs: number;
+  byFramework: Record<SubAgentFramework, number>;
+  byParent: Record<string, number>;
+}
+
+// Causal Memory Chains
+export interface CausalLink {
+  id: string;
+  /** The memory/decision this is the cause of */
+  effectId: string;
+  /** The memory/event that caused it */
+  causeId: string;
+  /** Optional text explaining the causal relationship */
+  rationale?: string;
+  strength: number;
+  createdAt: Date;
+}
+
+export interface CausalChainNode {
+  id: string;
+  content: string;
+  agentTool: AgentTool;
+  category: string;
+  createdAt: Date;
+  parents: string[];
+  children: string[];
+  depth: number;
+}
+
+export interface CausalChain {
+  rootId: string;
+  nodes: CausalChainNode[];
+  links: CausalLink[];
+  maxDepth: number;
+  generatedAt: Date;
+  dot: string;
+}
+
+// Agent Collision Detective
+export interface AgentEditIntent {
+  agentTool: AgentTool;
+  sessionId: string;
+  filePath: string;
+  startLine: number;
+  endLine: number;
+  intent: string;
+  declaredAt: Date;
+  expiresAt: Date;
+}
+
+export interface CollisionAlert {
+  id: string;
+  filePath: string;
+  conflictingIntents: AgentEditIntent[];
+  overlapStartLine: number;
+  overlapEndLine: number;
+  severity: 'info' | 'warning' | 'critical';
+  suggestedResolution: string;
+  detectedAt: Date;
+}
+
+export interface CollisionStats {
+  totalIntents: number;
+  activeIntents: number;
+  collisionsDetected: number;
+  collisionsResolved: number;
+  collisionsByAgent: Record<string, number>;
+  avgOverlapLines: number;
+}
+
+// Dream Engine (background reflection)
+export type DreamType = 'revisit' | 'counterfactual' | 'consolidation' | 'contradiction' | 'pattern-discovery';
+
+export interface DreamInsight {
+  id: string;
+  type: DreamType;
+  content: string;
+  sourceMemoryIds: string[];
+  confidence: number;
+  generatedAt: Date;
+  actOnNextSession: boolean;
+  acknowledged: boolean;
+}
+
+export interface DreamEngineConfig {
+  enabled: boolean;
+  idleThresholdMs: number;
+  maxDreamsPerCycle: number;
+  useLocalLLM: boolean;
+  dreamIntervalMs: number;
+}
+
+export interface DreamEngineStats {
+  totalDreams: number;
+  byType: Record<DreamType, number>;
+  avgConfidence: number;
+  actionableCount: number;
+  acknowledgedCount: number;
+  lastDreamAt: Date | null;
+  totalDreamTimeMs: number;
+}
+
+// Agent Reputation Ledger (Ed25519)
+export interface AgentDecisionReceipt {
+  id: string;
+  agentTool: AgentTool;
+  agentVersion: string;
+  projectId: string;
+  decision: string;
+  category: string;
+  confidence: number;
+  signedAt: Date;
+  signature: string;
+  publicKey: string;
+  outcomeVerdict?: 'correct' | 'incorrect' | 'partial' | 'unverified';
+  outcomeVerifiedAt?: Date;
+}
+
+export interface ReputationScore {
+  agentTool: AgentTool;
+  agentVersion: string;
+  totalDecisions: number;
+  correct: number;
+  incorrect: number;
+  partial: number;
+  accuracyRate: number;
+  categoryScores: Record<string, { correct: number; total: number; accuracy: number }>;
+  streakDays: number;
+  lastActive: Date;
+  publicKey: string;
+  ledgerHash: string;
+}
+
+export interface ReputationLedgerStats {
+  totalAgents: number;
+  totalReceipts: number;
+  verifiedReceipts: number;
+  averageAccuracy: number;
+  topAgents: Array<{ agentTool: AgentTool; accuracy: number; decisions: number }>;
+}
+
+// Swarm Debate Protocol
+export interface DebateTurn {
+  turnId: number;
+  agentLabel: string;
+  position: 'pro' | 'con' | 'arbiter';
+  statement: string;
+  confidence: number;
+  timestamp: Date;
+}
+
+export interface DebateTranscript {
+  id: string;
+  question: string;
+  context: string;
+  turns: DebateTurn[];
+  verdict: string;
+  arbiterConfidence: number;
+  durationMs: number;
+  createdAt: Date;
+}
+
+// Pre-Mortem Assistant
+export interface PreMortemFailure {
+  id: string;
+  description: string;
+  source: 'past-incident' | 'similar-project' | 'llm-predicted';
+  probability: number;
+  severity: 'low' | 'medium' | 'high' | 'critical';
+  mitigation: string;
+  relatedMemoryIds: string[];
+}
+
+export interface PreMortemReport {
+  taskDescription: string;
+  generatedAt: Date;
+  failures: PreMortemFailure[];
+  riskScore: number;
+  summary: string;
+}
+
+// Branch Brains
+export interface BranchBrainState {
+  currentBranch: string;
+  activeMemoryIds: string[];
+  branchMemoryCount: number;
+  globalMemoryCount: number;
+  lastSwitchAt: Date;
+  branchSpecificCategories: string[];
+}
+
+export interface BranchMemoryTag {
+  memoryId: string;
+  branch: string;
+  scope: 'branch' | 'global';
+  taggedAt: Date;
+}
+
+// Attention Heatmap
+export interface AttentionWeight {
+  memoryId: string;
+  memoryContent: string;
+  weight: number;
+  category: string;
+  reasoning: string;
+}
+
+export interface AttentionReport {
+  decisionId: string;
+  decisionText: string;
+  agentTool: AgentTool;
+  weights: AttentionWeight[];
+  totalMemoriesConsidered: number;
+  generatedAt: Date;
+}
+
+// Token Economy Engine
+export interface TokenSpendRecord {
+  id: string;
+  agentTool: AgentTool;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  estimatedCostUsd: number;
+  taskCategory: string;
+  timestamp: Date;
+}
+
+export interface TokenEconomyStats {
+  totalSpendUsd: number;
+  totalInputTokens: number;
+  totalOutputTokens: number;
+  byAgent: Record<string, { spendUsd: number; calls: number }>;
+  byModel: Record<string, { spendUsd: number; calls: number }>;
+  byCategory: Record<string, { spendUsd: number; calls: number }>;
+  monthlyProjectionUsd: number;
+  savingsOpportunitiesUsd: number;
+  suggestions: string[];
+}
+
+// Forgetting Curve + Sleep Consolidation
+export interface ForgettingState {
+  memoryId: string;
+  initialStrength: number;
+  currentStrength: number;
+  lastReinforced: Date;
+  accessCount: number;
+  halfLifeHours: number;
+  consolidatedTier: MemoryTier;
+}
+
+export interface ConsolidationReport {
+  cycle: number;
+  processedMemories: number;
+  promoted: number;
+  demoted: number;
+  forgotten: number;
+  strengthened: number;
+  ranAt: Date;
+  durationMs: number;
+}
+
+// Formal Verification Bridge
+export interface FormalRule {
+  id: string;
+  sourceMemoryId: string;
+  naturalLanguage: string;
+  eslintRule?: string;
+  semgrepRule?: string;
+  lspDiagnostic?: { code: string; pattern: string; message: string };
+  languageScope: string[];
+  generatedAt: Date;
+  verified: boolean;
+}
+
+export interface FormalBridgeStats {
+  totalRules: number;
+  byLanguage: Record<string, number>;
+  verifiedRules: number;
+  lastGenerated: Date | null;
+}
+
+// Confidence Calibration Monitor
+export interface CalibrationRecord {
+  agentTool: AgentTool;
+  category: string;
+  claim: string;
+  claimedConfidence: number;
+  actualOutcome: 'correct' | 'incorrect' | 'partial';
+  outcomeAt: Date;
+  recordedAt: Date;
+}
+
+export interface CalibrationScore {
+  agentTool: AgentTool;
+  category: string;
+  sampleSize: number;
+  brierScore: number;
+  calibrationError: number;
+  overconfidenceRatio: number;
+  trustWeight: number;
+  updatedAt: Date;
+}
+
+// Cost-Aware Sub-Agent Spawner
+export interface SpawnCostEstimate {
+  subAgentModel: string;
+  estimatedInputTokens: number;
+  estimatedOutputTokens: number;
+  estimatedCostUsd: number;
+  expectedValueScore: number;
+  cheaperAlternative: { model: string; costUsd: number } | null;
+  recommendation: 'proceed' | 'use-alternative' | 'skip';
+  rationale: string;
+}
+
+// Air-Gap Mode
+export interface AirGapStatus {
+  enabled: boolean;
+  blockedOutboundCount: number;
+  allowedLocalCount: number;
+  lastAttempt: Date | null;
+  policy: 'strict' | 'loose';
+}
+
+// Brain Encryption
+export interface EncryptedBrainFile {
+  schemaVersion: number;
+  cipher: 'chacha20-poly1305';
+  salt: string;
+  nonce: string;
+  ciphertext: string;
+  authTag: string;
+  createdAt: string;
+}
+
+// Hallucination Quarantine
+export interface QuarantineEntry {
+  id: string;
+  source: string;
+  claim: string;
+  evidence: string[];
+  reasonFlagged: string;
+  quarantinedAt: Date;
+  decision: 'pending' | 'promoted' | 'deleted';
+}
+
+// Voice Mode
+export interface VoiceCommandResult {
+  transcript: string;
+  confidence: number;
+  intent: string;
+  response: string;
+  audioPath?: string;
+  timestamp: Date;
+}
+
+// Brain Garden
+export interface GardenNode {
+  id: string;
+  kind: 'memory' | 'pattern' | 'decision' | 'link';
+  label: string;
+  age: number;
+  strength: number;
+  connections: string[];
+  bloom: number;
+}
+
+// PR Auto-Review
+export interface PRReviewComment {
+  prNumber: number;
+  repo: string;
+  body: string;
+  sections: {
+    matches: string[];
+    contradictions: string[];
+    suggestions: string[];
+    citations: Array<{ memoryId: string; snippet: string }>;
+  };
+  generatedAt: Date;
+}
+
+// Team Brain Sync (WebRTC, no server)
+export interface TeamPeerInfo {
+  peerId: string;
+  displayName: string;
+  agentTools: AgentTool[];
+  connectedAt: Date;
+  lastSeenAt: Date;
+  sharedMemoryCount: number;
+}
+
+export interface TeamSyncMessage {
+  type: 'offer' | 'answer' | 'ice' | 'memory-sync' | 'heartbeat';
+  from: string;
+  to?: string;
+  payload: unknown;
+  timestamp: Date;
+}
+
+// Brain Exchange — shareable curated brain slices
+export interface BrainSlicePackage {
+  id: string;
+  name: string;
+  description: string;
+  author: string;
+  version: string;
+  tags: string[];
+  categories: string[];
+  memoryCount: number;
+  memories: Array<{
+    content: string;
+    category: string;
+    importance: number;
+  }>;
+  createdAt: Date;
+  license: string;
+}
+
+// Local-First LLM Adapter
+export type LocalLLMProvider = 'ollama' | 'llamacpp' | 'lmstudio' | 'none';
+
+export interface LocalLLMConfig {
+  provider: LocalLLMProvider;
+  model: string;
+  endpoint: string;
+  timeoutMs: number;
+  maxTokens: number;
+  temperature: number;
+}
+
+export interface LocalLLMResponse {
+  text: string;
+  provider: LocalLLMProvider;
+  model: string;
+  inputTokens: number;
+  outputTokens: number;
+  durationMs: number;
+  local: true;
+}
+
+// Master v6.0 status
+export interface HiveMindStatus {
+  version: '6.0.0';
+  modules: {
+    sabb: SABBStats;
+    causal: { chains: number; links: number };
+    collision: CollisionStats;
+    dream: DreamEngineStats;
+    reputation: ReputationLedgerStats;
+    tokenEconomy: TokenEconomyStats;
+    formalBridge: FormalBridgeStats;
+    airGap: AirGapStatus;
+  };
+  localFirst: boolean;
+  totalAgentsConnected: number;
+  totalMemoriesStored: number;
+  generatedAt: Date;
 }

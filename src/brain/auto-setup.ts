@@ -232,7 +232,7 @@ export class AutoSetup {
     // Pre-commit hook
     const preCommit = path.join(hooksDir, 'pre-commit');
     const preCommitContent = `#!/bin/sh
-# Agent Shadow Brain — Auto-installed pre-commit hook
+# Agent Shadow Brain — managed pre-commit hook
 npx shadow-brain scan --staged 2>/dev/null || true
 `;
     fs.writeFileSync(preCommit, preCommitContent, { mode: 0o755 });
@@ -240,7 +240,7 @@ npx shadow-brain scan --staged 2>/dev/null || true
     // Pre-push hook
     const prePush = path.join(hooksDir, 'pre-push');
     const prePushContent = `#!/bin/sh
-# Agent Shadow Brain — Auto-installed pre-push hook
+# Agent Shadow Brain — managed pre-push hook
 npx shadow-brain health 2>/dev/null || true
 `;
     fs.writeFileSync(prePush, prePushContent, { mode: 0o755 });
@@ -652,29 +652,33 @@ npx shadow-brain health 2>/dev/null || true
 }
 
 // ── Standalone postinstall runner ──────────────────────────────────────────
-// Runs automatically after npm install to detect project and set up MCP
+// Runs automatically after npm install, but never mutates the user's project
+// unless explicitly opted in. Agent tools are security-sensitive; installs must
+// be visible, reversible, and dry-run friendly.
 async function postinstall(): Promise<void> {
   try {
     const setup = new AutoSetup();
     const result = await setup.detect();
+    const shouldMutate = process.env.SHADOW_BRAIN_POSTINSTALL_SETUP === '1';
 
-    // Only install MCP for detected tools, silently
-    if (result.aiTools.some(t => t.detected)) {
+    if (shouldMutate && result.aiTools.some(t => t.detected)) {
       await setup.installMCPForTools(result);
     }
 
-    // Install git hooks if git repo detected
-    if (result.hasGit) {
+    if (shouldMutate && result.hasGit) {
       await setup.installGitHooks();
     }
 
-    // Output minimal setup info
-    console.log(`\n  Shadow Brain v5.0.1 auto-configured for ${result.projectName} (${result.projectType})`);
+    console.log(`\n  Shadow Brain v5.2.0 detected ${result.projectName} (${result.projectType})`);
     if (result.aiTools.some(t => t.detected)) {
       const tools = result.aiTools.filter(t => t.detected).map(t => t.name);
       console.log(`  AI tools detected: ${tools.join(', ')}`);
     }
-    console.log(`  Run: shadow-brain start\n`);
+    if (shouldMutate) {
+      console.log(`  Opt-in setup completed. Run: shadow-brain start\n`);
+    } else {
+      console.log(`  No files were changed. Run: shadow-brain attach-all --dry-run\n`);
+    }
   } catch {
     // Silent — never break npm install
   }

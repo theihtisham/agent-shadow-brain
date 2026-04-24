@@ -1,7 +1,7 @@
 {
   "name": "@theihtisham/agent-shadow-brain",
-  "version": "5.2.0",
-  "description": "World's #1 AI coding intelligence layer — One brain across ALL agents (Claude Code, Cursor, Cline, Codex, Copilot, Windsurf, Kilo, Roo, OpenCode, Aider). v5.2.0 Subconscious Singularity: every agent auto-attaches on session start, every project shares a singleton global brain, proactive context injection so agents never start from zero, sub-millisecond L0 cache, infinite hierarchical memory, multi-agent consensus, cross-agent intelligence protocol, predictive prefetch, Code DNA, temporal intelligence, fine-tuning engine, LSP server, MCP server, rich dashboard, and 70+ CLI commands. Zero config — `npx @theihtisham/agent-shadow-brain attach-all` and every AI tool you use becomes smarter.",
+  "version": "6.0.0",
+  "description": "Hive Mind for AI coding agents — the first open-source brain that works with sub-agents. v6.0 adds SABB (Sub-Agent Brain Bridge), causal memory chains, agent collision detective, dream engine (idle reflection), Ed25519-signed reputation ledger, swarm debate protocol, pre-mortem assistant, branch brains, attention heatmap, token economy engine, formal verification bridge, calibration monitor, air-gap + E2E encryption, voice mode, brain garden, PR auto-review, team P2P sync, and curated brain exchange. Local-first, free, open.",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"
@@ -17,7 +17,7 @@
     "test": "vitest run",
     "lint": "tsc --noEmit",
     "prepublishOnly": "npm run build",
-    "postinstall": "node dist/brain/auto-setup.js 2>/dev/null || true"
+    "postinstall": "node dist/brain/auto-setup.js 2>>~/.shadow-brain/install.log || true"
   },
   "keywords": [
     "ai",
@@ -30,6 +30,11 @@
     "singleton-brain",
     "global-brain",
     "session-hook",
+    "agent-handoff",
+    "agent-firewall",
+    "mcp-security",
+    "prompt-injection",
+    "secret-scanning",
     "auto-attach",
     "claude-code",
     "claude",
@@ -107,7 +112,31 @@
     "developer-productivity",
     "trending",
     "viral",
-    "open-source"
+    "open-source",
+    "hive-mind",
+    "subagent-bridge",
+    "sabb",
+    "causal-chains",
+    "dream-engine",
+    "agent-reputation",
+    "swarm-debate",
+    "pre-mortem",
+    "branch-brain",
+    "attention-heatmap",
+    "token-economy",
+    "formal-verification",
+    "calibration-monitor",
+    "air-gap",
+    "e2e-encryption",
+    "voice-mode",
+    "brain-garden",
+    "pr-review",
+    "team-brain",
+    "brain-exchange",
+    "local-first",
+    "ollama",
+    "forgetting-curve",
+    "sleep-consolidation"
   ],
   "author": "ihtisham",
   "license": "MIT",

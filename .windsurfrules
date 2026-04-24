@@ -1,0 +1,6 @@
+# Shadow Brain Integration (Windsurf)
+
+Shadow Brain is active for this project. It maintains a singleton global brain
+across all your AI coding agents — what one agent learns, all agents know.
+
+Auto-injects context on session start. Run `shadow-brain status` for state.

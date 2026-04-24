@@ -1,0 +1,195 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Agent Shadow Brain Viral Video</title>
+  <style>
+    :root { color-scheme: dark; --bg:#080a0f; --ink:#ecfdf5; --muted:#9ca3af; --green:#22c55e; --cyan:#06b6d4; --amber:#f59e0b; --red:#ef4444; }
+    * { box-sizing:border-box; }
+    body { margin:0; min-height:100vh; display:grid; place-items:center; gap:16px; background:#05070b; color:var(--ink); font-family:Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, sans-serif; }
+    main { width:min(1280px, 96vw); }
+    canvas { width:100%; aspect-ratio:16/9; display:block; border:1px solid #1f2937; border-radius:12px; background:var(--bg); box-shadow:0 28px 80px rgba(0,0,0,.45); }
+    .controls { display:flex; align-items:center; justify-content:space-between; gap:12px; margin-top:12px; color:var(--muted); font-size:13px; }
+    button, a { border:1px solid #1f2937; background:#101827; color:var(--ink); border-radius:8px; padding:9px 12px; font-weight:700; cursor:pointer; text-decoration:none; }
+    button:hover, a:hover { border-color:var(--cyan); }
+    #download[hidden] { display:none; }
+  </style>
+</head>
+<body>
+  <main>
+    <canvas id="stage" width="1280" height="720"></canvas>
+    <div class="controls">
+      <span>45-second launch animation. Record, then post as WebM or convert to MP4.</span>
+      <span>
+        <button id="replay">Replay</button>
+        <button id="record">Record WebM</button>
+        <a id="download" hidden>Save recording</a>
+      </span>
+    </div>
+  </main>
+  <script>
+    const canvas = document.getElementById('stage');
+    const ctx = canvas.getContext('2d');
+    const W = canvas.width, H = canvas.height;
+    const TOTAL = 45;
+    let started = performance.now();
+    let recording = false;
+
+    const agents = [
+      { name:'Cursor', x:80, y:190, color:'#22c55e' },
+      { name:'Codex', x:80, y:330, color:'#06b6d4' },
+      { name:'Claude', x:80, y:470, color:'#f59e0b' },
+    ];
+
+    const scenes = [
+      { at:0, title:'Every AI agent starts from zero', sub:'Same repo. Same mistakes. No shared memory.' },
+      { at:5, title:'Cursor learns the project rule', sub:'"Use typed config. Never read .env directly."' },
+      { at:11, title:'Shadow Brain stores it locally', sub:'One shared brain across every agent and project.' },
+      { at:18, title:'Codex starts with context already loaded', sub:'No repeated explanations. No cold starts.' },
+      { at:26, title:'Safety Firewall blocks risky actions', sub:'Secret access, destructive shell, curl-to-shell, prompt injection.' },
+      { at:34, title:'Proof timeline shows what happened', sub:'What was injected, when, why, and by which agent.' },
+      { at:40, title:'One memory + safety layer for AI coding', sub:'npx @theihtisham/agent-shadow-brain attach-all' },
+    ];
+
+    function clamp(v,a,b){ return Math.max(a, Math.min(b, v)); }
+    function ease(t){ t=clamp(t,0,1); return t*t*(3-2*t); }
+    function sceneFor(t){ return scenes.reduce((a,s)=> t>=s.at ? s : a, scenes[0]); }
+    function rounded(x,y,w,h,r){ ctx.beginPath(); ctx.roundRect(x,y,w,h,r); }
+    function text(s,x,y,size,color='#ecfdf5',weight=800,align='left'){
+      ctx.fillStyle=color; ctx.font=`${weight} ${size}px Inter, system-ui, sans-serif`; ctx.textAlign=align; ctx.fillText(s,x,y);
+    }
+
+    function drawAgent(agent, active, memory){
+      rounded(agent.x, agent.y, 250, 86, 12);
+      ctx.fillStyle = active ? '#111d2a' : '#0e131c';
+      ctx.strokeStyle = active ? agent.color : '#243041';
+      ctx.lineWidth = 2;
+      ctx.fill(); ctx.stroke();
+      ctx.fillStyle = agent.color;
+      ctx.beginPath(); ctx.arc(agent.x+34, agent.y+43, 15, 0, Math.PI*2); ctx.fill();
+      text(agent.name, agent.x+62, agent.y+38, 22);
+      text(memory ? 'context loaded' : 'starts from zero', agent.x+62, agent.y+62, 13, memory ? '#86efac' : '#9ca3af', 600);
+    }
+
+    function drawBrain(t){
+      const pulse = .5 + .5*Math.sin(t*4);
+      ctx.save();
+      ctx.translate(640, 360);
+      ctx.shadowColor = '#22c55e';
+      ctx.shadowBlur = 20 + pulse*20;
+      rounded(-145,-105,290,210,28);
+      ctx.fillStyle = '#07130e';
+      ctx.strokeStyle = '#22c55e';
+      ctx.lineWidth = 3;
+      ctx.fill(); ctx.stroke();
+      ctx.shadowBlur = 0;
+      text('SHADOW', 0, -22, 30, '#ecfdf5', 900, 'center');
+      text('BRAIN', 0, 14, 30, '#ecfdf5', 900, 'center');
+      text('local memory + safety', 0, 52, 15, '#86efac', 700, 'center');
+      for(let i=0;i<18;i++){
+        const a=i/18*Math.PI*2+t*.8;
+        const r=76+Math.sin(t+i)*8;
+        ctx.fillStyle = i%3===0 ? '#06b6d4' : '#22c55e';
+        ctx.beginPath(); ctx.arc(Math.cos(a)*r, Math.sin(a)*r, 3, 0, Math.PI*2); ctx.fill();
+      }
+      ctx.restore();
+    }
+
+    function drawPacket(from, to, p, color){
+      const sx=330, sy=from.y+43, ex=495, ey=360;
+      const mx=sx+(ex-sx)*p, my=sy+(ey-sy)*p;
+      ctx.strokeStyle=color; ctx.lineWidth=2; ctx.globalAlpha=.35;
+      ctx.beginPath(); ctx.moveTo(sx, sy); ctx.lineTo(ex, ey); ctx.stroke();
+      ctx.globalAlpha=1;
+      ctx.fillStyle=color; rounded(mx-48,my-17,96,34,17); ctx.fill();
+      text('memory', mx, my+5, 14, '#02130a', 900, 'center');
+    }
+
+    function drawFirewall(t, active){
+      const x=870,y=210,w=310,h=250;
+      rounded(x,y,w,h,18);
+      ctx.fillStyle='#160c0d'; ctx.strokeStyle=active?'#ef4444':'#374151'; ctx.lineWidth=2; ctx.fill(); ctx.stroke();
+      text('Safety Firewall', x+28, y+46, 26);
+      text(active?'BLOCKED':'watching', x+28, y+82, 18, active?'#fca5a5':'#9ca3af', 800);
+      const lines=['.env access','rm -rf','curl | sh','prompt injection'];
+      lines.forEach((l,i)=>{
+        const yy=y+122+i*31;
+        ctx.fillStyle=active&&i<3?'#ef4444':'#1f2937';
+        ctx.beginPath(); ctx.arc(x+35, yy-5, 6,0,Math.PI*2); ctx.fill();
+        text(l,x+52,yy,15,active&&i<3?'#fecaca':'#d1d5db',700);
+      });
+    }
+
+    function drawTimeline(t){
+      const x=865,y=185,w=330,h=315;
+      rounded(x,y,w,h,18); ctx.fillStyle='#0b1220'; ctx.strokeStyle='#164e63'; ctx.lineWidth=2; ctx.fill(); ctx.stroke();
+      text('Proof Timeline', x+28, y+45, 25);
+      const rows=[
+        ['Cursor','learned repo rule','#22c55e'],
+        ['Brain','stored memory','#06b6d4'],
+        ['Codex','received briefing','#06b6d4'],
+        ['Firewall','blocked .env','#ef4444'],
+        ['Dashboard','audit visible','#f59e0b'],
+      ];
+      rows.forEach((r,i)=>{
+        const yy=y+86+i*42;
+        ctx.fillStyle=r[2]; ctx.beginPath(); ctx.arc(x+32,yy-5,6,0,Math.PI*2); ctx.fill();
+        text(r[0],x+52,yy,16,'#ecfdf5',800);
+        text(r[1],x+130,yy,14,'#9ca3af',600);
+      });
+    }
+
+    function frame(){
+      const elapsed=(performance.now()-started)/1000;
+      const t=elapsed%TOTAL;
+      ctx.clearRect(0,0,W,H);
+      const grad=ctx.createLinearGradient(0,0,W,H);
+      grad.addColorStop(0,'#05070b'); grad.addColorStop(.55,'#0b1220'); grad.addColorStop(1,'#06140f');
+      ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+      for(let i=0;i<70;i++){
+        ctx.globalAlpha=.08; ctx.fillStyle=i%2?'#22c55e':'#06b6d4';
+        ctx.fillRect((i*73+t*18)%W,(i*41)%H,2,2);
+      }
+      ctx.globalAlpha=1;
+      const sc=sceneFor(t);
+      text(sc.title, 70, 88, 43, '#ecfdf5', 900);
+      text(sc.sub, 72, 124, 21, '#a7f3d0', 650);
+      agents.forEach((a,i)=> drawAgent(a, t>i*4, (a.name==='Cursor'&&t>6)||(a.name==='Codex'&&t>19)||(a.name==='Claude'&&t>31)));
+      drawBrain(t);
+      if(t>7 && t<14) drawPacket(agents[0], null, ease((t-7)/5), '#22c55e');
+      if(t>18 && t<25) drawPacket({y:360}, agents[1], ease((t-18)/5), '#06b6d4');
+      if(t>=26 && t<34) drawFirewall(t,true);
+      else if(t>=34) drawTimeline(t);
+      else drawFirewall(t,false);
+      if(t>40){
+        rounded(370,570,540,70,16); ctx.fillStyle='#ecfdf5'; ctx.fill();
+        text('npx @theihtisham/agent-shadow-brain attach-all',640,614,24,'#06140f',900,'center');
+      }
+      requestAnimationFrame(frame);
+    }
+
+    document.getElementById('replay').onclick=()=>{ started=performance.now(); };
+    document.getElementById('record').onclick=async()=>{
+      if(recording) return;
+      recording=true;
+      started=performance.now();
+      const stream=canvas.captureStream(30);
+      const chunks=[];
+      const rec=new MediaRecorder(stream,{mimeType:'video/webm;codecs=vp9'});
+      rec.ondataavailable=e=>{ if(e.data.size) chunks.push(e.data); };
+      rec.onstop=()=>{
+        const blob=new Blob(chunks,{type:'video/webm'});
+        const url=URL.createObjectURL(blob);
+        const a=document.getElementById('download');
+        a.href=url; a.download='agent-shadow-brain-viral-demo.webm'; a.hidden=false;
+        a.textContent='Save recording';
+        recording=false;
+      };
+      rec.start();
+      setTimeout(()=>rec.stop(), TOTAL*1000);
+    };
+    frame();
+  </script>
+</body>
+</html>

@@ -1,0 +1,390 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shadow Brain v6.0 — Hive Mind Explainer (1 minute)</title>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js"></script>
+<style>
+  :root {
+    --bg: #050710; --bg2: #0d1020; --border: #2a3350;
+    --text: #e4ecf6; --text2: #8a9cc3;
+    --cyan: #18ffff; --purple: #a855f7; --green: #00e676;
+    --red: #ff5252; --orange: #ffab40; --yellow: #ffca28;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--bg); color: var(--text);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    overflow: hidden;
+  }
+  body { display: flex; align-items: center; justify-content: center; min-height: 100vh; }
+
+  .stage {
+    position: relative; width: 1280px; height: 720px;
+    background: radial-gradient(ellipse at center, #0c1128 0%, #050710 80%);
+    border-radius: 14px; overflow: hidden;
+    box-shadow: 0 0 120px rgba(24, 255, 255, 0.12);
+  }
+  .bg-stars { position: absolute; inset: 0; pointer-events: none; }
+
+  .scene {
+    position: absolute; inset: 0; opacity: 0;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 48px;
+  }
+
+  .title {
+    font-size: 52px; font-weight: 900; letter-spacing: -1.5px;
+    text-align: center; margin-bottom: 12px;
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 100%);
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle { font-size: 22px; color: var(--text2); text-align: center; max-width: 900px; line-height: 1.5; }
+
+  /* Scene 1 — The Problem */
+  .agents { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; margin-top: 40px; width: 80%; }
+  .agent {
+    background: linear-gradient(180deg, #1a2040, #101528);
+    border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+    text-align: center; opacity: 0.3; transition: all 0.5s;
+  }
+  .agent .emoji { font-size: 42px; margin-bottom: 8px; }
+  .agent .name { font-weight: 700; font-size: 16px; }
+  .agent .mem { font-size: 11px; color: var(--text2); margin-top: 6px; font-family: monospace; }
+
+  /* Scene 2 — Hive Mind */
+  .brain-core {
+    width: 280px; height: 280px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(168,85,247,0.6) 0%, rgba(24,255,255,0.3) 50%, transparent 70%);
+    display: flex; align-items: center; justify-content: center;
+    animation: pulse 3s ease-in-out infinite;
+    position: relative;
+  }
+  .brain-core .ring {
+    position: absolute; inset: -40px; border: 2px dashed rgba(24,255,255,0.5);
+    border-radius: 50%; animation: spin 20s linear infinite;
+  }
+  .brain-core .label {
+    font-family: monospace; font-size: 14px; color: var(--cyan);
+    text-align: center;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  @keyframes pulse { 50% { transform: scale(1.05); box-shadow: 0 0 60px rgba(168,85,247,0.6); } }
+
+  .agent-ring {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    pointer-events: none;
+  }
+  .orbit-agent {
+    position: absolute; width: 80px; height: 80px;
+    background: var(--bg2); border: 2px solid var(--cyan);
+    border-radius: 50%; display: flex; align-items: center; justify-content: center;
+    font-size: 28px;
+  }
+
+  /* Scene 3 — SABB */
+  .sabb-stage {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px;
+    align-items: center; width: 90%;
+  }
+  .sabb-parent, .sabb-sub {
+    background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+    padding: 24px; text-align: center;
+  }
+  .sabb-parent { border-color: var(--cyan); }
+  .sabb-sub { border-color: var(--purple); }
+  .sabb-arrow {
+    font-size: 48px; color: var(--cyan); text-align: center;
+  }
+  .sabb-sliver {
+    background: linear-gradient(90deg, rgba(24,255,255,0.2), rgba(168,85,247,0.2));
+    border-radius: 8px; padding: 16px; font-family: monospace; font-size: 13px;
+    margin-top: 12px; color: var(--cyan);
+  }
+
+  /* Scene 4 — Causal chains */
+  .causal-graph {
+    display: flex; flex-direction: column; gap: 14px; width: 70%;
+  }
+  .causal-node {
+    background: var(--bg2); border: 1px solid var(--cyan); border-radius: 8px;
+    padding: 12px 18px; font-family: monospace; font-size: 14px;
+    opacity: 0.7;
+    position: relative;
+  }
+  .causal-node::before {
+    content: ""; position: absolute; left: 20px; bottom: -14px;
+    width: 2px; height: 14px; background: var(--cyan);
+  }
+  .causal-node:last-child::before { display: none; }
+  .causal-node .cat { color: var(--purple); font-weight: 700; }
+
+  /* Scene 5 — Collision + Dream */
+  .split {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+    width: 90%; height: 70%; align-items: center;
+  }
+  .panel {
+    background: var(--bg2); border-radius: 12px; padding: 28px;
+    border: 1px solid var(--border); height: 100%;
+    display: flex; flex-direction: column; justify-content: center;
+  }
+  .panel.collision { border-color: var(--red); }
+  .panel.dream { border-color: var(--purple); }
+  .panel h3 { font-size: 22px; margin-bottom: 14px; }
+  .panel p { font-size: 14px; color: var(--text2); line-height: 1.6; font-family: monospace; }
+  .shield-warn {
+    font-size: 64px; text-align: center; margin-bottom: 12px;
+    animation: shake 0.4s ease-in-out infinite;
+  }
+  @keyframes shake { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+
+  /* Scene 6 — CTA */
+  .cta-install {
+    background: #0f1729; border: 1px solid var(--cyan); border-radius: 8px;
+    padding: 16px 24px; font-family: monospace; font-size: 22px;
+    color: var(--cyan); margin-top: 32px;
+  }
+  .free-tags { display: flex; gap: 16px; margin-top: 24px; }
+  .free-tag {
+    padding: 8px 20px; border-radius: 24px; font-size: 14px; font-weight: 700;
+    background: var(--bg2); border: 1px solid var(--green); color: var(--green);
+  }
+
+  /* Record button */
+  .controls {
+    position: absolute; top: 16px; right: 16px; z-index: 1000;
+    display: flex; gap: 8px;
+  }
+  .controls button {
+    background: var(--bg2); color: var(--text); border: 1px solid var(--border);
+    padding: 8px 16px; border-radius: 6px; cursor: pointer; font-size: 12px;
+  }
+  .controls button:hover { border-color: var(--cyan); }
+  .progress {
+    position: absolute; bottom: 0; left: 0; height: 3px;
+    background: linear-gradient(90deg, var(--cyan), var(--purple));
+    width: 0; z-index: 999; transition: width 0.1s linear;
+  }
+
+  .caption {
+    position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+    background: rgba(5, 7, 16, 0.9); padding: 10px 24px; border-radius: 30px;
+    font-size: 18px; font-weight: 600; letter-spacing: 0.3px;
+    border: 1px solid var(--border);
+    opacity: 0;
+  }
+
+  .version-stamp {
+    position: absolute; top: 24px; left: 24px;
+    font-family: monospace; font-size: 12px; color: var(--text2);
+    background: var(--bg2); padding: 4px 10px; border-radius: 4px;
+  }
+</style>
+</head>
+<body>
+<div class="stage" id="stage">
+  <div class="version-stamp">Shadow Brain · v6.0 Hive Mind</div>
+  <div class="controls">
+    <button onclick="play()">▶ Play</button>
+    <button onclick="restart()">↻ Restart</button>
+    <button onclick="startRecording()">⏺ Record WebM</button>
+    <button onclick="stopRecording()">⏹ Stop</button>
+  </div>
+  <div class="progress" id="progress"></div>
+
+  <!-- Scene 1: The Problem -->
+  <div class="scene" id="scene1">
+    <div class="title">Every session. Every agent. Blind.</div>
+    <div class="subtitle">Your AI coding agents forget everything. Sub-agents start from scratch. Memory dies at every boundary.</div>
+    <div class="agents" id="scene1-agents">
+      <div class="agent"><div class="emoji">🤖</div><div class="name">Claude Code</div><div class="mem">memory: empty</div></div>
+      <div class="agent"><div class="emoji">🎯</div><div class="name">Cursor</div><div class="mem">memory: empty</div></div>
+      <div class="agent"><div class="emoji">💻</div><div class="name">Codex</div><div class="mem">memory: empty</div></div>
+      <div class="agent"><div class="emoji">🪄</div><div class="name">Copilot</div><div class="mem">memory: empty</div></div>
+    </div>
+  </div>
+
+  <!-- Scene 2: Hive Mind -->
+  <div class="scene" id="scene2">
+    <div class="title">One Hive Mind for All Agents.</div>
+    <div class="subtitle">Shadow Brain v6.0 — the first open-source brain that works with sub-agents.</div>
+    <div class="brain-core" id="brain-core">
+      <div class="ring"></div>
+      <div class="label">~/.shadow-brain/<br/>global.json</div>
+      <div class="agent-ring" id="agent-ring">
+        <div class="orbit-agent" style="transform: translate(-220px, 0)">🤖</div>
+        <div class="orbit-agent" style="transform: translate(0, -200px)">🎯</div>
+        <div class="orbit-agent" style="transform: translate(220px, 0)">💻</div>
+        <div class="orbit-agent" style="transform: translate(0, 200px)">🪄</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 3: SABB — Sub-Agent Bridge -->
+  <div class="scene" id="scene3">
+    <div class="title">Sub-Agents Inherit the Brain.</div>
+    <div class="subtitle">SABB — the first bridge that syncs context to Claude's Task, Cursor Composer, CrewAI, LangGraph, AutoGen.</div>
+    <div class="sabb-stage">
+      <div class="sabb-parent">
+        <div style="font-size: 48px;">🤖</div>
+        <div style="font-weight: 700; margin-top: 8px;">Parent Agent</div>
+        <div style="font-size: 12px; color: var(--text2); font-family: monospace; margin-top: 6px;">spawns sub-agent</div>
+      </div>
+      <div class="sabb-arrow">
+        <div id="arrow-anim">→ 🧠 →</div>
+        <div class="sabb-sliver" id="sliver-text">context sliver · 300 tokens · 3 memories</div>
+      </div>
+      <div class="sabb-sub">
+        <div style="font-size: 48px;">⚡</div>
+        <div style="font-weight: 700; margin-top: 8px;">Sub-Agent</div>
+        <div style="font-size: 12px; color: var(--text2); font-family: monospace; margin-top: 6px;">starts with context</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 4: Causal Chains -->
+  <div class="scene" id="scene4">
+    <div class="title">Every Decision. Every Cause. Visible.</div>
+    <div class="subtitle">Causal Memory Chains — why did Claude choose bcrypt cost 12? Here's the trace.</div>
+    <div class="causal-graph" id="causal-graph">
+      <div class="causal-node"><span class="cat">[today · claude]</span> decision: bcrypt cost 12</div>
+      <div class="causal-node"><span class="cat">[Mar 20 · cursor]</span> pattern: use bcrypt w/ high cost</div>
+      <div class="causal-node"><span class="cat">[Mar 20 · user]</span> prompt: use secure password hashing</div>
+      <div class="causal-node"><span class="cat">[Feb 14 · cursor]</span> incident: weak hash found in audit</div>
+    </div>
+  </div>
+
+  <!-- Scene 5: Collision + Dream -->
+  <div class="scene" id="scene5">
+    <div class="title">Collisions Caught. Dreams Dreamt.</div>
+    <div class="subtitle">Real-time multi-agent safety + idle-time reflection. Your brain gets smarter while you sleep.</div>
+    <div class="split">
+      <div class="panel collision">
+        <div class="shield-warn">🛡️</div>
+        <h3 style="color: var(--red); text-align: center;">Agent Collision</h3>
+        <p>Cursor: src/auth.ts:42-67 (refactor)<br/>Claude: src/auth.ts:55-89 (rate-limit)<br/><br/>overlap lines 55-67 · severity: critical · spawn merge-arbiter</p>
+      </div>
+      <div class="panel dream">
+        <div style="font-size: 64px; text-align: center;">💤</div>
+        <h3 style="color: var(--purple); text-align: center;">Dream Engine</h3>
+        <p>&gt; revisit: recent 12 decisions<br/>&gt; counterfactual: redis vs postgres<br/>&gt; pattern-discovery: auth tokens rotate 24h<br/>&gt; new dream insight generated</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scene 6: CTA -->
+  <div class="scene" id="scene6">
+    <div class="title">Free. Open. Yours.</div>
+    <div class="subtitle">22 novel features. Local-first by default. Air-gap friendly. No subscription. No trial.</div>
+    <div class="cta-install">npx @theihtisham/agent-shadow-brain@latest attach-all</div>
+    <div class="free-tags">
+      <div class="free-tag">100% LOCAL-FIRST</div>
+      <div class="free-tag">100% FREE</div>
+      <div class="free-tag">100% OPEN</div>
+    </div>
+    <div style="margin-top: 36px; font-size: 14px; color: var(--text2); font-family: monospace;">
+      github.com/theihtisham/agent-shadow-brain · v6.0 Hive Mind
+    </div>
+  </div>
+
+  <div class="caption" id="caption"></div>
+</div>
+
+<script>
+  // Build starry background (CSS only would be heavy; JS injects dots)
+  const stars = document.createElement('div');
+  stars.className = 'bg-stars';
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('span');
+    s.style.cssText = `position:absolute; width:2px; height:2px; background:rgba(255,255,255,${0.2 + Math.random() * 0.6}); border-radius:50%; left:${Math.random() * 100}%; top:${Math.random() * 100}%;`;
+    stars.appendChild(s);
+  }
+  document.getElementById('stage').prepend(stars);
+
+  const scenes = ['scene1', 'scene2', 'scene3', 'scene4', 'scene5', 'scene6'];
+  const captions = [
+    'Every agent starts from zero. Every session. Every sub-agent.',
+    'Shadow Brain is the first open-source Hive Mind for AI agents.',
+    'Sub-agents inherit the brain — not the blind spot.',
+    'Every decision has a visible, auditable cause.',
+    'Collisions caught before they happen. Reflection runs idle.',
+    'Free. Open. Local-first. Yours.',
+  ];
+  const sceneDur = 10; // seconds per scene
+  const total = scenes.length * sceneDur;
+
+  let masterTl = null;
+
+  function buildTimeline() {
+    const tl = gsap.timeline({ paused: true });
+    scenes.forEach((id, i) => {
+      const sceneEl = document.getElementById(id);
+      const capEl = document.getElementById('caption');
+      tl.to(sceneEl, { opacity: 1, duration: 0.5 }, i * sceneDur);
+      tl.call(() => { capEl.textContent = captions[i]; }, null, i * sceneDur + 0.3);
+      tl.to(capEl, { opacity: 1, duration: 0.4 }, i * sceneDur + 0.3);
+
+      // Scene-specific micro-animations
+      if (id === 'scene1') {
+        tl.to('#scene1-agents .agent', { opacity: 1, stagger: 0.2, duration: 0.4 }, i * sceneDur + 0.5);
+        tl.to('#scene1-agents .agent', { opacity: 0.3, duration: 0.6, stagger: 0.15 }, i * sceneDur + 5);
+      } else if (id === 'scene2') {
+        tl.from('#brain-core', { scale: 0.3, opacity: 0, duration: 1.0 }, i * sceneDur + 0.5);
+        tl.from('.orbit-agent', { scale: 0, opacity: 0, stagger: 0.15, duration: 0.5 }, i * sceneDur + 1.5);
+      } else if (id === 'scene3') {
+        tl.from('.sabb-parent', { x: -200, opacity: 0, duration: 0.7 }, i * sceneDur + 0.5);
+        tl.from('.sabb-sub', { x: 200, opacity: 0, duration: 0.7 }, i * sceneDur + 0.5);
+        tl.from('.sabb-arrow', { scale: 0, opacity: 0, duration: 0.6 }, i * sceneDur + 1.2);
+        tl.from('.sabb-sliver', { width: 0, opacity: 0, duration: 1.0 }, i * sceneDur + 1.8);
+      } else if (id === 'scene4') {
+        tl.from('#causal-graph .causal-node', { y: 20, opacity: 0, stagger: 0.3, duration: 0.5 }, i * sceneDur + 0.5);
+      } else if (id === 'scene5') {
+        tl.from('.panel.collision', { x: -100, opacity: 0, duration: 0.6 }, i * sceneDur + 0.5);
+        tl.from('.panel.dream', { x: 100, opacity: 0, duration: 0.6 }, i * sceneDur + 0.5);
+      } else if (id === 'scene6') {
+        tl.from('.cta-install', { y: 20, opacity: 0, duration: 0.6 }, i * sceneDur + 0.6);
+        tl.from('.free-tag', { scale: 0, opacity: 0, stagger: 0.15, duration: 0.4 }, i * sceneDur + 1.3);
+      }
+
+      // Fade out scene
+      if (i < scenes.length - 1) {
+        tl.to(sceneEl, { opacity: 0, duration: 0.5 }, (i + 1) * sceneDur - 0.5);
+        tl.to(capEl, { opacity: 0, duration: 0.4 }, (i + 1) * sceneDur - 0.5);
+      }
+    });
+    // Progress bar
+    tl.to('#progress', { width: '100%', duration: total, ease: 'none' }, 0);
+    return tl;
+  }
+
+  function play() { if (masterTl) masterTl.kill(); masterTl = buildTimeline(); masterTl.play(); }
+  function restart() { play(); }
+
+  // MediaRecorder
+  let mediaRecorder = null; let chunks = [];
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 30 }, audio: false });
+      mediaRecorder = new MediaRecorder(stream, { mimeType: 'video/webm;codecs=vp9' });
+      chunks = [];
+      mediaRecorder.ondataavailable = e => chunks.push(e.data);
+      mediaRecorder.onstop = () => {
+        const blob = new Blob(chunks, { type: 'video/webm' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a'); a.href = url; a.download = 'shadow-brain-v6-explainer.webm'; a.click();
+      };
+      mediaRecorder.start();
+      play();
+    } catch (err) { alert('Recording failed: ' + err.message); }
+  }
+  function stopRecording() { if (mediaRecorder && mediaRecorder.state !== 'inactive') mediaRecorder.stop(); }
+
+  // Auto-play on load
+  window.addEventListener('load', () => { play(); });
+</script>
+</body>
+</html>

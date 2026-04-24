@@ -8,3 +8,32 @@ dist/
 coverage/
 *.tgz
 .claude/
+
+# v6.0 hygiene — prevent stray artifacts
+C:Users*
+tmp_*.txt
+*.traineddata
+.playwright-mcp/
+seo-gists/
+*.ollama-model
+.shadow-brain-local/
+*.local.json
+
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+.vscode/settings.local.json
+.idea/
+
+# Build outputs
+*.log
+install.log
+*.tsbuildinfo
+
+# HyperFrames
+shadow-brain-explainer/node_modules/
+shadow-brain-explainer/dist/
+shadow-brain-explainer/renders/
+narration-*.mp3

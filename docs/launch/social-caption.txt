@@ -1,0 +1,12 @@
+Your AI coding tools should not forget each other.
+
+Agent Shadow Brain gives Codex, Claude Code, Cursor, Copilot, Cline, Windsurf, Kilo, Roo, OpenCode, and Aider one shared local memory plus a safety firewall for risky agent actions.
+
+Cursor learns it.
+Codex remembers it.
+Claude gets blocked before it breaks production.
+
+Try:
+npx @theihtisham/agent-shadow-brain attach-all --dry-run
+
+#AI #CodingAgents #Codex #ClaudeCode #Cursor #MCP #DeveloperTools #OpenSource

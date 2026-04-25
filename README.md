@@ -3,7 +3,7 @@
 <a href="https://github.com/theihtisham/agent-shadow-brain">
   <img src="Banner (2).png" alt="Shadow Brain v6.0 — Hive Mind" width="100%">
 </a>
-
+<a href="https://trendshift.io/repositories/25944" target="_blank"><img src="https://trendshift.io/api/badge/repositories/25944" alt="lsdefine%2FGenericAgent | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 <br/><br/>
 
 <!-- Auto-plays muted on GitHub README. Unmute via player controls. -->

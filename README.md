@@ -1,10 +1,18 @@
 <div align="center">
 
-<a href="https://github.com/theihtisham/agent-shadow-brain/raw/main/docs/launch/shadow-brain-motion-explainer-narrated.mp4">
-  <img src="Banner (2).png" alt="Shadow Brain v6.0 — Hive Mind · Click to watch the 2-minute explainer" width="100%">
-</a>
+<video src="https://github.com/theihtisham/agent-shadow-brain/raw/main/docs/launch/shadow-brain-motion-explainer-narrated.mp4"
+       poster="Banner (2).png"
+       controls
+       muted
+       playsinline
+       preload="none"
+       width="100%">
+  <a href="https://github.com/theihtisham/agent-shadow-brain/releases/tag/v6.0.0">
+    <img src="Banner (2).png" alt="Shadow Brain v6.0 — Hive Mind · Watch the 2-minute explainer on the release page" width="100%">
+  </a>
+</video>
 
-### 🎬 **[▶ Watch the 2-minute explainer](https://github.com/theihtisham/agent-shadow-brain/raw/main/docs/launch/shadow-brain-motion-explainer-narrated.mp4)** · Click the banner above
+### 🎬 **▶ Click the banner above to play the 2-minute explainer in-place**  ·  [Open on Release page](https://github.com/theihtisham/agent-shadow-brain/releases/tag/v6.0.0)
 
 [![npm version](https://img.shields.io/npm/v/@theihtisham/agent-shadow-brain?color=a855f7&labelColor=1a0a2e&style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@theihtisham/agent-shadow-brain)
 [![npm downloads](https://img.shields.io/npm/dt/@theihtisham/agent-shadow-brain?color=06b6d4&labelColor=1a0a2e&style=for-the-badge)](https://www.npmjs.com/package/@theihtisham/agent-shadow-brain)

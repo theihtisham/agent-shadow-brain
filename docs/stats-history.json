@@ -134,5 +134,22 @@
       "last_month": 1836,
       "total": 1836
     }
+  },
+  {
+    "date": "2026-04-30",
+    "timestamp": 1777563989119,
+    "stars": 18,
+    "forks": 2,
+    "watchers": 2,
+    "open_issues": 12,
+    "total_issues": 0,
+    "releases": 2,
+    "size_kb": 27707,
+    "npm": {
+      "last_day": 5,
+      "last_week": 224,
+      "last_month": 1841,
+      "total": 1841
+    }
   }
 ]

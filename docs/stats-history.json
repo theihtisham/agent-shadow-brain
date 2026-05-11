@@ -321,5 +321,22 @@
       "last_month": 1879,
       "total": 1912
     }
+  },
+  {
+    "date": "2026-05-11",
+    "timestamp": 1778517166320,
+    "stars": 25,
+    "forks": 3,
+    "watchers": 3,
+    "open_issues": 12,
+    "total_issues": 0,
+    "releases": 2,
+    "size_kb": 27724,
+    "npm": {
+      "last_day": 4,
+      "last_week": 48,
+      "last_month": 1747,
+      "total": 1916
+    }
   }
 ]

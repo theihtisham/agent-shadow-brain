@@ -1,0 +1,15 @@
+{
+  "id": "03-react-dev-null-guard",
+  "title": "Missing null-guard in development-only key warning",
+  "repo_url": "https://github.com/facebook/react",
+  "base_commit": "main",
+  "language": "javascript",
+  "setup": ["yarn install --frozen-lockfile"],
+  "failing_test": "yarn test packages/react/src/__tests__/ReactChildren-test.js -t 'does not crash with null children'",
+  "expected_fix_hint": "ReactChildren.js validateChildKeys reads child.key but child may be null when developers pass null/undefined entries. Guard with if (child && typeof child === 'object') before key access.",
+  "success_criteria": "Tests: 1 passed",
+  "agent_prompt": "When developers pass null children to React.Children.map in development mode, the validation throws because it dereferences child.key without a null check. Find the function in packages/react/src/ReactChildren.js (or its current location) and add the appropriate guard so the failing test passes.",
+  "wall_clock_budget_s": 300,
+  "source": "Illustrative — null-deref class issue commonly seen in dev warnings",
+  "complexity": "small"
+}

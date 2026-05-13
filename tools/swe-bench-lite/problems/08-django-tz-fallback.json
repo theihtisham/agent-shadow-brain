@@ -1,0 +1,15 @@
+{
+  "id": "08-django-tz-fallback",
+  "title": "Empty TIME_ZONE setting crashes with TypeError instead of falling back to UTC",
+  "repo_url": "https://github.com/django/django",
+  "base_commit": "main",
+  "language": "python",
+  "setup": ["pip install -e . --quiet"],
+  "failing_test": "python -m pytest tests/utils_tests/test_timezone.py::test_empty_tz_falls_back_to_utc -q",
+  "expected_fix_hint": "django/utils/timezone.py get_default_timezone() should treat empty-string TIME_ZONE the same as None and fall back to UTC; current code calls pytz.timezone('') which raises.",
+  "success_criteria": "1 passed",
+  "agent_prompt": "If a Django setting TIME_ZONE is the empty string (rather than None), Django raises an UnknownTimeZoneError. The expected behavior is to fall back to UTC like it does for None. Fix django/utils/timezone.py so the failing test passes.",
+  "wall_clock_budget_s": 240,
+  "source": "Illustrative — None vs empty-string falsy-equivalent bug class",
+  "complexity": "small"
+}

@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" width="1200" height="800">
+  <defs><linearGradient id="w-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#050a18"/><stop offset="1" stop-color="#0d2540"/></linearGradient></defs>
+  <rect width="1200" height="800" fill="url(#w-bg)"/>
+  <text x="48" y="68" fill="#7dd3fc" font-size="14" font-family="ui-monospace,monospace" letter-spacing="4">SHADOW BRAIN · TROPHY WALL</text>
+  <text x="48" y="112" fill="#e2f5ff" font-size="38" font-family="ui-sans-serif,system-ui" font-weight="600">shadow-brain</text>
+  <text x="48" y="142" fill="#7dd3fc" font-size="16" font-family="ui-monospace,monospace" opacity="0.75">0 / 25 unlocked</text>
+  <g transform="translate(48,180)">
+    <rect width="204.8" height="114" fill="#00ffd5" fill-opacity="0.02" stroke="#00ffd5" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🌟</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">First Spark</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">COMMON</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Recorded your very first memory.</text>
+  </g>
+  <g transform="translate(268.8,180)">
+    <rect width="204.8" height="114" fill="#00ffd5" fill-opacity="0.02" stroke="#00ffd5" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">📝</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Tenfold</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">COMMON</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Recorded 10 memories.</text>
+  </g>
+  <g transform="translate(489.6,180)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">📚</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Centurion</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Recorded 100 memories.</text>
+  </g>
+  <g transform="translate(710.4000000000001,180)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🗄</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Knowledge Vault</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Recorded 1,000 memories.</text>
+  </g>
+  <g transform="translate(931.2,180)">
+    <rect width="204.8" height="114" fill="#fbbf24" fill-opacity="0.02" stroke="#fbbf24" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">👑</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Archive Sovereign</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">LEGENDARY</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Recorded 10,000 memories.</text>
+  </g>
+  <g transform="translate(48,310)">
+    <rect width="204.8" height="114" fill="#00ffd5" fill-opacity="0.02" stroke="#00ffd5" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🔥</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Week One</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">COMMON</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">7 consecutive days of brain activity.</text>
+  </g>
+  <g transform="translate(268.8,310)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">📅</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Monthly Mind</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">30 consecutive days of brain activity.</text>
+  </g>
+  <g transform="translate(489.6,310)">
+    <rect width="204.8" height="114" fill="#fbbf24" fill-opacity="0.02" stroke="#fbbf24" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🏆</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Centennial Streak</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">LEGENDARY</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">100 consecutive days of brain activity.</text>
+  </g>
+  <g transform="translate(710.4000000000001,310)">
+    <rect width="204.8" height="114" fill="#00ffd5" fill-opacity="0.02" stroke="#00ffd5" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🤝</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Two Heads</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">COMMON</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Shared memory across 2 different agents.</text>
+  </g>
+  <g transform="translate(931.2,310)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🐝</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Hive Mind</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Shared memory across 5 different agents.</text>
+  </g>
+  <g transform="translate(48,440)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🌍</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Federation</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Shared memory across 10 different agents.</text>
+  </g>
+  <g transform="translate(268.8,440)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🎯</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Sharp Predictor</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Achieved Brier score below 0.10.</text>
+  </g>
+  <g transform="translate(489.6,440)">
+    <rect width="204.8" height="114" fill="#fbbf24" fill-opacity="0.02" stroke="#fbbf24" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">📐</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Calibration Master</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">LEGENDARY</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Expected calibration error below 0.05.</text>
+  </g>
+  <g transform="translate(710.4000000000001,440)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🔁</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Sync Initiate</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Completed first team sync.</text>
+  </g>
+  <g transform="translate(931.2,440)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">📦</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Exchange Initiate</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Imported your first brain exchange.</text>
+  </g>
+  <g transform="translate(48,570)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🔍</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">PR Whisperer</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">First automated PR review.</text>
+  </g>
+  <g transform="translate(268.8,570)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">📐</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Architect&#39;s Toolkit</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Embraced The Architect archetype.</text>
+  </g>
+  <g transform="translate(489.6,570)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">👁</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Debugger&#39;s Eye</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Embraced The Debugger archetype.</text>
+  </g>
+  <g transform="translate(710.4000000000001,570)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🌙</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">The Witching Hour</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Committed brain activity at 3am local.</text>
+  </g>
+  <g transform="translate(931.2,570)">
+    <rect width="204.8" height="114" fill="#fbbf24" fill-opacity="0.02" stroke="#fbbf24" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🧙</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Ancient Fix</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">LEGENDARY</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Fixed a bug introduced 1+ year ago.</text>
+  </g>
+  <g transform="translate(48,700)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">⏳</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Time Traveler</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Restored a time capsule.</text>
+  </g>
+  <g transform="translate(268.8,700)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">⚡</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Sub-50</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">Achieved sub-50ms recall.</text>
+  </g>
+  <g transform="translate(489.6,700)">
+    <rect width="204.8" height="114" fill="#fbbf24" fill-opacity="0.02" stroke="#fbbf24" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">🚀</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Vector Lightning</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">LEGENDARY</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">100ms search over 10k vectors.</text>
+  </g>
+  <g transform="translate(710.4000000000001,700)">
+    <rect width="204.8" height="114" fill="#a78bfa" fill-opacity="0.02" stroke="#a78bfa" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">📊</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Power User</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">RARE</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">1,000 searches in a single day.</text>
+  </g>
+  <g transform="translate(931.2,700)">
+    <rect width="204.8" height="114" fill="#ff5fdc" fill-opacity="0.02" stroke="#ff5fdc" stroke-opacity="0.15" stroke-width="1.5" rx="10"/>
+    <text x="20" y="50" fill="#ffffff" font-size="42" opacity="0.25">💭</text>
+    <text x="80" y="40" fill="#5a7a98" font-size="13" font-family="ui-monospace,monospace" font-weight="700">Dream Engineer</text>
+    <text x="80" y="60" fill="#7dd3fc" font-size="10" font-family="ui-monospace,monospace" opacity="0.35">EPIC</text>
+    <text x="80" y="82" fill="#cfe9ff" font-size="11" font-family="ui-sans-serif,system-ui" opacity="0.35">100 dream-engine reflections.</text>
+  </g>
+  <text x="48" y="776" fill="#7dd3fc" font-size="12" font-family="ui-monospace,monospace" opacity="0.6">npm i -g @theihtisham/agent-shadow-brain</text>
+</svg>

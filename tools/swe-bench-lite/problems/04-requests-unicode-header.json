@@ -1,0 +1,15 @@
+{
+  "id": "04-requests-unicode-header",
+  "title": "Unicode header values raise on Python 3.12+",
+  "repo_url": "https://github.com/psf/requests",
+  "base_commit": "main",
+  "language": "python",
+  "setup": ["pip install -e .[socks] --quiet"],
+  "failing_test": "python -m pytest tests/test_utils.py::test_unicode_header -q",
+  "expected_fix_hint": "src/requests/utils.py check_header_validity must encode header values via .encode('latin-1', 'ignore') before regex check; current code passes raw unicode and fails on certain code points.",
+  "success_criteria": "1 passed",
+  "agent_prompt": "Unicode characters in HTTP header values raise InvalidHeader on Python 3.12+. Fix check_header_validity in src/requests/utils.py so the failing test in tests/test_utils.py passes. Do not change the test.",
+  "wall_clock_budget_s": 300,
+  "source": "Illustrative — header validation edge case for non-ASCII bytes",
+  "complexity": "small"
+}

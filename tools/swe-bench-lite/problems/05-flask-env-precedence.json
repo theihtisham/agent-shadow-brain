@@ -1,0 +1,15 @@
+{
+  "id": "05-flask-env-precedence",
+  "title": "FLASK_DEBUG env var wrongly overrides explicit app.debug=False",
+  "repo_url": "https://github.com/pallets/flask",
+  "base_commit": "main",
+  "language": "python",
+  "setup": ["pip install -e .[dotenv] --quiet"],
+  "failing_test": "python -m pytest tests/test_cli.py::test_debug_explicit_overrides_env -q",
+  "expected_fix_hint": "src/flask/cli.py debug resolution: when app.debug is explicitly False the env var should not override; currently env var is checked first unconditionally.",
+  "success_criteria": "1 passed",
+  "agent_prompt": "If an application sets app.debug=False explicitly, setting FLASK_DEBUG=1 still flips it to True. The expected behavior is that an explicit False on the app object wins. Fix the precedence in src/flask/cli.py so the failing test passes.",
+  "wall_clock_budget_s": 240,
+  "source": "Illustrative — config precedence issue common in framework configs",
+  "complexity": "small"
+}

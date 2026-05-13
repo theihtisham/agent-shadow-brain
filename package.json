@@ -1,7 +1,7 @@
 {
   "name": "@theihtisham/agent-shadow-brain",
-  "version": "6.0.0",
-  "description": "Hive Mind for AI coding agents — the first open-source brain that works with sub-agents. v6.0 adds SABB (Sub-Agent Brain Bridge), causal memory chains, agent collision detective, dream engine (idle reflection), Ed25519-signed reputation ledger, swarm debate protocol, pre-mortem assistant, branch brains, attention heatmap, token economy engine, formal verification bridge, calibration monitor, air-gap + E2E encryption, voice mode, brain garden, PR auto-review, team P2P sync, and curated brain exchange. Local-first, free, open.",
+  "version": "6.0.2",
+  "description": "Hive Mind for AI coding agents — the first open-source brain that works with sub-agents. v6.0.2 ships 19 world-first features: 5 viral artifacts (Brain Replay timeline, Brain DNA fingerprint card, Hive Voice consensus chart, Brain Time Capsule snapshots, Brain Diff Venn) + 14 advanced features (Brain Cinema auto-video, Brain Sonification codebase-as-music, Brain Trophies achievements, Brain Holiday Card year-in-review, Brain Coach proactive suggestions, Brain Quest gamified onboarding, Brain Notebook Jupyter-style explorer, Brain Reflex local-model inline completion, Brain Roast comedy code review, Brain Tarot 78-card divination, Brain ASCII terminal art, Brain Memes auto-generator, Brain 3D rotatable graph, Brain Doppelganger codebase-matching) + production infrastructure (real HNSW vector index, Constitution layer, Confidence Gate, multimodal llava vision, Markdown brain export, OTel-lite tracing, LoRA distillation pipeline, SWE-Bench eval harness). On top of v6.0's 22 features (SABB, causal chains, dream engine, swarm debate, branch brains, air-gap, voice mode, PR auto-review, team P2P sync). Local-first, free, MIT, zero telemetry.",
   "main": "dist/index.js",
   "exports": {
     ".": "./dist/index.js"

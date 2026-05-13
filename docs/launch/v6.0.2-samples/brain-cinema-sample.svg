@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1080" width="1920" height="1080">
+  <!-- Brain Cinema · empty state -->
+  <defs>
+    <radialGradient id="e-bg" cx="0.5" cy="0.5" r="0.75">
+      <stop offset="0" stop-color="#06121f"/><stop offset="1" stop-color="#020812"/>
+    </radialGradient>
+  </defs>
+  <rect width="1920" height="1080" fill="url(#e-bg)"/>
+  <text x="960" y="520" fill="#e2f5ff" font-size="42" font-family="ui-sans-serif,system-ui" font-weight="600" text-anchor="middle">shadow-brain</text>
+  <text x="960" y="570" fill="#7dd3fc" font-size="22" font-family="ui-sans-serif,system-ui" text-anchor="middle" opacity="0.8">Your brain is brand new. Come back after some activity.</text>
+  <circle cx="960" cy="670" r="6" fill="#00ffd5">
+    <animate attributeName="r" values="6;18;6" dur="30s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.8;0.2;0.8" dur="30s" repeatCount="indefinite"/>
+  </circle>
+</svg>

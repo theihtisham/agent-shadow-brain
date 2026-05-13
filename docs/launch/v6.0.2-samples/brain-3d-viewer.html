@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Brain 3D — shadow-brain</title>
+<style>
+  html,body{margin:0;padding:0;height:100%;background:linear-gradient(135deg,#030509 0%,#10152a 100%);color:#cfe9ff;font-family:ui-sans-serif,system-ui,sans-serif;overflow:hidden}
+  #hud{position:absolute;top:14px;left:18px;z-index:10;font-size:12px;letter-spacing:2px;text-transform:uppercase;color:#18ffff;opacity:0.85}
+  #subhud{position:absolute;top:34px;left:18px;z-index:10;font-size:11px;color:#7dd3fc;opacity:0.6}
+  #footer{position:absolute;bottom:12px;left:18px;z-index:10;font-size:10px;color:#7dd3fc;opacity:0.5;font-family:ui-monospace,monospace}
+  canvas{display:block}
+</style>
+</head>
+<body>
+<div id="hud">Brain 3D &middot; shadow-brain &middot; force-directed</div>
+<div id="subhud">1 nodes &middot; 0 edges &middot; drag to rotate &middot; wheel to zoom</div>
+<div id="footer">@shadow-brain v6.0.2</div>
+<script src="https://unpkg.com/three@0.166.0/build/three.min.js"></script>
+<script>
+const SCENE_DATA = {"version":"1.0","generatedAt":"2026-05-12T21:25:59.604Z","layout":"force-directed","nodes":[{"id":"hello","label":"Hello Brain","group":"memory","position":[0,0,0],"size":6,"color":"#18ffff","importance":1,"metadata":{"empty":true,"project":"shadow-brain"}}],"edges":[],"camera":{"position":[0,0,80],"lookAt":[0,0,0],"fov":55,"near":0.1,"far":2000},"lights":[{"type":"ambient","color":"#404060","intensity":0.7},{"type":"point","color":"#18ffff","intensity":0.6,"position":[0,0,50]}],"theme":{"background":"#030509","backgroundGradient":["#030509","#10152a"],"primary":"#18ffff","secondary":"#a855f7","accent":"#ec4899","edgeColor":"#3a4870"},"meta":{"project":"shadow-brain","nodeCount":1,"edgeCount":0,"empty":true}};
+(function(){
+  const data = SCENE_DATA;
+  const scene = new THREE.Scene();
+  const camera = new THREE.PerspectiveCamera(data.camera.fov, window.innerWidth/window.innerHeight, data.camera.near, data.camera.far);
+  camera.position.set.apply(camera.position, data.camera.position);
+  camera.lookAt.apply(camera, data.camera.lookAt);
+  const renderer = new THREE.WebGLRenderer({antialias:true, alpha:true});
+  renderer.setPixelRatio(window.devicePixelRatio);
+  renderer.setSize(window.innerWidth, window.innerHeight);
+  renderer.setClearColor(0x000000, 0);
+  document.body.appendChild(renderer.domElement);
+  for (const L of data.lights) {
+    let light;
+    if (L.type === 'ambient') light = new THREE.AmbientLight(L.color, L.intensity);
+    else if (L.type === 'directional') { light = new THREE.DirectionalLight(L.color, L.intensity); if (L.position) light.position.set.apply(light.position, L.position); }
+    else { light = new THREE.PointLight(L.color, L.intensity); if (L.position) light.position.set.apply(light.position, L.position); }
+    scene.add(light);
+  }
+  const nodeMeshes = {};
+  for (const n of data.nodes) {
+    const geom = new THREE.SphereGeometry(Math.max(0.5, n.size), 16, 16);
+    const mat = new THREE.MeshStandardMaterial({color:n.color, emissive:n.color, emissiveIntensity:0.35*n.importance+0.05, roughness:0.4, metalness:0.2});
+    const mesh = new THREE.Mesh(geom, mat);
+    mesh.position.set(n.position[0], n.position[1], n.position[2]);
+    mesh.userData = {id:n.id, label:n.label, group:n.group};
+    scene.add(mesh);
+    nodeMeshes[n.id] = mesh;
+  }
+  const edgeMat = new THREE.LineBasicMaterial({color:data.theme.edgeColor, transparent:true, opacity:0.45});
+  for (const e of data.edges) {
+    const a = nodeMeshes[e.source]; const b = nodeMeshes[e.target];
+    if (!a || !b) continue;
+    const geom = new THREE.BufferGeometry().setFromPoints([a.position, b.position]);
+    scene.add(new THREE.Line(geom, edgeMat));
+  }
+  // Inline orbit controls: spherical coordinates around origin
+  let theta = 0, phi = Math.PI/2.4, radius = Math.hypot(data.camera.position[0], data.camera.position[1], data.camera.position[2]) || 120;
+  let dragging = false, lastX = 0, lastY = 0;
+  function applyCamera(){ camera.position.set(radius*Math.sin(phi)*Math.cos(theta), radius*Math.cos(phi), radius*Math.sin(phi)*Math.sin(theta)); camera.lookAt(0,0,0); }
+  renderer.domElement.addEventListener('mousedown', e => { dragging = true; lastX = e.clientX; lastY = e.clientY; });
+  window.addEventListener('mouseup', () => { dragging = false; });
+  window.addEventListener('mousemove', e => { if (!dragging) return; theta += (e.clientX - lastX)*0.005; phi = Math.max(0.1, Math.min(Math.PI-0.1, phi - (e.clientY - lastY)*0.005)); lastX = e.clientX; lastY = e.clientY; applyCamera(); });
+  renderer.domElement.addEventListener('wheel', e => { e.preventDefault(); radius = Math.max(20, Math.min(800, radius * (1 + e.deltaY*0.001))); applyCamera(); }, {passive:false});
+  window.addEventListener('resize', () => { camera.aspect = window.innerWidth/window.innerHeight; camera.updateProjectionMatrix(); renderer.setSize(window.innerWidth, window.innerHeight); });
+  applyCamera();
+  let t = 0;
+  function tick(){ t += 0.002; if (!dragging) { theta += 0.0015; applyCamera(); } renderer.render(scene, camera); requestAnimationFrame(tick); }
+  tick();
+})();
+</script>
+</body>
+</html>

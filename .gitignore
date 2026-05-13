@@ -37,3 +37,8 @@ shadow-brain-explainer/node_modules/
 shadow-brain-explainer/dist/
 shadow-brain-explainer/renders/
 narration-*.mp3
+
+# Agent-specific editor configs (personal, not committed)
+.cline/
+.kilocode/
+.opencode/

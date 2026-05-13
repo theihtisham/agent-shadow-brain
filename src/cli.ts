@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// src/cli.ts — CLI entry point for Shadow Brain v6.0.0 "Hive Mind"
+// src/cli.ts — CLI entry point for Shadow Brain v6.0.2 "Singularity"
 
 import { Command } from 'commander';
 import chalk from 'chalk';
@@ -13,7 +13,7 @@ import { BaseAdapter } from './adapters/base-adapter.js';
 import { BrainConfig, BrainInsight, AgentTool, BrainPersonality, LLMProvider } from './types.js';
 import { checkForUpdate, formatUpdateNotice } from './brain/auto-update.js';
 
-const VERSION = '6.0.0';
+const VERSION = '6.0.2';
 
 const config: any = new Conf({
   projectName: 'shadow-brain',
@@ -4087,5 +4087,875 @@ program.addCommand(gardenCmd);
 program.addCommand(prReviewCmd);
 program.addCommand(teamSyncCmd);
 program.addCommand(exchangeCmd);
+
+// ════════════════════════════════════════════════════════════════════
+//  v6.0.2 "Singularity" — 5 viral features + infrastructure + DX
+// ════════════════════════════════════════════════════════════════════
+
+// ── 🎬 Brain Replay ─────────────────────────────────────────────────
+const replayCmd = new Command('replay')
+  .description('Brain Replay — scrubbable timeline of every brain event since day zero')
+  .option('--project <name>', 'Project name', 'default');
+replayCmd.addCommand(new Command('export')
+  .description('Export the timeline as svg | jsonl | csv')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--format <fmt>', 'svg|jsonl|csv', 'svg')
+  .option('--out <path>', 'Output path (default: stdout for svg/csv, file for jsonl)')
+  .action(async (opts: any) => {
+    const { getBrainReplay } = await import('./brain/brain-replay.js');
+    const out = getBrainReplay().export(opts.project, opts.format);
+    if (opts.out) {
+      fs.writeFileSync(opts.out, typeof out === 'string' ? out : out as Buffer);
+      console.log(chalk.green(`  ✓ ${opts.format} written to ${opts.out}`));
+    } else {
+      process.stdout.write(typeof out === 'string' ? out : out.toString());
+    }
+  }));
+replayCmd.addCommand(new Command('frame-at')
+  .description('Show the brain state at a specific timestamp')
+  .requiredOption('--ts <epoch>', 'Unix epoch ms')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (opts: any) => {
+    const { getBrainReplay } = await import('./brain/brain-replay.js');
+    const frame = getBrainReplay().frameAt(opts.project, parseInt(opts.ts, 10));
+    console.log(JSON.stringify(frame, null, 2));
+  }));
+replayCmd.addCommand(new Command('compress')
+  .description('Compact old events into snapshots to bound disk use')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (opts: any) => {
+    const { getBrainReplay } = await import('./brain/brain-replay.js');
+    getBrainReplay().compress(opts.project);
+    console.log(chalk.green('  ✓ replay log compressed'));
+  }));
+
+// ── 🧬 Brain DNA ─────────────────────────────────────────────────────
+const brainDnaCmd = new Command('brain-dna')
+  .description('Brain DNA — Spotify-Wrapped-style shareable fingerprint card');
+brainDnaCmd.addCommand(new Command('card')
+  .description('Generate a DNA card for a project')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--style <s>', 'card|poster|banner', 'card')
+  .option('--out <path>', 'Output SVG path (default stdout)')
+  .action(async (opts: any) => {
+    const { getBrainDna } = await import('./brain/brain-dna.js');
+    const { svg, stats } = getBrainDna().generate(opts.project, { style: opts.style });
+    if (opts.out) {
+      fs.writeFileSync(opts.out, svg);
+      console.log(chalk.green(`  ✓ ${opts.style} written to ${opts.out}`));
+      console.log(chalk.dim(`  archetype: ${stats.archetype} · entities: ${stats.totalEntities} · age: ${stats.ageDays}d`));
+    } else process.stdout.write(svg);
+  }));
+brainDnaCmd.addCommand(new Command('compare')
+  .description('Side-by-side DNA cards for two projects')
+  .requiredOption('--a <projectA>', 'First project name')
+  .requiredOption('--b <projectB>', 'Second project name')
+  .option('--out <path>', 'Output SVG path (default stdout)')
+  .action(async (opts: any) => {
+    const { getBrainDna } = await import('./brain/brain-dna.js');
+    const { svg } = getBrainDna().compareCards(opts.a, opts.b);
+    if (opts.out) {
+      fs.writeFileSync(opts.out, svg);
+      console.log(chalk.green(`  ✓ comparison written to ${opts.out}`));
+    } else process.stdout.write(svg);
+  }));
+brainDnaCmd.addCommand(new Command('archetypes')
+  .description('List all personality archetypes')
+  .action(async () => {
+    const { getBrainDna } = await import('./brain/brain-dna.js');
+    for (const a of getBrainDna().topArchetypes()) console.log(`  • ${a}`);
+  }));
+
+// ── 🗳️ Hive Voice ───────────────────────────────────────────────────
+const hiveVoiceCmd = new Command('hive-voice')
+  .description('Hive Voice — multi-model debate-vote with dissent + confidence distribution');
+hiveVoiceCmd.addCommand(new Command('ask')
+  .description('Ask a question; multiple local models vote')
+  .argument('<question...>', 'Question to ask')
+  .option('--rounds <n>', 'Number of debate rounds', '1')
+  .option('--mode <m>', 'unanimous|majority|weighted', 'weighted')
+  .option('--svg <path>', 'Save bar-chart SVG to this path')
+  .option('--json', 'Output full JSON')
+  .action(async (questionParts: string[], opts: any) => {
+    const { getHiveVoice } = await import('./brain/hive-voice.js');
+    const question = questionParts.join(' ');
+    const result = await getHiveVoice().ask(question, {
+      rounds: parseInt(opts.rounds, 10),
+      mode: opts.mode,
+    });
+    if (opts.svg) fs.writeFileSync(opts.svg, result.svg);
+    if (opts.json) return console.log(JSON.stringify(result, null, 2));
+    console.log(chalk.magenta.bold(`\n  HIVE VOTE — ${result.mode}`));
+    console.log(`  ${chalk.cyan('consensus:')} ${result.consensus}`);
+    console.log(`  ${chalk.cyan('confidence:')} ${(result.confidence * 100).toFixed(0)}%`);
+    console.log(`  ${chalk.cyan('voters:')} ${result.votes.length}  ${chalk.dim('dissents:')} ${result.dissents.length}`);
+    if (opts.svg) console.log(chalk.green(`  ✓ chart written to ${opts.svg}`));
+  }));
+
+// ── ⏰ Brain Time Capsule ────────────────────────────────────────────
+const capsuleCmd = new Command('capsule')
+  .description('Brain Time Capsule — freeze, label, and resurrect brain snapshots');
+capsuleCmd.addCommand(new Command('freeze')
+  .description('Freeze the current brain into a labelled capsule')
+  .requiredOption('--label <label>', 'Human-readable label')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--description <text>', 'Longer description')
+  .action(async (opts: any) => {
+    const { getBrainTimeCapsule } = await import('./brain/brain-time-capsule.js');
+    const r = await getBrainTimeCapsule().freeze(opts.project, opts.label, { description: opts.description });
+    console.log(chalk.green(`  ✓ capsule frozen: ${r.capsuleId}`));
+    console.log(chalk.dim(`    path: ${r.path}  size: ${(r.sizeBytes / 1024).toFixed(1)}KB`));
+  }));
+capsuleCmd.addCommand(new Command('list')
+  .description('List capsules for a project')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (opts: any) => {
+    const { getBrainTimeCapsule } = await import('./brain/brain-time-capsule.js');
+    const list = await getBrainTimeCapsule().list(opts.project);
+    for (const c of list) console.log(`  ${chalk.cyan(c.capsuleId.padEnd(24))} ${c.label.padEnd(30)} ${chalk.dim(c.createdAt)}`);
+  }));
+capsuleCmd.addCommand(new Command('restore')
+  .description('Restore a frozen capsule into the active brain')
+  .argument('<capsuleId>', 'Capsule id from `capsule list`')
+  .action(async (capsuleId: string) => {
+    const { getBrainTimeCapsule } = await import('./brain/brain-time-capsule.js');
+    const r = await getBrainTimeCapsule().restore(capsuleId);
+    console.log(chalk.green(`  ✓ restored at ${new Date(r.restoredAt).toISOString()}`));
+    console.log(chalk.dim(`    ${r.replacedFiles.length} files replaced`));
+  }));
+capsuleCmd.addCommand(new Command('inspect')
+  .description('Read-only inspection of a capsule')
+  .argument('<capsuleId>')
+  .action(async (capsuleId: string) => {
+    const { getBrainTimeCapsule } = await import('./brain/brain-time-capsule.js');
+    const r = await getBrainTimeCapsule().inspect(capsuleId);
+    console.log(JSON.stringify(r, null, 2));
+  }));
+capsuleCmd.addCommand(new Command('diff')
+  .description('Diff two capsules')
+  .argument('<a>')
+  .argument('<b>')
+  .action(async (a: string, b: string) => {
+    const { getBrainTimeCapsule } = await import('./brain/brain-time-capsule.js');
+    const r = await getBrainTimeCapsule().diff(a, b);
+    console.log(JSON.stringify(r, null, 2));
+  }));
+
+// ── 🔬 Brain Diff (between two brains) ───────────────────────────────
+const brainDiffCmd = new Command('brain-diff')
+  .description('Brain Diff — semantic diff between two brains (paths or capsule ids)');
+brainDiffCmd.addCommand(new Command('compare')
+  .description('Compare brainA vs brainB')
+  .argument('<brainA>', 'Path or capsule id')
+  .argument('<brainB>', 'Path or capsule id')
+  .option('--svg <path>', 'Save Venn-diagram SVG')
+  .option('--narrative', 'Print the English narrative summary')
+  .option('--json', 'Output full JSON report')
+  .action(async (a: string, b: string, opts: any) => {
+    const { getBrainDiff } = await import('./brain/brain-diff.js');
+    const r = await getBrainDiff().diff(a, b);
+    if (opts.svg) fs.writeFileSync(opts.svg, r.svg);
+    if (opts.json) return console.log(JSON.stringify(r, null, 2));
+    console.log(chalk.magenta.bold(`\n  BRAIN DIFF`));
+    console.log(chalk.dim(`  only in A: ${r.onlyInA.length}   only in B: ${r.onlyInB.length}   shared: ${r.bothShared.length}   conflicting: ${r.conflicting.length}`));
+    console.log(chalk.dim(`  similarity: ${(r.stats.similarityScore * 100).toFixed(0)}%`));
+    if (opts.narrative) console.log('\n  ' + r.narrative);
+    if (opts.svg) console.log(chalk.green(`  ✓ Venn written to ${opts.svg}`));
+  }));
+
+// ── 📜 Constitution layer ────────────────────────────────────────────
+const constitutionCmd = new Command('constitution')
+  .description('Constitution — project invariants the brain enforces');
+constitutionCmd.addCommand(new Command('init')
+  .description('Create .shadow-brain/constitution.md with a template')
+  .action(async () => {
+    const cwd = process.cwd();
+    const dir = path.join(cwd, '.shadow-brain');
+    fs.mkdirSync(dir, { recursive: true });
+    const target = path.join(dir, 'constitution.md');
+    if (fs.existsSync(target)) return console.log(chalk.yellow('  constitution.md already exists.'));
+    fs.writeFileSync(target, `# Project Constitution\n\n## Rule 1\nseverity: must\nscope: code\nNever log PII (emails, names, payment info) in production code paths.\n\n## Rule 2\nseverity: must\nscope: code\nAlways use parameterized queries for SQL — no string concatenation.\n\n## Rule 3\nseverity: should\nscope: tests\nAuth flows must have regression tests for token-bypass attempts.\n`);
+    console.log(chalk.green(`  ✓ ${target}`));
+  }));
+constitutionCmd.addCommand(new Command('rules')
+  .description('List all parsed rules')
+  .action(async () => {
+    const { getConstitution } = await import('./brain/constitution.js');
+    const c = getConstitution(process.cwd());
+    for (const r of c.listRules()) {
+      const sev = r.severity === 'must' ? chalk.red('MUST') : r.severity === 'should' ? chalk.yellow('SHOULD') : chalk.green('NEVER');
+      console.log(`  [${sev}] (${r.scope}) ${r.text}`);
+    }
+    c.dispose();
+  }));
+constitutionCmd.addCommand(new Command('validate')
+  .description('Check a text snippet against constitution rules')
+  .argument('<text...>')
+  .action(async (parts: string[]) => {
+    const { getConstitution } = await import('./brain/constitution.js');
+    const c = getConstitution(process.cwd());
+    const r = await c.validate(parts.join(' '));
+    console.log(chalk.cyan(`  violations: ${r.violations.length}   passed: ${r.passed.length}`));
+    for (const v of r.violations) console.log(chalk.red(`    × ${v.rule.text}`));
+    c.dispose();
+  }));
+
+// ── 🚦 Confidence Gate ───────────────────────────────────────────────
+const gateCmd = new Command('gate')
+  .description('Confidence Gate — active output filter based on calibrated confidence');
+gateCmd.addCommand(new Command('threshold')
+  .description('Show or set the gate threshold')
+  .option('--set <n>', 'Set threshold (0.0-1.0)')
+  .action(async (opts: any) => {
+    const { getConfidenceGate } = await import('./brain/confidence-gate.js');
+    const g = getConfidenceGate();
+    if (opts.set) {
+      g.setThreshold(parseFloat(opts.set));
+      console.log(chalk.green(`  ✓ threshold = ${opts.set}`));
+    } else {
+      console.log(`  threshold: ${chalk.cyan(String(g.getThreshold()))}`);
+    }
+  }));
+gateCmd.addCommand(new Command('stats')
+  .description('Show calibration stats (Brier score + ECE)')
+  .action(async () => {
+    const { getConfidenceGate } = await import('./brain/confidence-gate.js');
+    const s = getConfidenceGate().stats();
+    console.log(JSON.stringify(s, null, 2));
+  }));
+gateCmd.addCommand(new Command('test')
+  .description('Test the gate on a {text, confidence} pair')
+  .requiredOption('--text <t>', 'Input text')
+  .requiredOption('--confidence <c>', 'Predicted confidence 0..1')
+  .option('--mode <m>', 'block|downgrade|flag', 'downgrade')
+  .action(async (opts: any) => {
+    const { getConfidenceGate } = await import('./brain/confidence-gate.js');
+    const result = await getConfidenceGate().gate(
+      { text: opts.text, confidence: parseFloat(opts.confidence) },
+      { mode: opts.mode },
+    );
+    console.log(JSON.stringify(result, null, 2));
+  }));
+
+// ── 🧠 Embeddings v2 (real ANN index) ────────────────────────────────
+const embedCmd = new Command('embed')
+  .description('EmbeddingsV2 — real ANN vector index (HNSW-style, sub-100ms recall)');
+embedCmd.addCommand(new Command('add')
+  .description('Add a document to the index')
+  .requiredOption('--id <id>', 'Document id')
+  .requiredOption('--text <text>', 'Text to embed')
+  .action(async (opts: any) => {
+    const { getEmbeddingsV2 } = await import('./brain/embeddings-v2.js');
+    await getEmbeddingsV2().addDocument(opts.id, opts.text);
+    console.log(chalk.green(`  ✓ added ${opts.id}`));
+  }));
+embedCmd.addCommand(new Command('search')
+  .description('Semantic search across the index')
+  .requiredOption('--query <q>', 'Query text')
+  .option('--top <n>', 'Top K results', '10')
+  .action(async (opts: any) => {
+    const { getEmbeddingsV2 } = await import('./brain/embeddings-v2.js');
+    const hits = await getEmbeddingsV2().search(opts.query, parseInt(opts.top, 10));
+    for (const h of hits) console.log(`  ${chalk.cyan(h.score.toFixed(3))}  ${h.id}`);
+  }));
+embedCmd.addCommand(new Command('stats')
+  .description('Index statistics')
+  .action(async () => {
+    const { getEmbeddingsV2 } = await import('./brain/embeddings-v2.js');
+    console.log(JSON.stringify(getEmbeddingsV2().stats(), null, 2));
+  }));
+
+// ── 🖼️ Multimodal vision ─────────────────────────────────────────────
+const visionCmd = new Command('vision')
+  .description('Multimodal vision — ingest screenshots, diagrams, photos via Ollama llava');
+visionCmd.addCommand(new Command('ingest')
+  .description('Ingest one image into the brain')
+  .argument('<path>', 'Image file path')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--tags <csv>', 'Comma-separated tags', '')
+  .option('--prompt <p>', 'Override vision prompt')
+  .action(async (filePath: string, opts: any) => {
+    const { getMultimodalVision } = await import('./brain/multimodal-vision.js');
+    const v = await getMultimodalVision().ingestImage(filePath, {
+      project: opts.project,
+      tags: opts.tags ? opts.tags.split(',').map((s: string) => s.trim()) : [],
+      prompt: opts.prompt,
+    });
+    console.log(chalk.green(`  ✓ ingested ${v.id}`));
+    console.log(chalk.dim(`    ${v.description.slice(0, 200)}${v.description.length > 200 ? '…' : ''}`));
+  }));
+visionCmd.addCommand(new Command('search')
+  .description('Semantic search across stored image descriptions')
+  .requiredOption('--query <q>')
+  .option('--top <n>', 'Top K', '5')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (opts: any) => {
+    const { getMultimodalVision } = await import('./brain/multimodal-vision.js');
+    const hits = await getMultimodalVision().search(opts.query, parseInt(opts.top, 10), opts.project);
+    for (const h of hits) console.log(`  ${chalk.cyan(h.id.padEnd(20))} ${h.description.slice(0, 100)}`);
+  }));
+visionCmd.addCommand(new Command('recent')
+  .description('Recently ingested images')
+  .option('-n <count>', 'How many', '10')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (opts: any) => {
+    const { getMultimodalVision } = await import('./brain/multimodal-vision.js');
+    const list = await getMultimodalVision().recent(parseInt(opts.n, 10), opts.project);
+    for (const v of list) console.log(`  ${chalk.dim(new Date(v.capturedAt).toISOString())}  ${v.id}  ${v.description.slice(0, 80)}`);
+  }));
+
+// ── 📤 Markdown export / 📥 import ───────────────────────────────────
+const exportMdCmd = new Command('export-md')
+  .description('Export the brain to a git-trackable Markdown file')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--out <path>', 'Output path', '.shadow-brain.md')
+  .option('--sections <csv>', 'memories,patterns,decisions,entities,rules')
+  .action(async (opts: any) => {
+    const { getMarkdownExport } = await import('./brain/markdown-export.js');
+    const sections = opts.sections ? opts.sections.split(',') : undefined;
+    const r = await getMarkdownExport().exportBrain(opts.project, { sections, outPath: opts.out });
+    console.log(chalk.green(`  ✓ ${r.path}`));
+    console.log(chalk.dim(`    ${(r.sizeBytes / 1024).toFixed(1)}KB · ${Object.entries(r.sectionCounts).map(([k, v]) => `${k}:${v}`).join('  ')}`));
+  });
+
+const importMdCmd = new Command('import-md')
+  .description('Import a brain from a previously exported Markdown file')
+  .argument('<path>', 'Path to .shadow-brain.md')
+  .option('--merge <strategy>', 'replace|addNew|overwrite', 'addNew')
+  .option('--dry-run', 'Print diff without writing')
+  .action(async (mdPath: string, opts: any) => {
+    const { getMarkdownExport } = await import('./brain/markdown-export.js');
+    if (opts.dryRun) {
+      const d = await getMarkdownExport().diff(mdPath);
+      return console.log(JSON.stringify(d, null, 2));
+    }
+    const r = await getMarkdownExport().importBrain(mdPath, { merge: opts.merge });
+    console.log(chalk.green(`  ✓ added: ${r.added}  modified: ${r.modified}  skipped: ${r.skipped}  errors: ${r.errors}`));
+  });
+
+// ── 🔭 OTel-lite traces ──────────────────────────────────────────────
+const tracesCmd = new Command('traces')
+  .description('OTel-lite — JSONL trace viewer for brain operations');
+tracesCmd.addCommand(new Command('tail')
+  .description('Tail the most recent trace lines')
+  .option('-n <count>', 'Number of lines', '50')
+  .option('--json', 'Raw JSONL')
+  .action(async (opts: any) => {
+    const { OtelLite } = await import('./brain/otel-lite.js');
+    const lines = await OtelLite.tail(parseInt(opts.n, 10));
+    if (opts.json) return lines.forEach(l => console.log(JSON.stringify(l)));
+    for (const l of lines) {
+      const dur = ((l.end_ns - l.start_ns) / 1_000_000).toFixed(1);
+      console.log(`  ${chalk.dim(new Date(l.start_ns / 1_000_000).toISOString())}  ${chalk.cyan(l.name.padEnd(28))}  ${dur}ms`);
+    }
+  }));
+tracesCmd.addCommand(new Command('today')
+  .description('Print today\'s trace file path')
+  .action(async () => {
+    const { OtelLite } = await import('./brain/otel-lite.js');
+    console.log(OtelLite.todayFilePath());
+  }));
+tracesCmd.addCommand(new Command('cleanup')
+  .description('Drop trace files older than 14 days')
+  .action(async () => {
+    const { OtelLite } = await import('./brain/otel-lite.js');
+    OtelLite.cleanup();
+    console.log(chalk.green('  ✓ cleanup done'));
+  }));
+
+// ── 🎉 Demo — 30-second hello-world ──────────────────────────────────
+const demoCmd = new Command('demo')
+  .description('30-second Hello Brain — ingest sample data, run sample queries, open dashboard')
+  .option('--no-open', 'Skip launching the dashboard')
+  .option('--port <port>', 'Dashboard port', '7341')
+  .action(async (opts: any) => {
+    console.log(chalk.magenta.bold(`\n  🧠 SHADOW BRAIN v${VERSION} — 30-Second Demo\n`));
+
+    // 1. seed a few sample memories
+    const { getEmbeddingsV2 } = await import('./brain/embeddings-v2.js');
+    const ev2 = getEmbeddingsV2();
+    const samples = [
+      ['mem-1', 'Always parameterize SQL queries to prevent injection.'],
+      ['mem-2', 'React useEffect cleanup functions must cancel pending async work.'],
+      ['mem-3', 'When a test flakes, look for time-of-day dependencies first.'],
+      ['mem-4', 'Postgres connection pooling: max 100 connections in production.'],
+      ['mem-5', 'In dual-mode work, the Opus brain plans and Codex implements.'],
+    ];
+    console.log(chalk.cyan('  ▶ seeding sample memories'));
+    for (const [id, text] of samples) await ev2.addDocument(id, text);
+
+    // 2. run sample searches
+    console.log(chalk.cyan('  ▶ semantic search: "how do I prevent SQL injection?"'));
+    const hits = await ev2.search('how do I prevent SQL injection', 3);
+    for (const h of hits) console.log(`    ${chalk.cyan(h.score.toFixed(3))}  ${h.id}`);
+
+    // 3. generate Brain DNA card
+    console.log(chalk.cyan('\n  ▶ generating Brain DNA card'));
+    const { getBrainDna } = await import('./brain/brain-dna.js');
+    const dna = getBrainDna().generate('demo', { style: 'card' });
+    const dnaPath = path.join(os.tmpdir(), 'shadow-brain-demo-dna.svg');
+    fs.writeFileSync(dnaPath, dna.svg);
+    console.log(`    ${chalk.dim('archetype:')} ${dna.stats.archetype}`);
+    console.log(`    ${chalk.green('✓')} card written: ${dnaPath}`);
+
+    // 4. record some replay events so timeline isn't empty
+    const { getBrainReplay } = await import('./brain/brain-replay.js');
+    for (const [id, text] of samples) {
+      getBrainReplay().record({ type: 'memory.add', payload: { id, text }, project: 'demo' });
+    }
+    const replaySvg = getBrainReplay().export('demo', 'svg');
+    const replayPath = path.join(os.tmpdir(), 'shadow-brain-demo-replay.svg');
+    fs.writeFileSync(replayPath, typeof replaySvg === 'string' ? replaySvg : (replaySvg as Buffer));
+    console.log(`    ${chalk.green('✓')} replay timeline written: ${replayPath}`);
+
+    // 5. optionally launch dashboard
+    if (opts.open !== false) {
+      console.log(chalk.cyan('\n  ▶ launching dashboard'));
+      const { Orchestrator } = await import('./brain/orchestrator.js');
+      const { DashboardServer } = await import('./dashboard/server.js');
+      const orchestrator = new Orchestrator(mergeConfig({}));
+      const dashboard = new DashboardServer(orchestrator, { port: parseInt(opts.port, 10), openBrowser: true });
+      const url = await dashboard.start();
+      console.log(chalk.green(`    ✓ ${url}`));
+      console.log(chalk.dim('\n  Press Ctrl+C to stop.'));
+    } else {
+      console.log(chalk.dim('\n  Done. Run with --no-open=false to launch the dashboard.'));
+    }
+  });
+
+program.addCommand(replayCmd);
+program.addCommand(brainDnaCmd);
+program.addCommand(hiveVoiceCmd);
+program.addCommand(capsuleCmd);
+program.addCommand(brainDiffCmd);
+program.addCommand(constitutionCmd);
+program.addCommand(gateCmd);
+program.addCommand(embedCmd);
+program.addCommand(visionCmd);
+program.addCommand(exportMdCmd);
+program.addCommand(importMdCmd);
+program.addCommand(tracesCmd);
+program.addCommand(demoCmd);
+
+// ════════════════════════════════════════════════════════════════════
+//  v6.0.2 Wave 2 — 14 advanced viral features
+// ════════════════════════════════════════════════════════════════════
+
+// ── 🎵 Brain Cinema ──────────────────────────────────────────────────
+const cinemaCmd = new Command('cinema')
+  .description('Brain Cinema — auto 60-second SVG-animated video of brain growth')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--style <s>', 'minimal|rich|arcade', 'rich')
+  .option('--duration <s>', 'Duration in seconds', '60')
+  .option('--out <path>', 'Output SVG path')
+  .action(async (opts: any) => {
+    const { getBrainCinema } = await import('./brain/brain-cinema.js');
+    const { svg, manifest } = await getBrainCinema().generate(opts.project, {
+      style: opts.style,
+      durationS: parseInt(opts.duration, 10),
+    });
+    if (opts.out) {
+      fs.writeFileSync(opts.out, svg);
+      console.log(chalk.green(`  ✓ ${opts.out}  (${manifest.eventsRendered} events, ${manifest.durationMs}ms)`));
+    } else process.stdout.write(svg);
+  });
+
+// ── 🎼 Brain Sonification ────────────────────────────────────────────
+const sonifyCmd = new Command('sonify')
+  .description('Brain Sonification — your codebase as music (WAV)')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--mode <m>', 'major|minor|phrygian', 'phrygian')
+  .option('--duration <s>', 'Duration in seconds', '60')
+  .option('--tempo <bpm>', 'Tempo BPM', '110')
+  .option('--out <path>', 'Output WAV path (required)')
+  .action(async (opts: any) => {
+    const { getBrainSonification } = await import('./brain/brain-sonification.js');
+    const { wav, manifest } = await getBrainSonification().generate(opts.project, {
+      mode: opts.mode,
+      durationS: parseInt(opts.duration, 10),
+      tempo: parseInt(opts.tempo, 10),
+    });
+    const out = opts.out || `brain-sonification-${opts.project}-${Date.now()}.wav`;
+    fs.writeFileSync(out, wav);
+    console.log(chalk.green(`  ✓ ${out}  (${manifest.eventsRendered} events, ${manifest.durationMs}ms, ${manifest.mode})`));
+  });
+
+// ── 🏆 Brain Trophies ────────────────────────────────────────────────
+const trophiesCmd = new Command('trophies')
+  .description('Brain Trophies — 25 unlockable achievements with shareable cards');
+trophiesCmd.addCommand(new Command('list')
+  .description('List achievements + progress')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (opts: any) => {
+    const { getBrainTrophies } = await import('./brain/brain-trophies.js');
+    const r = await getBrainTrophies().checkProgress(opts.project);
+    console.log(chalk.magenta.bold(`\n  TROPHIES — ${opts.project}`));
+    console.log(chalk.green(`  Unlocked: ${r.unlocked.length}/25`));
+    for (const a of r.unlocked) console.log(`    ${a.icon} ${chalk.cyan(a.name)}  ${chalk.dim(a.rarity)}`);
+    console.log(chalk.dim(`\n  In progress: ${r.inProgress.length}`));
+    for (const p of r.inProgress.slice(0, 5)) console.log(`    ${chalk.dim((p.progressPct * 100).toFixed(0) + '%')}  ${p.achievement.name}`);
+  }));
+trophiesCmd.addCommand(new Command('card')
+  .description('Generate a share card for an unlocked trophy')
+  .requiredOption('--id <achievementId>', 'Achievement ID (e.g., first-spark)')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--style <s>', 'card|badge|trophy', 'card')
+  .option('--out <path>', 'Output SVG path')
+  .action(async (opts: any) => {
+    const { getBrainTrophies } = await import('./brain/brain-trophies.js');
+    const { svg } = await getBrainTrophies().generateCard(opts.project, opts.id, { style: opts.style });
+    if (opts.out) {
+      fs.writeFileSync(opts.out, svg);
+      console.log(chalk.green(`  ✓ ${opts.out}`));
+    } else process.stdout.write(svg);
+  }));
+trophiesCmd.addCommand(new Command('wall')
+  .description('Wall-of-trophies SVG (1200×800)')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--out <path>', 'Output SVG path')
+  .action(async (opts: any) => {
+    const { getBrainTrophies } = await import('./brain/brain-trophies.js');
+    const { svg } = await getBrainTrophies().wallSvg(opts.project);
+    if (opts.out) {
+      fs.writeFileSync(opts.out, svg);
+      console.log(chalk.green(`  ✓ ${opts.out}`));
+    } else process.stdout.write(svg);
+  }));
+
+// ── 🎁 Brain Holiday Card ────────────────────────────────────────────
+const holidayCmd = new Command('holiday')
+  .description('Brain Holiday Card — Spotify-Wrapped-style year-in-review')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--year <yyyy>', 'Year', String(new Date().getFullYear()))
+  .option('--style <s>', 'wrapped|classic|minimalist', 'wrapped')
+  .option('--out <path>', 'Output SVG path')
+  .action(async (opts: any) => {
+    const { getBrainHolidayCard } = await import('./brain/brain-holiday-card.js');
+    const { svg } = await getBrainHolidayCard().generate(opts.project, {
+      year: parseInt(opts.year, 10),
+      style: opts.style,
+    });
+    if (opts.out) {
+      fs.writeFileSync(opts.out, svg);
+      console.log(chalk.green(`  ✓ ${opts.out}`));
+    } else process.stdout.write(svg);
+  });
+
+// ── 🧭 Brain Coach ───────────────────────────────────────────────────
+const coachCmd = new Command('coach')
+  .description('Brain Coach — proactive idle suggestions');
+coachCmd.addCommand(new Command('suggestions')
+  .description('Show current suggestions')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--top <n>', 'Top N', '5')
+  .action(async (opts: any) => {
+    const { getBrainCoach } = await import('./brain/brain-coach.js');
+    const list = await getBrainCoach().suggestions(opts.project, { topN: parseInt(opts.top, 10) });
+    for (const s of list) {
+      console.log(`  ${s.emoji} ${chalk.cyan(s.title)}`);
+      console.log(`    ${chalk.dim(s.body)}`);
+    }
+    if (!list.length) console.log(chalk.dim('  No suggestions right now.'));
+  }));
+coachCmd.addCommand(new Command('idle')
+  .description('Run idle-check (call this when user has been idle)')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--since <ms>', 'Idle for this many ms', '300000')
+  .action(async (opts: any) => {
+    const { getBrainCoach } = await import('./brain/brain-coach.js');
+    const list = await getBrainCoach().idleCheck(opts.project, parseInt(opts.since, 10));
+    for (const s of list) console.log(`  ${s.emoji} ${s.title}`);
+  }));
+coachCmd.addCommand(new Command('dismiss')
+  .description('Dismiss a suggestion by id')
+  .argument('<id>')
+  .action(async (id: string) => {
+    const { getBrainCoach } = await import('./brain/brain-coach.js');
+    getBrainCoach().dismiss(id);
+    console.log(chalk.green('  ✓ dismissed'));
+  }));
+coachCmd.addCommand(new Command('pin')
+  .description('Pin a suggestion')
+  .argument('<id>')
+  .action(async (id: string) => {
+    const { getBrainCoach } = await import('./brain/brain-coach.js');
+    getBrainCoach().pin(id);
+    console.log(chalk.green('  ✓ pinned'));
+  }));
+
+// ── 🗺️ Brain Quest ──────────────────────────────────────────────────
+const questCmd = new Command('quest')
+  .description('Brain Quest — gamified onboarding adventures');
+questCmd.addCommand(new Command('list')
+  .description('List available quests')
+  .action(async () => {
+    const { getBrainQuest } = await import('./brain/brain-quest.js');
+    for (const q of getBrainQuest().availableQuests()) {
+      console.log(`  ${chalk.cyan(q.id.padEnd(20))} ${q.emoji} ${q.title}`);
+      console.log(`    ${chalk.dim(q.subtitle)}  ${chalk.dim(`~${q.estimatedMinutes}m, ${q.steps.length} steps`)}`);
+    }
+  }));
+questCmd.addCommand(new Command('start')
+  .description('Start a quest')
+  .argument('<questId>')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (questId: string, opts: any) => {
+    const { getBrainQuest } = await import('./brain/brain-quest.js');
+    const state = await getBrainQuest().start(questId, opts.project);
+    console.log(chalk.magenta.bold(`\n  Quest started: ${questId}`));
+    console.log(chalk.dim(`  Step: ${state.currentStepId}  (${state.completedSteps.length} steps completed)`));
+  }));
+questCmd.addCommand(new Command('step')
+  .description('Advance the current quest')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--choice <c>', 'Branch choice if step has options')
+  .action(async (opts: any) => {
+    const { getBrainQuest } = await import('./brain/brain-quest.js');
+    const r = await getBrainQuest().step(opts.project, opts.choice);
+    console.log('\n' + r.narrative + '\n');
+    if (r.options) for (const opt of r.options) console.log(`    [${chalk.cyan(opt)}]`);
+    if (r.complete) console.log(chalk.green(`\n  ✓ Quest complete! ${r.reward?.message || ''}`));
+  }));
+questCmd.addCommand(new Command('current')
+  .description('Show the active quest state')
+  .option('--project <name>', 'Project name', 'default')
+  .action(async (opts: any) => {
+    const { getBrainQuest } = await import('./brain/brain-quest.js');
+    const s = getBrainQuest().current(opts.project);
+    console.log(s ? JSON.stringify(s, null, 2) : chalk.dim('  No active quest. Run `quest list` to pick one.'));
+  }));
+
+// ── 📓 Brain Notebook ────────────────────────────────────────────────
+const notebookCmd = new Command('notebook')
+  .description('Brain Notebook — Jupyter-style interactive brain explorer');
+notebookCmd.addCommand(new Command('new')
+  .description('Create a starter notebook')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--title <t>', 'Notebook title', 'My Investigation')
+  .action(async (opts: any) => {
+    const { getBrainNotebook } = await import('./brain/brain-notebook.js');
+    const r = await getBrainNotebook().createNotebook(opts.project, opts.title);
+    console.log(chalk.green(`  ✓ ${r.path}`));
+  }));
+notebookCmd.addCommand(new Command('run')
+  .description('Run all query cells, save inline results')
+  .argument('<path>', 'Path to notebook .md')
+  .action(async (notebookPath: string) => {
+    const { getBrainNotebook } = await import('./brain/brain-notebook.js');
+    const nb = await getBrainNotebook().parse(notebookPath);
+    const r = await getBrainNotebook().runAll(nb);
+    await getBrainNotebook().save(nb, notebookPath);
+    const ran = r.cells.filter(c => c.result || c.error).length;
+    console.log(chalk.green(`  ✓ ran ${ran}/${r.cells.length} cells in ${r.totalDurationMs}ms`));
+  }));
+
+// ── ⚡ Brain Reflex ──────────────────────────────────────────────────
+const reflexCmd = new Command('reflex')
+  .description('Brain Reflex — local-model inline next-line completion');
+reflexCmd.addCommand(new Command('complete')
+  .description('Complete a code snippet')
+  .requiredOption('--prefix <p>', 'Prefix code to complete')
+  .option('--language <l>', 'Language hint', 'typescript')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--max-tokens <n>', 'Max tokens', '128')
+  .action(async (opts: any) => {
+    const { getBrainReflex } = await import('./brain/brain-reflex.js');
+    const r = await getBrainReflex().complete(
+      { prefix: opts.prefix, language: opts.language, project: opts.project },
+      { maxTokens: parseInt(opts.maxTokens, 10) },
+    );
+    console.log(chalk.dim(`  source: ${r.source}  latency: ${r.latencyMs}ms  citations: ${r.citations.join(', ')}\n`));
+    console.log(r.completion);
+  }));
+reflexCmd.addCommand(new Command('precache')
+  .description('Warm brain memories before a session')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--files <csv>', 'Comma-separated file paths', '')
+  .action(async (opts: any) => {
+    const { getBrainReflex } = await import('./brain/brain-reflex.js');
+    const files = opts.files.split(',').map((s: string) => s.trim()).filter((x: string) => x);
+    const r = await getBrainReflex().precache(opts.project, files);
+    console.log(chalk.green(`  ✓ cached ${r.cached} memories in ${r.durationMs}ms`));
+  }));
+
+// ── 🔥 Brain Roast ───────────────────────────────────────────────────
+const roastCmd = new Command('roast')
+  .description('Brain Roast — comedy code review (6 personas)')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--persona <p>', 'gordon-ramsay|simon-cowell|mom|comedian|critic|philosopher', 'gordon-ramsay')
+  .option('--intensity <i>', 'gentle|medium|savage', 'medium')
+  .option('--svg <path>', 'Save roast card SVG')
+  .action(async (opts: any) => {
+    const { getBrainRoast } = await import('./brain/brain-roast.js');
+    const r = await getBrainRoast().roast(opts.project, { persona: opts.persona, intensity: opts.intensity });
+    console.log(chalk.magenta.bold(`\n  ROAST · ${r.persona} · ${r.intensity} · grade ${r.grade}\n`));
+    for (const line of r.lines) console.log('  ' + line);
+    if (opts.svg) {
+      const card = await getBrainRoast().roastCard(r);
+      fs.writeFileSync(opts.svg, card.svg);
+      console.log(chalk.green(`\n  ✓ card written to ${opts.svg}`));
+    }
+  });
+
+// ── 🔮 Brain Tarot ───────────────────────────────────────────────────
+const tarotCmd = new Command('tarot')
+  .description('Brain Tarot — 78-card divination from your codebase');
+tarotCmd.addCommand(new Command('draw')
+  .description('Draw a reading')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--spread <s>', 'one-card|three-card|celtic-cross', 'three-card')
+  .option('--question <q>', 'Optional question')
+  .option('--svg <path>', 'Save reading SVG')
+  .action(async (opts: any) => {
+    const { getBrainTarot } = await import('./brain/brain-tarot.js');
+    const r = await getBrainTarot().draw(opts.project, { spread: opts.spread, question: opts.question });
+    console.log(chalk.magenta.bold(`\n  TAROT · ${r.spread}\n`));
+    for (const c of r.cards) {
+      console.log(`  ${chalk.cyan(c.name.padEnd(28))} (${c.orientation})  ${chalk.dim(c.position)}`);
+      console.log(`    ${chalk.dim(c.meaning)}`);
+    }
+    console.log('\n  ' + r.synthesis);
+    if (r.advice) console.log('\n  ' + chalk.yellow('Advice: ') + r.advice);
+    if (opts.svg) {
+      fs.writeFileSync(opts.svg, r.svg);
+      console.log(chalk.green(`\n  ✓ reading written to ${opts.svg}`));
+    }
+  }));
+
+// ── 🎨 Brain ASCII ───────────────────────────────────────────────────
+const asciiCmd = new Command('ascii')
+  .description('Brain ASCII — terminal-art brain visualizations');
+asciiCmd.addCommand(new Command('render')
+  .description('Render brain as ASCII art')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--style <s>', 'galaxy|tree|matrix|pixel|banner|sparkline', 'galaxy')
+  .option('--width <w>', 'Width', '80')
+  .option('--height <h>', 'Height', '20')
+  .action(async (opts: any) => {
+    const { getBrainAscii } = await import('./brain/brain-ascii.js');
+    const out = await getBrainAscii().render(opts.project, {
+      style: opts.style,
+      width: parseInt(opts.width, 10),
+      height: parseInt(opts.height, 10),
+    });
+    console.log(out);
+  }));
+asciiCmd.addCommand(new Command('sparkline')
+  .description('Activity sparkline over the last N days')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--days <n>', 'Days', '30')
+  .action(async (opts: any) => {
+    const { getBrainAscii } = await import('./brain/brain-ascii.js');
+    const s = await getBrainAscii().dailySparkline(opts.project, parseInt(opts.days, 10));
+    console.log(s);
+  }));
+asciiCmd.addCommand(new Command('mascot')
+  .description('ASCII mascot for an archetype')
+  .option('--archetype <a>', 'Archetype name')
+  .action(async (opts: any) => {
+    const { getBrainAscii } = await import('./brain/brain-ascii.js');
+    console.log(getBrainAscii().mascot(opts.archetype));
+  }));
+
+// ── 😂 Brain Memes ───────────────────────────────────────────────────
+const memesCmd = new Command('memes')
+  .description('Brain Memes — auto-generated dev memes from brain patterns');
+memesCmd.addCommand(new Command('generate')
+  .description('Generate one or more memes')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--template <t>', 'Specific template (else random)')
+  .option('--count <n>', 'How many', '5')
+  .option('--save', 'Save SVGs to disk')
+  .action(async (opts: any) => {
+    const { getBrainMemes } = await import('./brain/brain-memes.js');
+    const results = await getBrainMemes().generate(opts.project, {
+      template: opts.template,
+      count: parseInt(opts.count, 10),
+      save: opts.save,
+    } as any);
+    for (const m of results) {
+      console.log(`  ${chalk.cyan(m.template.padEnd(28))}`);
+      console.log(`    TOP: ${m.topText}`);
+      console.log(`    BOT: ${m.bottomText}`);
+      if (m.sharePath) console.log(`    ${chalk.dim(m.sharePath)}`);
+    }
+  }));
+memesCmd.addCommand(new Command('templates')
+  .description('List meme templates')
+  .action(async () => {
+    const { getBrainMemes } = await import('./brain/brain-memes.js');
+    for (const t of getBrainMemes().listTemplates()) console.log(`  • ${t}`);
+  }));
+
+// ── 🌌 Brain 3D ──────────────────────────────────────────────────────
+const brain3dCmd = new Command('brain-3d')
+  .description('Brain 3D — rotatable 3D graph viewer (Three.js)');
+brain3dCmd.addCommand(new Command('export')
+  .description('Export scene as JSON / glTF / HTML viewer')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--layout <l>', 'force-directed|sphere|helix|galaxy', 'force-directed')
+  .option('--format <f>', 'json|gltf|html', 'html')
+  .option('--out <path>', 'Output path')
+  .action(async (opts: any) => {
+    const { getBrain3d } = await import('./brain/brain-3d.js');
+    const scene = await getBrain3d().exportScene(opts.project, { layout: opts.layout });
+    let payload: string;
+    if (opts.format === 'gltf') payload = getBrain3d().glTfExport(scene);
+    else if (opts.format === 'html') payload = getBrain3d().htmlViewer(scene);
+    else payload = JSON.stringify(scene, null, 2);
+    if (opts.out) {
+      fs.writeFileSync(opts.out, payload);
+      console.log(chalk.green(`  ✓ ${opts.out}  (${scene.nodes.length} nodes, ${scene.edges.length} edges)`));
+    } else process.stdout.write(payload);
+  }));
+
+// ── 💞 Brain Doppelganger ────────────────────────────────────────────
+const doppelgangerCmd = new Command('doppelganger')
+  .description('Brain Doppelganger — find your codebase\'s twin');
+doppelgangerCmd.addCommand(new Command('find')
+  .description('Find similar projects')
+  .option('--project <name>', 'Project name', 'default')
+  .option('--pool <p>', 'local|exchange|all', 'local')
+  .option('--top <n>', 'Top K', '5')
+  .action(async (opts: any) => {
+    const { getBrainDoppelganger } = await import('./brain/brain-doppelganger.js');
+    const matches = await getBrainDoppelganger().findMatches(opts.project, {
+      pool: opts.pool,
+      topK: parseInt(opts.top, 10),
+    });
+    for (const m of matches) {
+      console.log(`  ${chalk.cyan((m.similarity * 100).toFixed(0) + '%').padEnd(14)} ${m.otherProject}`);
+      console.log(`    ${chalk.dim(m.blurb)}`);
+    }
+    if (!matches.length) console.log(chalk.dim('  No matches found.'));
+  }));
+doppelgangerCmd.addCommand(new Command('card')
+  .description('Compatibility share card for two projects')
+  .requiredOption('--mine <p>', 'Your project name')
+  .requiredOption('--other <p>', 'Other project name')
+  .option('--out <path>', 'Output SVG path')
+  .action(async (opts: any) => {
+    const { getBrainDoppelganger } = await import('./brain/brain-doppelganger.js');
+    const { svg } = await getBrainDoppelganger().compatibilityCard(opts.mine, opts.other);
+    if (opts.out) {
+      fs.writeFileSync(opts.out, svg);
+      console.log(chalk.green(`  ✓ ${opts.out}`));
+    } else process.stdout.write(svg);
+  }));
+
+program.addCommand(cinemaCmd);
+program.addCommand(sonifyCmd);
+program.addCommand(trophiesCmd);
+program.addCommand(holidayCmd);
+program.addCommand(coachCmd);
+program.addCommand(questCmd);
+program.addCommand(notebookCmd);
+program.addCommand(reflexCmd);
+program.addCommand(roastCmd);
+program.addCommand(tarotCmd);
+program.addCommand(asciiCmd);
+program.addCommand(memesCmd);
+program.addCommand(brain3dCmd);
+program.addCommand(doppelgangerCmd);
 
 program.parse();

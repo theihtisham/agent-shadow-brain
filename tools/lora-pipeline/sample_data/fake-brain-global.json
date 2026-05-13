@@ -1,0 +1,15 @@
+{
+  "version": 6,
+  "createdAt": "2025-10-01T00:00:00.000Z",
+  "updatedAt": "2026-05-10T09:00:00.000Z",
+  "projects": [
+    { "id": "demo-app", "name": "demo-app", "path": "C:\\code\\demo-app", "framework": "Next.js + TypeScript", "lastActivity": "2026-05-10T09:00:00.000Z" }
+  ],
+  "memories": [
+    { "id": "g-001", "projectId": "demo-app", "projectName": "demo-app", "agentTool": "claude-code", "category": "decision",  "content": "Use bcrypt cost 12 for password hashing. SHA-256 deprecated as of 2025-Q4 audit.", "importance": 0.92, "createdAt": "2026-03-05T09:00:00.000Z" },
+    { "id": "g-002", "projectId": "demo-app", "projectName": "demo-app", "agentTool": "cursor",      "category": "pattern",   "content": "React Query is preferred over Redux for server state.", "importance": 0.88, "createdAt": "2026-03-06T11:00:00.000Z" },
+    { "id": "g-003", "projectId": "demo-app", "projectName": "demo-app", "agentTool": "codex",       "category": "security",  "content": "All SQL must be parameterized. Enforced via Semgrep.", "importance": 0.95, "createdAt": "2026-03-07T08:30:00.000Z" },
+    { "id": "g-004", "projectId": "demo-app", "projectName": "demo-app", "agentTool": "claude-code", "category": "architecture", "content": "Atomic write-rename for ~/.shadow-brain/global.json.", "importance": 0.90, "createdAt": "2026-03-08T13:15:00.000Z" },
+    { "id": "g-005", "projectId": "demo-app", "projectName": "demo-app", "agentTool": "cline",       "category": "warning",   "content": "Never fs.writeFileSync without tmp+rename.", "importance": 0.85, "createdAt": "2026-03-09T09:45:00.000Z" }
+  ]
+}

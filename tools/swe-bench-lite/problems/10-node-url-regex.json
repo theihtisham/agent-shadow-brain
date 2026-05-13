@@ -1,0 +1,15 @@
+{
+  "id": "10-node-url-regex",
+  "title": "URL.parse regex anchors mismatch for IPv6 brackets",
+  "repo_url": "https://github.com/nodejs/node",
+  "base_commit": "main",
+  "language": "javascript",
+  "setup": [],
+  "failing_test": "node --test test/parallel/test-url-ipv6-brackets.js",
+  "expected_fix_hint": "lib/internal/url.js the hostname regex is missing the `?` quantifier after the closing bracket allowing optional port; fix so [::1]:8080 parses correctly.",
+  "success_criteria": "pass 1",
+  "agent_prompt": "URL parsing of IPv6 hosts with ports (e.g., http://[::1]:8080/) is failing because the regex in lib/internal/url.js does not handle the optional port after the closing bracket. Fix the regex so the failing test in test/parallel passes. Do not modify the test.",
+  "wall_clock_budget_s": 240,
+  "source": "Illustrative — IPv6 + port regex anchor issue, common across URL parsers",
+  "complexity": "small"
+}

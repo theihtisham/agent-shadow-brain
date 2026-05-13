@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 300" width="1200" height="300">
+  <defs><linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#0a1628"/><stop offset="1" stop-color="#0d2540"/></linearGradient></defs>
+  <rect width="1200" height="300" fill="url(#bg)"/>
+  <text x="600" y="150" fill="#7dd3fc" font-size="18" font-family="ui-sans-serif,system-ui" text-anchor="middle">default · awaiting first event</text>
+</svg>

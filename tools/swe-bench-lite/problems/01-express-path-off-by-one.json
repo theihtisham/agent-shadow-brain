@@ -1,0 +1,15 @@
+{
+  "id": "01-express-path-off-by-one",
+  "title": "Off-by-one in route path matching helper",
+  "repo_url": "https://github.com/expressjs/express",
+  "base_commit": "4.x",
+  "language": "javascript",
+  "setup": ["npm install --no-audit --no-fund"],
+  "failing_test": "npx mocha --reporter spec test/utils.js -g 'normalizeType'",
+  "expected_fix_hint": "The slice index in lib/utils.js normalizeType handling of trailing semicolons should be one position higher; current code drops a real character.",
+  "success_criteria": "0 failing",
+  "agent_prompt": "There is a failing test in test/utils.js for the normalizeType helper. Read lib/utils.js, find the slice indices used to parse content-type parameters, and fix the off-by-one. Do not modify the test. Apply your patch with a single `git diff` you can show me.",
+  "wall_clock_budget_s": 300,
+  "source": "Illustrative — typical pattern in express utils slicing logic",
+  "complexity": "trivial"
+}

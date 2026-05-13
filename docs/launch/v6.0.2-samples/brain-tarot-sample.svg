@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1600" width="1200" height="1600">
+  <!-- BRAIN TAROT · v6.0.2 -->
+  <defs>
+    <linearGradient id="t-bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#15052a"/>
+      <stop offset="0.5" stop-color="#240b3e"/>
+      <stop offset="1" stop-color="#0a0218"/>
+    </linearGradient>
+    <radialGradient id="t-halo" cx="0.5" cy="0.35" r="0.6">
+      <stop offset="0" stop-color="#d4af37" stop-opacity="0.22"/>
+      <stop offset="1" stop-color="#d4af37" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="t-card" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#3a1d5e"/>
+      <stop offset="1" stop-color="#1c0838"/>
+    </linearGradient>
+    <linearGradient id="t-gold" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#d4af37"/>
+      <stop offset="1" stop-color="#fff1a8"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="1600" fill="url(#t-bg)"/>
+  <rect width="1200" height="1600" fill="url(#t-halo)"/>
+  <text x="60" y="92" fill="#d4af37" font-size="14" font-family="ui-monospace,monospace" letter-spacing="4">BRAIN TAROT · v6.0.2</text>
+  <text x="60" y="140" fill="url(#t-gold)" font-size="44" font-family="ui-serif,Georgia,serif" font-weight="700">shadow-brain</text>
+  
+  <text x="1140" y="92" fill="#d4af37" font-size="14" font-family="ui-monospace,monospace" text-anchor="end" letter-spacing="3">A SINGLE CARD</text>
+  <g transform="translate(420, 320)">
+    <rect x="0" y="0" width="360" height="540" rx="10" ry="10" fill="url(#t-card)" stroke="#d4af37" stroke-width="1.5"/>
+    <rect x="6" y="6" width="348" height="528" rx="6" ry="6" fill="none" stroke="#d4af37" stroke-width="0.6" opacity="0.55"/>
+    <g >
+      <text x="180" y="28" fill="#d4af37" font-size="11" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="2" opacity="0.85">SILENCE</text>
+      <g transform="translate(180, 270) scale(1)"><g stroke="#d4af37" stroke-width="1.6" fill="none" opacity="0.9">
+      <circle cx="0" cy="0" r="38"/>
+      <circle cx="0" cy="0" r="22"/>
+      <path d="M -38 0 Q -10 -28 0 0 Q 10 28 38 0"/>
+      <path d="M 0 -38 Q -28 -10 0 0 Q 28 10 0 38"/>
+      <circle cx="0" cy="0" r="4" fill="#d4af37"/>
+    </g></g>
+      <text x="180" y="522" fill="#fff1a8" font-size="18" font-family="ui-serif,Georgia,serif" text-anchor="middle">No Card Drawn</text>
+    </g>
+  </g>
+  <text x="60" y="1100" fill="#e6d9ff" font-size="22" font-family="ui-serif,Georgia,serif" opacity="0.95">The cards are silent. You have no past for them to read.</text>
+  <text x="60" y="1470" fill="#d4af37" font-size="14" font-family="ui-monospace,monospace" opacity="0.85" letter-spacing="2">LUCKY FILE</text>
+  <text x="60" y="1500" fill="#fff1a8" font-size="22" font-family="ui-monospace,monospace">README.md</text>
+  <text x="60" y="1544" fill="#d4af37" font-size="13" font-family="ui-monospace,monospace" opacity="0.8">Powered by @shadow-brain</text>
+  <text x="60" y="1568" fill="#e6d9ff" font-size="14" font-family="ui-monospace,monospace">npx @theihtisham/agent-shadow-brain tarot</text>
+</svg>

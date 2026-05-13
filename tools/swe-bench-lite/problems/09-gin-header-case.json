@@ -1,0 +1,15 @@
+{
+  "id": "09-gin-header-case",
+  "title": "Header lookup is case-sensitive — should be case-insensitive per RFC 7230",
+  "repo_url": "https://github.com/gin-gonic/gin",
+  "base_commit": "master",
+  "language": "go",
+  "setup": ["go mod download"],
+  "failing_test": "go test -run TestContextGetHeaderCaseInsensitive ./...",
+  "expected_fix_hint": "context.go GetHeader uses c.Request.Header[key] (case-sensitive map access) where it should use c.Request.Header.Get(key) which is case-insensitive.",
+  "success_criteria": "PASS",
+  "agent_prompt": "A test expects ctx.GetHeader(\"content-type\") to return the value even when the request was set with \"Content-Type\". The current implementation in context.go uses a raw map lookup which is case-sensitive. Fix it to use the case-insensitive accessor.",
+  "wall_clock_budget_s": 300,
+  "source": "Illustrative — Go http.Header case-sensitivity gotcha",
+  "complexity": "trivial"
+}

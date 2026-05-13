@@ -1,0 +1,65 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1080" width="1080" height="1080">
+  <!-- TODO: Ed25519-signed export marker -->
+  <defs>
+    <linearGradient id="card-bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#061224"/>
+      <stop offset="0.5" stop-color="#0a1628"/>
+      <stop offset="1" stop-color="#0d2540"/>
+    </linearGradient>
+    <radialGradient id="halo" cx="0.5" cy="0.32" r="0.55">
+      <stop offset="0" stop-color="#7dd3fc" stop-opacity="0.35"/>
+      <stop offset="1" stop-color="#7dd3fc" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="hero" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#7dd3fc"/>
+      <stop offset="1" stop-color="#00ffd5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1080" height="1080" fill="url(#card-bg)"/>
+  <rect width="1080" height="1080" fill="url(#halo)"/>
+  <text x="64" y="96" fill="#7dd3fc" font-size="14" font-family="ui-monospace,monospace" letter-spacing="3">BRAIN DNA · v6.0.2</text>
+  <text x="64" y="140" fill="#e2f5ff" font-size="38" font-family="ui-sans-serif,system-ui" font-weight="600">shadow-brain</text>
+  <text x="64" y="170" fill="#7dd3fc" font-size="16" font-family="ui-monospace,monospace" opacity="0.7">0.0 days alive</text>
+
+  <g transform="translate(64,260)">
+    <text x="0" y="0" fill="#7dd3fc" font-size="14" font-family="ui-monospace,monospace" opacity="0.75" letter-spacing="2">PERSONALITY ARCHETYPE</text>
+    <text x="0" y="80" fill="url(#hero)" font-size="84" font-family="ui-sans-serif,system-ui" font-weight="800">The Wanderer</text>
+    <text x="0" y="120" fill="#cfe9ff" font-size="20" font-family="ui-sans-serif,system-ui" opacity="0.85">Young brain, vast horizons, no fixed star.</text>
+    <rect x="0" y="150" width="120" height="3" fill="#7dd3fc"/>
+  </g>
+
+  <g transform="translate(64,540)">
+    <text x="0" y="22" fill="#7dd3fc" font-size="13" font-family="ui-sans-serif,system-ui" opacity="0.75">MEMORIES</text>
+    <text x="0" y="64" fill="#e2f5ff" font-size="34" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-weight="700">0</text>
+    <text x="0" y="86" fill="#7dd3fc" font-size="11" font-family="ui-monospace,monospace" opacity="0.55">recorded thoughts</text>
+  </g>
+  <g transform="translate(381.3333333333333,540)">
+    <text x="0" y="22" fill="#7dd3fc" font-size="13" font-family="ui-sans-serif,system-ui" opacity="0.75">ENTITIES</text>
+    <text x="0" y="64" fill="#e2f5ff" font-size="34" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-weight="700">0</text>
+    <text x="0" y="86" fill="#7dd3fc" font-size="11" font-family="ui-monospace,monospace" opacity="0.55">tracked symbols</text>
+  </g>
+  <g transform="translate(698.6666666666666,540)">
+    <text x="0" y="22" fill="#7dd3fc" font-size="13" font-family="ui-sans-serif,system-ui" opacity="0.75">DAYS ALIVE</text>
+    <text x="0" y="64" fill="#e2f5ff" font-size="34" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-weight="700">0.0</text>
+    <text x="0" y="86" fill="#7dd3fc" font-size="11" font-family="ui-monospace,monospace" opacity="0.55">since first event</text>
+  </g>
+  <g transform="translate(64,670)">
+    <text x="0" y="22" fill="#7dd3fc" font-size="13" font-family="ui-sans-serif,system-ui" opacity="0.75">TOP LANGUAGE</text>
+    <text x="0" y="64" fill="#e2f5ff" font-size="34" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-weight="700">—</text>
+    <text x="0" y="86" fill="#7dd3fc" font-size="11" font-family="ui-monospace,monospace" opacity="0.55">most-tagged</text>
+  </g>
+  <g transform="translate(381.3333333333333,670)">
+    <text x="0" y="22" fill="#7dd3fc" font-size="13" font-family="ui-sans-serif,system-ui" opacity="0.75">TOP AGENT</text>
+    <text x="0" y="64" fill="#e2f5ff" font-size="34" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-weight="700">none</text>
+    <text x="0" y="86" fill="#7dd3fc" font-size="11" font-family="ui-monospace,monospace" opacity="0.55">0 contributions</text>
+  </g>
+  <g transform="translate(698.6666666666666,670)">
+    <text x="0" y="22" fill="#7dd3fc" font-size="13" font-family="ui-sans-serif,system-ui" opacity="0.75">HALLUCINATIONS</text>
+    <text x="0" y="64" fill="#e2f5ff" font-size="34" font-family="ui-monospace,SFMono-Regular,Menlo,monospace" font-weight="700">0</text>
+    <text x="0" y="86" fill="#7dd3fc" font-size="11" font-family="ui-monospace,monospace" opacity="0.55">caught + quarantined</text>
+  </g>
+
+  <text x="64" y="1004" fill="#7dd3fc" font-size="13" font-family="ui-monospace,monospace" opacity="0.8">Powered by @shadow-brain</text>
+  <text x="64" y="1028" fill="#cfe9ff" font-size="14" font-family="ui-monospace,monospace">npm i -g @theihtisham/agent-shadow-brain</text>
+  <text x="1016" y="1028" fill="#7dd3fc" font-size="16" font-family="ui-monospace,monospace" text-anchor="end" font-weight="700">WND</text>
+</svg>

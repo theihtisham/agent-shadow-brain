@@ -1,0 +1,15 @@
+{
+  "id": "06-numpy-dtype-msg",
+  "title": "Wrong dtype string in TypeError message",
+  "repo_url": "https://github.com/numpy/numpy",
+  "base_commit": "main",
+  "language": "python",
+  "setup": ["pip install . --quiet"],
+  "failing_test": "python -m pytest numpy/_core/tests/test_dtype.py::test_invalid_dtype_message -q",
+  "expected_fix_hint": "numpy/_core/_dtype.py format invalid dtype message uses repr(dtype.name) instead of repr(dtype.str) so the message shows 'int32' rather than '<i4' — the test expects the byte-order form.",
+  "success_criteria": "1 passed",
+  "agent_prompt": "A test expects the dtype error message to include the byte-order representation (e.g. '<i4'), but the message currently shows the human name (e.g. 'int32'). Fix the formatting in numpy/_core/_dtype.py so the test passes.",
+  "wall_clock_budget_s": 180,
+  "source": "Illustrative — trivial error-message string mismatch",
+  "complexity": "trivial"
+}

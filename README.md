@@ -1,14 +1,14 @@
 <div align="center">
 
 <a href="https://github.com/theihtisham/agent-shadow-brain">
-  <img src="Banner (2).png" alt="Shadow Brain v6.0 — Hive Mind" width="100%">
+  <img src="banner-v6.0.2.png" alt="Shadow Brain v6.0.2 — Singularity · 35 new modules · 5 viral features · 10 brain-quality upgrades · One brain, every agent" width="100%">
 </a>
 <a href="https://trendshift.io/repositories/25944" target="_blank"><img src="https://trendshift.io/api/badge/repositories/25944" alt="lsdefine%2FGenericAgent | Trendshift" style="width: 250px; height: 55px;" width="250" height="55"/></a>
 <br/><br/>
 
-<!-- Auto-plays muted on GitHub README. Unmute via player controls. -->
-<video src="https://raw.githubusercontent.com/theihtisham/agent-shadow-brain/main/docs/launch/shadow-brain-motion-explainer-narrated.mp4"
-       poster="Banner (2).png"
+<!-- v6.0.2 hero video — auto-plays muted on GitHub README -->
+<video src="https://raw.githubusercontent.com/theihtisham/agent-shadow-brain/main/docs/launch/shadow-brain-v6.0.2-hero.mp4"
+       poster="banner-v6.0.2.png"
        autoplay
        muted
        loop
@@ -16,10 +16,10 @@
        playsinline
        width="100%">
   Your browser doesn't support inline video.
-  <a href="https://github.com/theihtisham/agent-shadow-brain/releases/tag/v6.0.0">Watch the 2-minute explainer on the v6.0.0 release page</a>.
+  <a href="https://github.com/theihtisham/agent-shadow-brain/releases/tag/v6.0.2">Watch the v6.0.2 hero video on the release page</a>.
 </video>
 
-### 🎬 **2-minute explainer above — auto-plays muted · click 🔊 to unmute · or [open on Release page](https://github.com/theihtisham/agent-shadow-brain/releases/tag/v6.0.0)**
+### 🎬 **2-minute v6.0.2 hero above — auto-plays muted · click 🔊 to unmute · [v6.0.2 release page](https://github.com/theihtisham/agent-shadow-brain/releases/tag/v6.0.2) · [original 2-min explainer](docs/launch/shadow-brain-motion-explainer-narrated.mp4) · [dashboard tour](docs/launch/shadow-brain-dashboard-tour.mp4)**
 
 [![npm version](https://img.shields.io/npm/v/@theihtisham/agent-shadow-brain?color=a855f7&labelColor=1a0a2e&style=for-the-badge&logo=npm)](https://www.npmjs.com/package/@theihtisham/agent-shadow-brain)
 [![npm downloads](https://img.shields.io/npm/dt/@theihtisham/agent-shadow-brain?color=06b6d4&labelColor=1a0a2e&style=for-the-badge)](https://www.npmjs.com/package/@theihtisham/agent-shadow-brain)
@@ -27,8 +27,8 @@
 [![license](https://img.shields.io/badge/license-MIT-8b5cf6?labelColor=1a0a2e&style=for-the-badge)](https://github.com/theihtisham/agent-shadow-brain/blob/main/LICENSE)
 [![TypeScript](https://img.shields.io/badge/TypeScript-100%25-3178c6?labelColor=1a0a2e&style=for-the-badge&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![node](https://img.shields.io/badge/node-%3E%3D18-22c55e?labelColor=1a0a2e&style=for-the-badge&logo=node.js)](https://nodejs.org/)
-[![Brain Modules](https://img.shields.io/badge/brain_modules-48-ec4899?labelColor=1a0a2e&style=for-the-badge)](#-architecture)
-[![CLI Commands](https://img.shields.io/badge/CLI-90%2B_commands-eab308?labelColor=1a0a2e&style=for-the-badge&logo=windowsterminal)](#-cli-reference)
+[![Brain Modules](https://img.shields.io/badge/brain_modules-122-ec4899?labelColor=1a0a2e&style=for-the-badge)](#-architecture)
+[![CLI Commands](https://img.shields.io/badge/CLI-120%2B_commands-eab308?labelColor=1a0a2e&style=for-the-badge&logo=windowsterminal)](#-cli-reference)
 [![MCP Tools](https://img.shields.io/badge/MCP-60%2B_tools-8b5cf6?labelColor=1a0a2e&style=for-the-badge&logo=anthropic)](#-mcp-tools)
 [![Tests](https://img.shields.io/badge/tests-148%2F148_passing-10b981?labelColor=1a0a2e&style=for-the-badge&logo=vitest)](#)
 [![Local First](https://img.shields.io/badge/local--first-ollama_default-f97316?labelColor=1a0a2e&style=for-the-badge&logo=ollama)](#)
@@ -36,15 +36,30 @@
 
 <br/>
 
-# 🧠 Shadow Brain v6.0 — Hive Mind
+# 🧠 Shadow Brain v6.0.2 — Singularity
 
 ### *The first open-source brain that every AI coding agent on your machine can share.*
 
 **Claude Code · Cursor · Cline · Codex · Copilot · Windsurf · Kilo · Roo · OpenCode · Aider** — all running on one local brain. What one agent learns, every agent knows. What one sub-agent discovers, every sub-agent inherits.
 
+> **🆕 v6.0.2 "Singularity" — 19 world-first features. Every one of them shareable.**
+>
+> **The 5 viral artifacts** — each renders as a tweet-ready PNG/SVG/MP4:
+> 🎬 **Brain Replay** · 🧬 **Brain DNA** · 🗳️ **Hive Voice** · ⏰ **Time Capsule** · 🔬 **Brain Diff**
+>
+> **The 14 advanced features** — Spotify-Wrapped-meets-AI-codebase:
+> 🎵 **Brain Cinema** (auto 60s SVG-animated video of brain growth) · 🎼 **Brain Sonification** (your codebase as music) · 🏆 **Brain Trophies** (25 achievements + share cards) · 🎁 **Brain Holiday Card** (year-in-review) · 🧭 **Brain Coach** (proactive idle suggestions) · 🗺️ **Brain Quest** (gamified onboarding adventures) · 📓 **Brain Notebook** (Jupyter-style brain explorer) · ⚡ **Brain Reflex** (local-model inline completion) · 🔥 **Brain Roast** (comedy code reviews, 6 personas) · 🔮 **Brain Tarot** (78-card divination from git+brain) · 🎨 **Brain ASCII** (terminal art representations) · 😂 **Brain Memes** (auto-generated dev memes) · 🌌 **Brain 3D** (Three.js rotatable graph viewer) · 💞 **Brain Doppelganger** (find your codebase's twin)
+>
+> **The infrastructure** — real ANN HNSW index · Constitution layer · Confidence Gate · multimodal vision (llava) · LoRA distillation pipeline · SWE-Bench-Lite eval harness · OpenTelemetry-lite tracing · git-trackable Markdown brain export/import.
+>
+> [Full release notes →](docs/launch/RELEASE_NOTES_v6.0.2.md)
+
 ```bash
 # 30 seconds. Every agent + sub-agent on your machine becomes smarter.
 npx @theihtisham/agent-shadow-brain@latest attach-all
+
+# Or — the 30-second wow tour
+npx @theihtisham/agent-shadow-brain@latest demo
 ```
 
 **[🎬 Video](https://github.com/theihtisham/agent-shadow-brain/raw/main/docs/launch/shadow-brain-motion-explainer-narrated.mp4) · [📦 npm](https://www.npmjs.com/package/@theihtisham/agent-shadow-brain) · [⭐ Star on GitHub](https://github.com/theihtisham/agent-shadow-brain) · [📚 Docs](https://github.com/theihtisham/agent-shadow-brain/tree/main/docs) · [🐛 Issues](https://github.com/theihtisham/agent-shadow-brain/issues)**
@@ -70,6 +85,76 @@ npx @theihtisham/agent-shadow-brain attach-all
 ```
 
 **Zero config. Zero API key required. 100 % local-first.**
+
+---
+
+## 🆕 What's New in v6.0.2 — "Singularity"
+
+> **35 new modules + 27 new CLI commands + 7 sample artifacts. Zero new npm deps. tsc-clean.**
+
+### 🌟 The 5 World-First Viral Features
+
+Every one of these renders as a tweet-ready PNG/SVG. *Cursor doesn't have these. Cline doesn't have these. Nobody has these.*
+
+| | Feature | What it does |
+|---|---|---|
+| 🎬 | **[Brain Replay](docs/launch/v6.0.2-samples/brain-replay-sample.svg)** | Scrubbable timeline of every brain event since day-zero. Drag the cursor, rewind to any moment. SVG export. |
+| 🧬 | **[Brain DNA](docs/launch/v6.0.2-samples/brain-dna-sample.svg)** | Spotify-Wrapped-style fingerprint card. 8 personality archetypes (The Architect, The Debugger, …). 1080×1080 share card. |
+| 🗳️ | **Hive Voice** | 3 local models debate-vote on every architecture question. See consensus, dissent, and confidence — live. SVG bar chart. |
+| ⏰ | **Brain Time Capsule** | Freeze + label + resurrect brain snapshots. "Here's what we knew about React in January." Ed25519-signed bundles. |
+| 🔬 | **Brain Diff** | Semantic diff between two brains. Venn-diagram SVG + English narrative. "What did Team A learn that Team B didn't?" |
+
+```bash
+shadow-brain dna card --out my-brain.svg                    # 🧬 generate your DNA card
+shadow-brain replay export --format svg --out timeline.svg  # 🎬 scrubbable timeline
+shadow-brain hive-voice ask "Server Components by default?" # 🗳️ multi-model vote
+shadow-brain capsule freeze --label "pre-redesign"          # ⏰ freeze a snapshot
+shadow-brain brain-diff compare brain-a/ brain-b/           # 🔬 semantic diff
+```
+
+### 🎁 14 More Advanced Features
+
+| | | | |
+|---|---|---|---|
+| 🎵 **Brain Cinema** — auto-procedural 60-sec SVG video | 🎼 **Brain Sonification** — your codebase as music (WAV) | 🏆 **Brain Trophies** — 25 achievements w/ share cards | 🎁 **Brain Holiday Card** — year-in-review SVG |
+| 🧭 **Brain Coach** — 10 proactive idle-suggestion rules | 🗺️ **Brain Quest** — 5 gamified onboarding adventures | 📓 **Brain Notebook** — Jupyter-style brain explorer | ⚡ **Brain Reflex** — local-model inline completion |
+| 🔥 **Brain Roast** — comedy code review (6 personas) | 🔮 **Brain Tarot** — 78-card divination from git+brain | 🎨 **Brain ASCII** — terminal-art brain (6 styles) | 😂 **Brain Memes** — auto-generated dev memes (10 templates) |
+| 🌌 **Brain 3D** — rotatable Three.js graph viewer | 💞 **Brain Doppelganger** — find your codebase's twin | | |
+
+### 🧠 10 Brain-Quality Upgrades (the engineering wins)
+
+| Recall quality | Memory arch | Efficiency | Intelligence | Size + Learning |
+|---|---|---|---|---|
+| **Rerank** (BM25 + cosine hybrid) | **Memory Tiers** (episodic/semantic) | **Working Memory** (LRU + predictive prefetch) | **Contradictions** (46 polarity pairs) | **Quantize** (int8 vectors, 4× smaller, 0.000298 mean error) |
+| **Query Expander** (synonyms + abbrev + HyDE) | **Consolidator** (dedup + abstractions) | **Recall Cache** (bloom filter, 65k bits, ~4% FP @ 10k keys) | **Graph Walker** (5 edge types, 3-hop BFS) | **Active Learner** (accept/reject feedback bias) |
+
+### ⚙️ Production Infrastructure
+
+- **Real ANN vector index** (`embeddings-v2.ts`) — HNSW-style graph, M=8, sub-100ms recall over 10k vectors, sharded persistence (5MB cap), auto-pulls `nomic-embed-text` from Ollama on first run
+- **Constitution layer** — `<project>/.shadow-brain/constitution.md` parser + hot-reload + injection
+- **Confidence Gate** — active output filter, Brier score + ECE stats
+- **Multimodal vision** — Ollama llava / llava-llama3 / bakllava ingestion
+- **Markdown brain export/import** — git-trackable `.shadow-brain.md` round-trip
+- **OpenTelemetry-lite tracing** — OTel-compatible JSONL, daily rotation
+- **LoRA distillation pipeline** (`tools/lora-pipeline/`) — turn your brain into a Qwen2.5-Coder-1.5B adapter
+- **SWE-Bench-Lite harness** (`tools/swe-bench-lite/`) — 10 curated bugs, brain-on vs brain-off, statistical scoring
+- **30-second demo**: `npx @theihtisham/agent-shadow-brain demo`
+
+### 📊 v6.0.2 by the numbers
+
+| | |
+|---|---|
+| New brain modules | **35** (25 features + 10 quality stack) |
+| New CLI command groups | **27** |
+| New LOC | **~16,000** (TypeScript) |
+| New npm dependencies | **0** |
+| Sample artifacts shipped | **7** (DNA card, Replay timeline, Cinema, Holiday wrapped, Tarot, Trophy wall, 3D viewer HTML) |
+| Quantization roundtrip error | **0.000298** (16× better than spec) |
+| TypeScript errors | **0** |
+
+**Full release notes:** [docs/launch/RELEASE_NOTES_v6.0.2.md](docs/launch/RELEASE_NOTES_v6.0.2.md)
+**Strategic roadmap (v7+):** [docs/ROADMAP-v7.md](docs/ROADMAP-v7.md)
+**Launch playbook:** [docs/VIRAL-PLAYBOOK.md](docs/VIRAL-PLAYBOOK.md)
 
 ---
 

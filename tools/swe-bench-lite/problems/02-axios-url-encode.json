@@ -1,0 +1,15 @@
+{
+  "id": "02-axios-url-encode",
+  "title": "URL encoder leaves '+' unescaped in query strings",
+  "repo_url": "https://github.com/axios/axios",
+  "base_commit": "v1.x",
+  "language": "javascript",
+  "setup": ["npm install --no-audit --no-fund"],
+  "failing_test": "npx jest test/specs/helpers/buildURL.spec.js -t 'encodes plus'",
+  "expected_fix_hint": "lib/helpers/buildURL.js encode() should also escape '+' to '%2B'; currently the replace chain skips it.",
+  "success_criteria": "Tests: 1 passed",
+  "agent_prompt": "A test in test/specs/helpers/buildURL.spec.js expects '+' to be percent-encoded as %2B in query strings, but axios is leaving it bare. Fix the encode function in lib/helpers/buildURL.js so the test passes. Do not modify the test.",
+  "wall_clock_budget_s": 300,
+  "source": "Illustrative — URL encoding edge case common across HTTP libs",
+  "complexity": "trivial"
+}

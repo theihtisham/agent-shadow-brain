@@ -1,0 +1,9 @@
+{
+  "version": 1,
+  "links": [
+    { "id": "c-001", "from": "11111111-aaaa-bbbb-cccc-000000000010", "to": "11111111-aaaa-bbbb-cccc-000000000012", "reason": "bcrypt enforcement reinforced SQL-parameterization audit", "createdAt": "2026-03-08T00:00:00.000Z" },
+    { "id": "c-002", "from": "11111111-aaaa-bbbb-cccc-000000000013", "to": "11111111-aaaa-bbbb-cccc-000000000014", "reason": "global brain atomic write rule drove writeFileSync warning", "createdAt": "2026-03-09T00:00:00.000Z" },
+    { "id": "c-003", "from": "11111111-aaaa-bbbb-cccc-000000000018", "to": "11111111-aaaa-bbbb-cccc-000000000019", "reason": "outage post-mortem surfaced N+1 query class issue", "createdAt": "2026-04-22T00:00:00.000Z" },
+    { "id": "c-004", "from": "11111111-aaaa-bbbb-cccc-000000000021", "to": "11111111-aaaa-bbbb-cccc-000000000024", "reason": "secret-handling discipline expanded to XSS hardening", "createdAt": "2026-04-29T00:00:00.000Z" }
+  ]
+}

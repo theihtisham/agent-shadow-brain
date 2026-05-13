@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs><linearGradient id="he-bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#1a0833"/><stop offset="0.5" stop-color="#3d1a5b"/><stop offset="1" stop-color="#ff5fdc"/></linearGradient></defs>
+  <rect width="1080" height="1920" fill="url(#he-bg)"/>
+  <text x="540" y="240" fill="#e5d8ff" font-size="18" font-family="ui-monospace,monospace" text-anchor="middle" letter-spacing="6">BRAIN WRAPPED · 2026</text>
+  <text x="540" y="320" fill="#ffffff" font-size="48" font-family="ui-sans-serif,system-ui" font-weight="700" text-anchor="middle">shadow-brain</text>
+  <text x="540" y="920" fill="#fbbf24" font-size="56" font-family="ui-sans-serif,system-ui" font-weight="800" text-anchor="middle">Your brain is new.</text>
+  <text x="540" y="980" fill="#ffffff" font-size="24" font-family="ui-sans-serif,system-ui" text-anchor="middle" opacity="0.85">Come back in a year for your first wrap.</text>
+  <text x="540" y="1840" fill="#e5d8ff" font-size="14" font-family="ui-monospace,monospace" text-anchor="middle" opacity="0.7">Powered by Shadow Brain</text>
+  <text x="540" y="1870" fill="#fbbf24" font-size="15" font-family="ui-monospace,monospace" text-anchor="middle" font-weight="700">npm i -g @theihtisham/agent-shadow-brain</text>
+</svg>

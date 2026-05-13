@@ -1,0 +1,15 @@
+{
+  "id": "07-got-retry-count",
+  "title": "Retry counter off-by-one — one extra attempt vs the limit",
+  "repo_url": "https://github.com/sindresorhus/got",
+  "base_commit": "main",
+  "language": "typescript",
+  "setup": ["npm install --no-audit --no-fund"],
+  "failing_test": "npx ava test/retry.ts --match 'retry limit is respected'",
+  "expected_fix_hint": "source/core/retry.ts uses `attempt <= limit` where it should be `attempt < limit` (or equivalently the increment happens before the comparison in the wrong order).",
+  "success_criteria": "1 test passed",
+  "agent_prompt": "When a user sets retry: { limit: 3 }, got is performing 4 retries instead of 3. The fix is one operator in source/core/retry.ts. Find it and fix it so the failing test in test/retry.ts passes.",
+  "wall_clock_budget_s": 300,
+  "source": "Illustrative — classic off-by-one in retry / backoff loops",
+  "complexity": "trivial"
+}

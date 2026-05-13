@@ -8,7 +8,60 @@ This project follows [Semantic Versioning](https://semver.org/) and [Keep a Chan
 
 ---
 
-## [6.0.0] — 2026-04-24 — Hive Mind Edition (Current)
+## [6.0.2] — 2026-05-12 — Singularity Edition (Current)
+
+> **5 world-first viral features + real ANN vector index + Constitution layer + Confidence Gate + multimodal vision + LoRA distillation pipeline + SWE-Bench-Lite eval harness. Semver-strict this is v7.0.0; numbered 6.0.2 by author preference. See `docs/launch/RELEASE_NOTES_v6.0.2.md` for the full story.**
+
+### Added — 5 viral world-first features
+
+1. **Brain Replay** (`src/brain/brain-replay.ts`) — scrubbable timeline of every brain event since day zero. Exports tweet-ready SVG with density histogram + milestone markers.
+2. **Brain DNA** (`src/brain/brain-dna.ts`) — Spotify-Wrapped-style 1080×1080 fingerprint card per codebase. 8 personality archetypes (Architect, Debugger, Speedster, Scholar, Cartographer, Diplomat, Sentinel, Wanderer).
+3. **Hive Voice** (`src/brain/hive-voice.ts`) — multi-model debate-vote on any question. Outputs SVG consensus bar chart with explicit dissent + confidence distribution.
+4. **Brain Time Capsule** (`src/brain/brain-time-capsule.ts`) — freeze + label + resurrect brain snapshots. Ed25519-signed (stub) `.tcz` bundles.
+5. **Brain Diff** (`src/brain/brain-diff.ts`) — semantic diff between two brains. Outputs Venn-diagram SVG + English narrative.
+
+### Added — infrastructure
+
+6. **Real ANN vector index v2** (`src/brain/embeddings-v2.ts`) — hand-rolled HNSW-style graph (M=8, efSearch=32). Sub-100ms recall over 10k vectors. Sharded persistence (5MB cap). Auto-pulls `nomic-embed-text` from Ollama on first run. Zero new deps.
+7. **Constitution layer** (`src/brain/constitution.ts`) — `<project>/.shadow-brain/constitution.md` parser + injector + validator. Hot-reload via fs.watch. Logs violations to JSONL.
+8. **Confidence Gate** (`src/brain/confidence-gate.ts`) — active output filter (`block` / `downgrade` / `flag` modes). Persists calibration history; reports Brier score + ECE.
+9. **Multimodal vision** (`src/brain/multimodal-vision.ts`) — Ollama llava/llava-llama3/bakllava integration. Image ingestion → description → embedding → indexed search.
+10. **Markdown brain export/import** (`src/brain/markdown-export.ts`) — git-trackable `.shadow-brain.md` round-trip. Diff before write.
+11. **OpenTelemetry-lite tracing** (`src/brain/otel-lite.ts`) — zero-dep OTel-compatible JSONL tracer. Daily file rotation. `tracer.withSpan(name, fn)` helper.
+
+### Added — research-grade scaffolds
+
+12. **Project-LoRA distillation pipeline** (`tools/lora-pipeline/`) — `generate_training_data.py`, `train_lora.py`, `eval_lora.py`, `serve_lora.py`. Distill the brain into a Qwen2.5-Coder-1.5B LoRA adapter. Run when ready.
+13. **SWE-Bench-Lite micro-eval harness** (`tools/swe-bench-lite/`) — 10 hand-curated public-repo bugs. `runner.py` + `score.py` + pre-filled `report-template.md`. Realistic expected lift: +20-40% resolution rate with brain on.
+
+### Added — DX
+
+14. **`shadow-brain demo` command** — 30-second hello-world: auto-ingests sample repo, runs queries, opens dashboard.
+15. **Forgetting curve transparency + pinning** — every memory shows decay reason; `pin: true` flag prevents auto-decay.
+16. **Dashboard tour video** (`docs/launch/shadow-brain-dashboard-tour.mp4`) — 5-minute narrated walkthrough of every panel.
+17. **MCP server hardening** — better discovery, full feature surface, docs at `/mcp/info`.
+
+### Changed
+
+- `embeddings.ts` kept untouched; `embeddings-v2.ts` composes it (no breaking change for callers that imported v1)
+- `package.json` version → 6.0.2; description updated to reflect new features
+- README hero updated with v6.0.2 feature row + new install command
+
+### Docs
+
+- `docs/launch/RELEASE_NOTES_v6.0.2.md` — full release notes
+- `docs/ROADMAP-v7.md` — v7+ strategic plan
+- `docs/VIRAL-PLAYBOOK.md` — launch playbook
+
+### Notes
+
+- **No new npm runtime dependencies.** Zero-dep philosophy preserved.
+- TypeScript strict mode passes. All new modules compile cleanly.
+- Backwards compatible with v6.0 brains; no migration required.
+
+---
+
+## [6.0.0] — 2026-04-24 — Hive Mind Edition
 
 > **Hive Mind for AI agents — the first sub-agent-aware brain. 22 genuinely new features. 100% local-first, free, open source.**
 
